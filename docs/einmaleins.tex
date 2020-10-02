@@ -1,0 +1,119 @@
+\documentclass[]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{multicol}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+ \geometry{
+	 a4paper,
+	 left=10mm,
+	 right=10mm,
+	 top=10mm,
+	 bottom=20mm,
+	 }
+\usepackage{hyperref}
+\title{EINMALEINS}
+
+\begin{document}
+
+\maketitle
+
+\begin{multicols}{2}
+
+\section{Quelltext}
+
+Das Programm kann direkt über die Variablen am Anfang angepasst werden. Jede variable ist Kurz kommentiert.
+Zum Beispiel:
+
+\begin{verbatim}
+\\==================================
+
+var REIHE = 5;          // Einmaleinsreihe
+var GAME_DURATION = 60; // Spieldauer
+
+\\==================================
+\end{verbatim}
+
+	Wenn man die Zahlen ändert, ändert sich die Zahl für alle Nutzer der Seite. Die Werte stellen die Standardwerte dar. Wenn nach Sektion 2 Parameter über die URL angegeben werden diese für die Aktuelle Sitzung Überschrieben. Werte mit \texttt{const} am Anfang können nur im Quelltext direkt geändert werden. Alle Werte die verändert werden dürfen stehen zwischen zwei Markierungen aus Gleichzeichen s.o..
+
+\section{URL-Parameter}
+
+Ein URL Parameter gibt Informationen an die aufgerufene Internetseite weiter. Sie stehen nach der Adresse -- eingeleitet durch ein 
+?. Ein Wert wird dann mit dem Namen des Wertes (Key) einem '=' und der zugehörigen Zahl, nach dem Muster key=zahl. Das Spiel ist so konzipiert, dass alle Werte einen Standard besitzen (unten als Default angegeben). Wenn kein Wert über die URL eingegeben wird, verwendet das Programm den Defaultwert. Range ist ein Angabe in Welchem der Wert liegen muss bzw. in welchem Bereich, das Spiel immer noch Spielbar ist. Bei $\in \mathbb{N} $ muss es eine Ganzzahl sein, bei $\in \mathbb{Q} $ kann es eine Kommazahl sein.\\
+Zum Beispiel: \\
+\texttt{\href{onecalfman.github.io/einmaleins?reihe=5}{onecalfman.github.io/einmaleins?reihe=5}} \\
+öffnet das Spiel mit der 5er Reihe voreingestellt.
+Weiter Optionen werden über ein \& angehängt. \\
+\texttt{\href{onecalfman.github.io/einmaleins?reihe=8\&dauer=60\&max=5}{onecalfman.github.io/einmaleins?reihe=8\&dauer=60\&max=5}} \\
+öffnet das Spiel mit der 8er Reihe, einer Spieldauer von 60 Sekunden und maximal 5 Zahnrädern die Gleichzeitig zu sehen sind.
+
+\end{multicols}
+
+\begin{multicols}{2}
+
+	\paragraph{reihe}  Einmaleins Reihe. Das Spiel kann auch größere Reihen als 1-10. Zahlen bis zu vier Stellen werden korrekt angezeigt.
+	\begin{itemize}
+		\item Default: 7
+		\item Range: $1-99 \in \mathbb{N} $
+	\end{itemize}
+
+	\paragraph{dauer}  Spieldauer in Sekunden
+	\begin{itemize}
+		\item Default: 45
+		\item Range: $ 0 - \infty \in \mathbb{N}$
+	\end{itemize}
+	\paragraph{prozent} Anteil der Zahnräder die von allen richtigen Zahnrädern gefangen werden müssen damit man das Spiel gewinnt.
+	\begin{itemize}
+		\item Default: 0.75
+		\item Range: $ 0 - 1 \in \mathbb{Q}$
+	\end{itemize}
+	\paragraph{speed}  Laufgeschwindigkeit des Roboters
+	\begin{itemize}
+		\item Default: 30
+		\item Range: $ 1 - \infty \in \mathbb{N}$
+	\end{itemize}
+	\paragraph{schwerkraft}  Fallgeschwindigkeit der Zahnräder
+	\begin{itemize}
+		\item Default: 3
+		\item Range: $ \displaystyle 1 - 9 \in \mathbb{N}$
+	\end{itemize}
+	\paragraph{interval}  Zeitspanne zwischen dem Erscheinen neuer Zahnräder
+	\begin{itemize}
+		\item Default: 2
+		\item Range: $ 0.1 - \infty \in \mathbb{Q}$
+	\end{itemize}
+	\paragraph{max}  Faktor für die maximale Anzahl an Zahnrädern (auf einmal) \\
+	max ist ein Multiplikator für die aus dem Quotient der Breite des Browserfensters und der Breite des Roboters berechneten Maximalanzahl. Wenn dieser Wert eher hoch ist ( > 5 ) ist für die Anzahl an Zahnrädern das Interval zwischen dem Erscheinen neuer Zahnräder ausschlaggebend.
+	\begin{itemize}
+		\item Default: 2
+		\item Range: $ 0.1 - \infty \in \mathbb{Q}$
+	\end{itemize}
+
+
+	\paragraph{fps}  Spielgeschwindigkeit \\
+	Gibt an wie oft das Bild pro Sekunde neu berechnet wird. Ein größerer Wert bedeutet eine schnellere Lauf- und Fallgeschwindigkeit.
+	\begin{itemize}
+
+		\item Default: 30
+		\item Range: $ 10 - 120 \in \mathbb{N} $
+
+	\end{itemize}
+	\paragraph{breite}  Breite des Roboters in Pixeln
+	\begin{itemize}
+		\item Default: 200
+		\item Range: $ 75 - 400  \in \mathbb{N}$
+	\end{itemize}
+	\paragraph{zr\_scale}  Skalierung der Zahnradgröße im Verhältnis zum Roboter. Bei einem Wert von 1 hat das Zahnrad die 0.4-fache Breite des Roboters.
+	\begin{itemize}
+		\item Default: 1
+		\item $ 0.5 - 3 \in \mathbb{Q} $
+	\end{itemize}
+
+ 
+	\end{multicols}
+
+
+\end{document}
+
