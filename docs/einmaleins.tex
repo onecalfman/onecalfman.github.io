@@ -10,8 +10,8 @@
 	 a4paper,
 	 left=10mm,
 	 right=10mm,
-	 top=10mm,
-	 bottom=20mm,
+	 top=2mm,
+	 bottom=2mm,
 	 }
 \usepackage{hyperref}
 \title{EINMALEINS}
@@ -24,30 +24,32 @@
 
 \section{Quelltext}
 
-Das Programm kann direkt über die Variablen am Anfang angepasst werden. Jede variable ist Kurz kommentiert.
+Das Programm kann direkt über die Variablen am Anfang angepasst werden. Jede Variable ist kurz kommentiert.
 Zum Beispiel:
 
 \begin{verbatim}
-\\==================================
+//==================================
+// Einmaleinsreihe
+var REIHE = 5;            
+// Spieldauer
+var GAME_DURATION = 60;
+// Schriftfarbe (Hexadecimal # Rot Grün Blau)
+const FONT_COLOR = '#ddd'
+//==================================
+\end{verbatim} 
 
-var REIHE = 5;          // Einmaleinsreihe
-var GAME_DURATION = 60; // Spieldauer
-
-\\==================================
-\end{verbatim}
-
-	Wenn man die Zahlen ändert, ändert sich die Zahl für alle Nutzer der Seite. Die Werte stellen die Standardwerte dar. Wenn nach Sektion 2 Parameter über die URL angegeben werden diese für die Aktuelle Sitzung Überschrieben. Werte mit \texttt{const} am Anfang können nur im Quelltext direkt geändert werden. Alle Werte die verändert werden dürfen stehen zwischen zwei Markierungen aus Gleichzeichen s.o..
+	Wenn man die Zahlen ändert, ändert sich die Zahl für alle Nutzer der Seite. Die Werte stellen die Standardwerte dar. Wenn nach Sektion 2 Parameter über die URL angegeben werden, ändern sich die Werte nur für eine Sitzung. Werte mit \texttt{const} am Anfang können nur im Quelltext direkt geändert werden. Alle Werte die verändert werden dürfen stehen zwischen zwei Markierungen aus Gleichzeichen s.o.. Alle anderen Werte dürfen \textbf{NICHT} geändert werden.
 
 \section{URL-Parameter}
 
 Ein URL Parameter gibt Informationen an die aufgerufene Internetseite weiter. Sie stehen nach der Adresse -- eingeleitet durch ein 
-?. Ein Wert wird dann mit dem Namen des Wertes (Key) einem '=' und der zugehörigen Zahl, nach dem Muster key=zahl. Das Spiel ist so konzipiert, dass alle Werte einen Standard besitzen (unten als Default angegeben). Wenn kein Wert über die URL eingegeben wird, verwendet das Programm den Defaultwert. Range ist ein Angabe in Welchem der Wert liegen muss bzw. in welchem Bereich, das Spiel immer noch Spielbar ist. Bei $\in \mathbb{N} $ muss es eine Ganzzahl sein, bei $\in \mathbb{Q} $ kann es eine Kommazahl sein.\\
+?. Ein Wert wird dann mit dem Namen des Wertes (Key) einem '=' und der zugehörigen Zahl, nach dem Muster key=zahl angegeben. Das Spiel ist so konzipiert, dass alle Werte einen Standard besitzen (unten als Default angegeben). Wenn kein Wert über die URL eingegeben wird, verwendet das Programm den Defaultwert. Range ist ein Angabe in Welchem der Wert liegen muss bzw. in welchem Bereich, das Spiel immer noch Spielbar ist. Bei $\in \mathbb{N} $ muss es eine Ganzzahl sein, bei $\in \mathbb{Q} $ kann es eine Kommazahl sein.\\
 Zum Beispiel: \\
 \texttt{\href{onecalfman.github.io/einmaleins?reihe=5}{onecalfman.github.io/einmaleins?reihe=5}} \\
 öffnet das Spiel mit der 5er Reihe voreingestellt.
 Weiter Optionen werden über ein \& angehängt. \\
 \texttt{\href{onecalfman.github.io/einmaleins?reihe=8\&dauer=60\&max=5}{onecalfman.github.io/einmaleins?reihe=8\&dauer=60\&max=5}} \\
-öffnet das Spiel mit der 8er Reihe, einer Spieldauer von 60 Sekunden und maximal 5 Zahnrädern die Gleichzeitig zu sehen sind.
+öffnet das Spiel mit der 8er Reihe, einer Spieldauer von 60 Sekunden und maximal 5 Zahnrädern die Gleichzeitig zu sehen sind. Die möglichen keys sind unten gelistet.
 
 \end{multicols}
 
@@ -56,7 +58,7 @@ Weiter Optionen werden über ein \& angehängt. \\
 	\paragraph{reihe}  Einmaleins Reihe. Das Spiel kann auch größere Reihen als 1-10. Zahlen bis zu vier Stellen werden korrekt angezeigt.
 	\begin{itemize}
 		\item Default: 7
-		\item Range: $1-99 \in \mathbb{N} $
+		\item Range: $1-999 \in \mathbb{N} $
 	\end{itemize}
 
 	\paragraph{dauer}  Spieldauer in Sekunden
@@ -84,8 +86,7 @@ Weiter Optionen werden über ein \& angehängt. \\
 		\item Default: 2
 		\item Range: $ 0.1 - \infty \in \mathbb{Q}$
 	\end{itemize}
-	\paragraph{max}  Faktor für die maximale Anzahl an Zahnrädern (auf einmal) \\
-	max ist ein Multiplikator für die aus dem Quotient der Breite des Browserfensters und der Breite des Roboters berechneten Maximalanzahl. Wenn dieser Wert eher hoch ist ( > 5 ) ist für die Anzahl an Zahnrädern das Interval zwischen dem Erscheinen neuer Zahnräder ausschlaggebend.
+	\paragraph{max}  Faktor für die maximale Anzahl an Zahnrädern, die gleichzeitig auf dem Bildschirm zu sehen sind.  max ist ein Multiplikator für die aus dem Quotient der Breite des Browserfensters und der Breite des Roboters berechneten Maximalanzahl. Wenn dieser Wert eher hoch ist ( > 5 ) ist für die Anzahl an Zahnrädern das Interval zwischen dem Erscheinen neuer Zahnräder ausschlaggebend.
 	\begin{itemize}
 		\item Default: 2
 		\item Range: $ 0.1 - \infty \in \mathbb{Q}$
