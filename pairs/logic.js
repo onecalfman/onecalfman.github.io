@@ -277,10 +277,7 @@ function init()
 		}
 	}
 
-	for( let i = 0; i < cards.length; i++) {
-		ctx.fillStyle  = cards[i].color;
-		cards[i].draw();
-	}
+	draw();
 
 	canvas.onmousedown = function(event) { layer(event.clientX,event.clientY); };
 	canvas.onmouseup = function(event) { mousedown = false; match(); };
