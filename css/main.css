@@ -9,6 +9,15 @@ height:auto;
 border-radius: 4px;
 }
 h1 {
+float: right;
+width: 40%;
+text-align: center;
+padding-top: 15px;
+padding-bottom: 5px;
+margin-bottom: -5px;
+background-color: #EEEEFF;
+border-bottom-left-radius: 8px;
+border-bottom-right-radius: 8px;
 background-color: #4477f9;
 padding: 30px;
 font-family: arial, verdana, sans serif;
@@ -80,7 +89,7 @@ margin: 20px 0px 20px 0px;
 }
 
 body {
-background-color: #fff;
+background-color: #bbbbbb;
 color: #181818;
 
 }
