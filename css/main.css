@@ -9,9 +9,11 @@ height:auto;
 border-radius: 4px;
 }
 h1 {
+background-color: #4477f9;
+padding: 30px;
 font-family: arial, verdana, sans serif;
-font-size: 1.6em;
-line-height: 2em;
+font-size: 60px;
+line-height: 4em;
 }
 h2 {
 font-family: arial, verdana, sans serif;
