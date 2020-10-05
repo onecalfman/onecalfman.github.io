@@ -275,6 +275,7 @@ function init()
 			cards.push(new TextCard(i,cells[0]));
 			}
 		}
+	draw();
 	}
 
 	draw();
