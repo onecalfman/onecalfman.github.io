@@ -366,19 +366,21 @@ function init()
 		cells = lines[n].split(',');
 		for( let j = 0; j < cells.length; j++)
 		{
-			if ( cells[j].endsWith('png') || cells[j].endsWith('PNG') || cells[j].endsWith('jpg') || cells[j].endsWith('JPG')) {
+			cell = cells[j].trim();
+			if ( cell.endsWith('png') || cell.endsWith('PNG') || cell.endsWith('jpg') || cell.endsWith('JPG')) {
 			csv[i][j] = new Image();
 			csv[i][j].onload = function() { cards.push(new ImageCard(i,csv[i][j])); draw();}
-			csv[i][j].src = cells[j];
+			csv[i][j].src = cell;
 			} 
-			else if  ( cells[j].endsWith('mp3') || cells[j].endsWith('wav'))
+			else if  ( cell.endsWith('mp3') || cell.endsWith('wav'))
 			{ 
-				csv[i][j] = new Audio(cells[j]);
+				csv[i][j] = new Audio(cell);
 				cards.push(new SoundCard(i,csv[i][j]));
 			} 
-			else {
-				csv[i][j] = cells[j];
-				cards.push(new TextCard(i,csv[i][j]));
+			else if ( /\S/.test(cell) )
+			{
+				csv[i][j] = cell;
+				cards.push(new TextCard(i,cell));
 			}
 		}
 		lines.splice(n,1);
