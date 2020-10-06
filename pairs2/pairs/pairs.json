@@ -1,0 +1,22 @@
+{
+"chromium" : {
+	"text"	:	"chromium", 
+	"image"	:	"assets/chromium.png"
+},
+"libreoffice" : {
+	"text"	:	"libreoffice", 
+	"image"	:	"assets/libreoffice-main.png"
+},
+"firefox" : {
+	"text"	:	"firefox", 
+	"image"	:	"assets/firefox.png"
+},
+"gimp" : {
+	"text"	:	"gimp", 
+	"image"	:	"assets/gimp.png"
+},
+"spotify" : {
+	"text"	:	"spotify", 
+	"image"	:	"assets/spotify.png"
+}
+}
