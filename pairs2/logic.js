@@ -329,7 +329,7 @@ class United {
 	{
 		//console.log('drawn');
 		ctx.fillStyle = this.color;
-		ctx.fillRect(this.x, this.y, this.w, this.h);
+		ctx.fillRect(this.x, this.y, this.img[0].width, this.h);
 		var imgl = this.img.length;
 		for ( let i = 0; i < imgl; i++) {
 			var offsetX = i * this.w / 2;
