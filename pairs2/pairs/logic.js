@@ -3,18 +3,11 @@ const ctx = canvas.getContext('2d');
 //const PAIRS = 'pairs.csv';
 const PAIRS = 'anlaute.csv';
 const FONT_SIZE = 80;
-const IMG_SCALE = 1;
+const IMG_SCALE = 0.1;
 const BORDER = 5;
 const CARDS_N = 10;
 const sound = new Image();
 sound.scr = "assets/sound.png";
-
-sounds = []
-sounds.push(new Audio('/anlaute/snd/bruh.mp3'));
-sounds.push(new Audio('/anlaute/snd/minecraft_alpha_damage.mp3'))
-sounds.push(new Audio('/anlaute/snd/roblox.mp3'))
-sounds.push(new Audio('/anlaute/snd/Minecraft_villager.mp3'))
-
 
 ctx.font = FONT_SIZE + 'px sans';
 ctx.textBaseline = "hanging";
@@ -67,7 +60,6 @@ function draw()
 {
 	ctx.clearRect(0,0, canvas.width, canvas.height);
 	ctx.fillStyle = '#ddd';
-	ctx.fillRect(0,0,canvas.width, canvas.height);
 	cards.forEach(function(card) {card.draw()});
 	//for( let i = 0; i < cards.length; i++) {
 		//cards[i].draw();
@@ -92,91 +84,72 @@ function resize()
 }
 
 
-//function uniteImgImg(c1, c2, n)
-//{
-//	unite = new United(c1.group, c1.x, c1.y, (c1.w + c2.w) / 2, (c1.h + c2.h) / 2);
-//	unite.img.push(c1.img);
-//	unite.img.push(c2.img);
-//	cards.pop();
-//	cards.splice(n,1);
-//	cards.push(unite);
-//}
-//function uniteSndSnd(c1, c2, n)
-//{
-//	console.log('snd snd');
-//	console.log(c1);
-//	console.log(c2);
-//}
-//function uniteTxtTxt(c1, c2, n)
-//{
-//	console.log('txt txt');
-//	console.log(c1);
-//	console.log(c2);
-//}
-//function uniteTxtImg(c1, c2, n)
-//{
-//	console.log('txt img');
-//	console.log(c1);
-//	console.log(c2);
-//}
-//function uniteSndImg(c1, c2, n)
-//{
-//	console.log('snd img');
-//	console.log(c1);
-//	console.log(c2);
-//}
-//function uniteSndTxt(c1, c2, n)
-//{
-//	console.log('snd txt');
-//	console.log(c1);
-//	console.log(c2);
-//}
-
-function unite(p)
+function uniteImgImg(c1, c2, n)
 {
-	a = cards.length - 1;
-	if ( cards[a] instanceof United ) { 
-		cards[a].add(p);
-		console.log('a'); 
+	unite = new United(c1.group, c1.x, c1.y, (c1.w + c2.w) / 2, (c1.h + c2.h) / 2);
+	unite.img.push(c1.img);
+	unite.img.push(c2.img);
+	cards.pop();
+	cards.splice(n,1);
+	cards.push(unite);
+}
+function uniteSndSnd(c1, c2, n)
+{
+	console.log('snd snd');
+	console.log(c1);
+	console.log(c2);
+}
+function uniteTxtTxt(c1, c2, n)
+{
+	console.log('txt txt');
+	console.log(c1);
+	console.log(c2);
+}
+function uniteTxtImg(c1, c2, n)
+{
+	console.log('txt img');
+	console.log(c1);
+	console.log(c2);
+}
+function uniteSndImg(c1, c2, n)
+{
+	console.log('snd img');
+	console.log(c1);
+	console.log(c2);
+}
+function uniteSndTxt(c1, c2, n)
+{
+	console.log('snd txt');
+	console.log(c1);
+	console.log(c2);
+}
 
-	}
-	else if ( cards[p] instanceof United ) {
-		cards[p].add(a); console.log('p');
-	}
-	else {
-		console.log('new united');
-		if ( cards[a].w < cards[p].w) { w = cards[p].w; } else { w = cards[a].w; }
-		if ( cards[a].h < cards[p].h) { h = cards[p].h; } else { h = cards[a].h; }
-		u = new United(cards[a].group, cards[a].x, cards[a].y, w, h);
-		u.add(a);
-		u.add(p);
-		cards.push(u);
-	}
-	draw();
+function unite(n)
+	{
+	i = cards.length - 1
+	imgA = cards[i] instanceof ImageCard;
+	imgP = cards[n] instanceof ImageCard;
+	sndA = cards[i] instanceof SoundCard;
+	sndP = cards[n] instanceof SoundCard;
+	textA = cards[i] instanceof TextCard;
+	textP = cards[n] instanceof TextCard;                         // active passive
+	if      ( imgA && imgP ) { uniteImgImg(cards[n],cards[i],n);}   // img	img
+	else if ( sndA && sndP ) { uniteSndSnd(cards[n],cards[i],n);}   // snd	snd
+	else if ( textA && textP ) { uniteTxtTxt(cards[n],cards[i],n);} // text	text
+	else if ( textA && imgP ) { uniteTxtImg(cards[i],cards[n],n);}  // text	img
+	else if ( imgA && textP ) { uniteTxtImg(cards[n],cards[i],n);}  // img	text
+	else if ( imgA && sndP ) { uniteSndImg(cards[n],cards[i],n);}   // img	snd
+	else if ( sndA && imgP ) { uniteSndImg(cards[i],cards[n],n);}   // snd	img
+	else if ( sndA && textP ) { uniteSndTxt(cards[i],cards[n],n);}  // snd	text
+	else if ( textA && textP ) { uniteSndTxt(cards[n],cards[i],n);} // text	snd
 
-	//imgA = cards[i] instanceof ImageCard;
-	//imgP = cards[n] instanceof ImageCard;
-	//sndA = cards[i] instanceof SoundCard;
-	//sndP = cards[n] instanceof SoundCard;
-	//txt = cards[i] instanceof TextCard;
-	//txt = cards[n] instanceof TextCard;                         // active passive
-	//if      ( imgA && imgP ) { uniteImgImg(cards[n],cards[i],n);}   // img	img
-	//else if ( sndA && sndP ) { uniteSndSnd(cards[n],cards[i],n);}   // snd	snd
-	//else if ( txt && txt ) { uniteTxtTxt(cards[n],cards[i],n);} // txt	txt
-	//else if ( txt && imgP ) { uniteTxtImg(cards[i],cards[n],n);}  // txt	img
-	//else if ( imgA && txt ) { uniteTxtImg(cards[n],cards[i],n);}  // img	txt
-	//else if ( imgA && sndP ) { uniteSndImg(cards[n],cards[i],n);}   // img	snd
-	//else if ( sndA && imgP ) { uniteSndImg(cards[i],cards[n],n);}   // snd	img
-	//else if ( sndA && txt ) { uniteSndTxt(cards[i],cards[n],n);}  // snd	txt
-	//else if ( txt && txt ) { uniteSndTxt(cards[n],cards[i],n);} // txt	snd
-
-	//card = new United(img.group, img.x, img.y, img.w, img.h + txt.h);
-	//card.txt = txt.txt;
+	//card = new United(img.group, img.x, img.y, img.w, img.h + text.h);
+	//card.text = text.text;
 	//card.img = img.img;
 
 	//ctx.font = FONT_SIZE * 0.7 + 'px sans';
-	//txt_width = ctx.measureText(card.txt).width * 1.05;
-	//if ( card.w < txt_width ) { card.w = txt_width; }
+	//text_width = ctx.measureText(card.text).width * 1.05;
+	//if ( card.w < text_width ) { card.w = text_width; }
 	//cards.splice(n,1);
 	//cards.pop();
 	//cards.push(card);
@@ -188,7 +161,6 @@ function unite(p)
 function match()
 {
 	card = cards[cards.length - 1];
-	if ( card instanceof SoundCard ) { card.play(); };
 	for ( let i = cards.length - 1; 0 <= i; i--) {
 		group = card.group === cards[i].group;
 		lx = card.x < cards[i].x && cards[i].x < card.x + card.w;
@@ -275,12 +247,12 @@ class ImageCard {
 }
 
 class TextCard {
-	constructor(group, txt) {
+	constructor(group, text) {
 	this.group = group;
-	this.txt = txt;
+	this.text = text;
 	ctx.font = FONT_SIZE + 'px sans';
 	this.h = FONT_SIZE * 1.1;
-	this.w = Math.ceil(ctx.measureText(txt).width);
+	this.w = Math.ceil(ctx.measureText(text).width);
 	this.x = randInt(0, canvas.width - this.w);
 	this.y = randInt(0, canvas.height - this.h);
 	this.color = randPred();
@@ -293,28 +265,31 @@ class TextCard {
 		ctx.textBaseline = "hanging";
 		ctx.font = FONT_SIZE + 'px sans';
 		ctx.textAlign = 'center';
-		ctx.fillText(this.txt,this.x + this.w/2,this.y + this.h * 0.1);
+		ctx.fillText(this.text,this.x + this.w/2,this.y + this.h * 0.1);
 	}
 }
 
 class SoundCard {
-	constructor(group, snd) {
+	constructor(group, text) {
 	this.group = group;
-	this.h = 100;
-	this.w = 100;
+	this.text = text;
+	ctx.font = FONT_SIZE + 'px sans';
+	this.h = FONT_SIZE * 1.1;
+	this.w = Math.ceil(ctx.measureText(text).width);
 	this.x = randInt(0, canvas.width - this.w);
 	this.y = randInt(0, canvas.height - this.h);
-	this.snd = snd;
-	this.color = randPred();
+	this.snd = randPred();
 	}
 
 	draw() {
-		ctx.fillStyle = this.color;
-		ctx.fillRect(this.x, this.y, this.w, this.h);
-		ctx.drawImage(sound, this.x, this.y, sound.width, sound.height);
+		//ctx.fillStyle = this.color;
+		//ctx.fillRect(this.x,this.y,this.w,this.h);
+		ctx.fillStyle = '#000000';
+		ctx.textBaseline = "hanging";
+		ctx.font = FONT_SIZE + 'px sans';
+		ctx.textAlign = 'center';
+		ctx.fillText(this.text,this.x + this.w/2,this.y + this.h * 0.1);
 	}
-
-	play() { this.snd.play(); }
 }
 
 class United {
@@ -324,59 +299,49 @@ class United {
 	this.w = w;
 	this.x = x;
 	this.y = y;
-	this.color = randColor();
-	//this.img_pos = [];
+	this.text;
+	this.text_h = FONT_SIZE;
+	this.color = '#666666';
+	this.sound;
 	this.img = [];
-	this.snd = [];
-	this.txt = [];
 	}
 
-	add(n)
-	{
-		if ( cards[n].img ) {
-			this.img.push(cards[n].img);
+	draw() {
+		if( this.img.length > 1 ) 
+		{ 
+			for( let i = 0; i < this.img.length - 1; i++ ) {
+			ctx.drawImage(this.img[i], this.x, this.y, this.w, this.h) 
+			}
 		}
-		if ( cards[n].snd ) {
-			this.snd.push(cards[n].snd);
-		}
-		if (cards[n].txt) {
-			this.txt.push(cards[n].txt);
-			this.h += FONT_SIZE * 1.2;
-		}
-		
-		cards.splice(n,1);
-	}
-
-	draw()
-	{
-		//console.log('drawn');
-		ctx.fillStyle = this.color;
-		ctx.fillRect(this.x, this.y, this.w, this.h);
-		var imgl = this.img.length;
-		for ( let i = 0; i < imgl; i++) {
-			var offsetX = i * this.w / 2;
-			var offsetY = i * (this.h - FONT_SIZE * 1.2) / 2;
-			ctx.drawImage(this.img[i], this.x + offsetX , this.y + offsetY, 1.3 * this.img[i].width / imgl, 1.3 * this.img[i].height / imgl );
-		}
-		var txtl = this.txt.length;
-		for ( let i = 0; i < txtl; i++) {
-			ctx.fillStyle = '#000000';
-			ctx.textBaseline = "bottom";
-			ctx.font = FONT_SIZE + 'px sans';
+		else {
+			ctx.fillStyle = '#bbbbbb';
+			ctx.fillRect(this.x,this.y,this.w,this.h);
+			ctx.fillStyle = '#ffffff';
+			//ctx.fillRect(this.x + BORDER,this.y + BORDER, this.w - BORDER * 2,this.h - BORDER * 2);
+			ctx.drawImage(this.img, this.x + (this.w - this.img.width * IMG_SCALE) / 2, this.y, this.img.width * IMG_SCALE, this.img.height * IMG_SCALE);
+			ctx.fillStyle = '#444444';
+			ctx.font = FONT_SIZE * 0.7 + 'px sans';
 			ctx.textAlign = 'center';
-			ctx.fillText(this.txt[i], this.x + this.w / 2 , this.y + this.h + FONT_SIZE * 0.1);
+			ctx.fontBaseline = 'bottom';
+			ctx.fillText(this.text,this.x + this.w/2,this.y + this.h - FONT_SIZE);
+		}
+		if ( this.sound ) { 
+			ctx.drawImage(sound, this.x + this.w - sound.width, this.y);
 		}
 	}
 }
-
-
-
 
 function init()
 {
 	ctx.canvas.width = window.innerWidth;
 	ctx.canvas.height = window.innerHeight;
 	lines = open(PAIRS).split('\n')
+
+	//for( let i = 0; i < CARDS_N; i++ ) 
+	//{ 
+		//cards[i] = new Card("test", 100, 100);
+		//cards[i].layer = i;
+	//}
 	
 	for(let i = 0; i <= CARDS_N; i++)
 	{
@@ -404,7 +369,6 @@ function init()
 		ctx.fillStyle  = cards[i].color;
 		cards[i].draw();
 	}
-	draw();
 
 	canvas.onmousedown = function(event) { layer(event.clientX,event.clientY); };
 	canvas.onmouseup = function(event) { mousedown = false; match(); };
@@ -414,5 +378,4 @@ function init()
 
 	window.addEventListener("resize", function(event) {resize();}, true);
 	//window.addEventListener("deviceorientation", rotate(event), true);
-	draw();
 }
