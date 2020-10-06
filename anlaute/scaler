@@ -1,3 +1,0 @@
-#!/bin/sh
-
-convert $1 -geometry x250 $1
