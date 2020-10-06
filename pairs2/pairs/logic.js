@@ -3,16 +3,24 @@ const ctx = canvas.getContext('2d');
 //const PAIRS = 'pairs.csv';
 const PAIRS = 'anlaute.csv';
 const FONT_SIZE = 80;
-const IMG_SCALE = 0.1;
+const IMG_SCALE = 1;
 const BORDER = 5;
-const CARDS_N = 10;
-const sound = new Image();
-sound.scr = "assets/sound.png";
+const CARDS_N = 5;
+var speaker_img = new Image();
+speaker_img.scr = "anlaute/speaker.png";
+
+sounds = []
+sounds.push(new Audio('/anlaute/snd/bruh.mp3'));
+sounds.push(new Audio('/anlaute/snd/minecraft_alpha_damage.mp3'))
+sounds.push(new Audio('/anlaute/snd/roblox.mp3'))
+sounds.push(new Audio('/anlaute/snd/Minecraft_villager.mp3'))
+
 
 ctx.font = FONT_SIZE + 'px sans';
 ctx.textBaseline = "hanging";
 
 var cards = [];
+var images = []
 
 colors = [
 	'#788ca3',
@@ -34,6 +42,14 @@ function open(filePath) {
     result = xmlhttp.responseText;
   }
   return result;
+}
+
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
 }
 
 function randInt(min, max)	{
@@ -60,6 +76,7 @@ function draw()
 {
 	ctx.clearRect(0,0, canvas.width, canvas.height);
 	ctx.fillStyle = '#ddd';
+	ctx.fillRect(0,0,canvas.width, canvas.height);
 	cards.forEach(function(card) {card.draw()});
 	//for( let i = 0; i < cards.length; i++) {
 		//cards[i].draw();
@@ -84,76 +101,65 @@ function resize()
 }
 
 
-function uniteImgImg(c1, c2, n)
-{
-	unite = new United(c1.group, c1.x, c1.y, (c1.w + c2.w) / 2, (c1.h + c2.h) / 2);
-	unite.img.push(c1.img);
-	unite.img.push(c2.img);
-	cards.pop();
-	cards.splice(n,1);
-	cards.push(unite);
-}
-function uniteSndSnd(c1, c2, n)
-{
-	console.log('snd snd');
-	console.log(c1);
-	console.log(c2);
-}
-function uniteTxtTxt(c1, c2, n)
-{
-	console.log('txt txt');
-	console.log(c1);
-	console.log(c2);
-}
-function uniteTxtImg(c1, c2, n)
-{
-	console.log('txt img');
-	console.log(c1);
-	console.log(c2);
-}
-function uniteSndImg(c1, c2, n)
-{
-	console.log('snd img');
-	console.log(c1);
-	console.log(c2);
-}
-function uniteSndTxt(c1, c2, n)
-{
-	console.log('snd txt');
-	console.log(c1);
-	console.log(c2);
-}
+//function uniteImgImg(c1, c2, n)
+//{
+//	unite = new United(c1.group, c1.x, c1.y, (c1.w + c2.w) / 2, (c1.h + c2.h) / 2);
+//	unite.img.push(c1.img);
+//	unite.img.push(c2.img);
+//	cards.pop();
+//	cards.splice(n,1);
+//	cards.push(unite);
+//}
+//function uniteSndSnd(c1, c2, n)
+//{
+//	console.log('snd snd');
+//	console.log(c1);
+//	console.log(c2);
+//}
+//function uniteTxtTxt(c1, c2, n)
+//{
+//	console.log('txt txt');
+//	console.log(c1);
+//	console.log(c2);
+//}
+//function uniteTxtImg(c1, c2, n)
+//{
+//	console.log('txt img');
+//	console.log(c1);
+//	console.log(c2);
+//}
+//function uniteSndImg(c1, c2, n)
+//{
+//	console.log('snd img');
+//	console.log(c1);
+//	console.log(c2);
+//}
+//function uniteSndTxt(c1, c2, n)
+//{
+//	console.log('snd txt');
+//	console.log(c1);
+//	console.log(c2);
+//}
 
-function unite(n)
-	{
-	i = cards.length - 1
-	imgA = cards[i] instanceof ImageCard;
-	imgP = cards[n] instanceof ImageCard;
-	sndA = cards[i] instanceof SoundCard;
-	sndP = cards[n] instanceof SoundCard;
-	textA = cards[i] instanceof TextCard;
-	textP = cards[n] instanceof TextCard;                         // active passive
-	if      ( imgA && imgP ) { uniteImgImg(cards[n],cards[i],n);}   // img	img
-	else if ( sndA && sndP ) { uniteSndSnd(cards[n],cards[i],n);}   // snd	snd
-	else if ( textA && textP ) { uniteTxtTxt(cards[n],cards[i],n);} // text	text
-	else if ( textA && imgP ) { uniteTxtImg(cards[i],cards[n],n);}  // text	img
-	else if ( imgA && textP ) { uniteTxtImg(cards[n],cards[i],n);}  // img	text
-	else if ( imgA && sndP ) { uniteSndImg(cards[n],cards[i],n);}   // img	snd
-	else if ( sndA && imgP ) { uniteSndImg(cards[i],cards[n],n);}   // snd	img
-	else if ( sndA && textP ) { uniteSndTxt(cards[i],cards[n],n);}  // snd	text
-	else if ( textA && textP ) { uniteSndTxt(cards[n],cards[i],n);} // text	snd
+function unite(p)
+{
+	a = cards.length - 1;
+	if ( cards[a] instanceof United ) { 
+		cards[a].add(p);
 
-	//card = new United(img.group, img.x, img.y, img.w, img.h + text.h);
-	//card.text = text.text;
-	//card.img = img.img;
-
-	//ctx.font = FONT_SIZE * 0.7 + 'px sans';
-	//text_width = ctx.measureText(card.text).width * 1.05;
-	//if ( card.w < text_width ) { card.w = text_width; }
-	//cards.splice(n,1);
-	//cards.pop();
-	//cards.push(card);
-
+	}
+	else if ( cards[p] instanceof United ) {
+		cards[p].add(a);
+	}
+	else {
+		console.log('new united');
+		if ( cards[a].w < cards[p].w) { w = cards[p].w; } else { w = cards[a].w; }
+		if ( cards[a].h < cards[p].h) { h = cards[p].h; } else { h = cards[a].h; }
+		u = new United(cards[a].group, cards[a].x, cards[a].y, w, h);
+		u.add(a);
+		u.add(p);
+		cards.push(u);
+	}
 	draw();
 }
 
@@ -177,6 +183,8 @@ function match()
 			return;
 		}
 	}
+	if ( card instanceof SoundCard ) { card.play(); };
+	if ( card instanceof United && card.snd ) { card.play(); };
 }
 
 function layer(x,y)
@@ -234,25 +242,23 @@ class Card {
 class ImageCard {
 	constructor(group, img) {
 	this.group = group;
-	var im = new Image();
-	im.src = img;
-	this.img = im;
-	this.h = this.img.height * IMG_SCALE;
-	this.w = this.img.width * IMG_SCALE;
+	this.img = img;
+	this.h = images[group].height * IMG_SCALE;
+	this.w = images[group].width * IMG_SCALE;
 	this.x = randInt(0, canvas.width - this.w);
 	this.y = randInt(0, canvas.height - this.h);
 	}
 
-	draw() { ctx.drawImage(this.img, this.x, this.y, this.w, this.h); }
+	draw() { ctx.drawImage(this.img, this.x, this.y); }
 }
 
 class TextCard {
-	constructor(group, text) {
+	constructor(group, txt) {
 	this.group = group;
-	this.text = text;
+	this.txt = txt;
 	ctx.font = FONT_SIZE + 'px sans';
 	this.h = FONT_SIZE * 1.1;
-	this.w = Math.ceil(ctx.measureText(text).width);
+	this.w = Math.ceil(ctx.measureText(txt).width);
 	this.x = randInt(0, canvas.width - this.w);
 	this.y = randInt(0, canvas.height - this.h);
 	this.color = randPred();
@@ -265,31 +271,28 @@ class TextCard {
 		ctx.textBaseline = "hanging";
 		ctx.font = FONT_SIZE + 'px sans';
 		ctx.textAlign = 'center';
-		ctx.fillText(this.text,this.x + this.w/2,this.y + this.h * 0.1);
+		ctx.fillText(this.txt,this.x + this.w/2,this.y + this.h * 0.1);
 	}
 }
 
 class SoundCard {
-	constructor(group, text) {
+	constructor(group, snd) {
 	this.group = group;
-	this.text = text;
-	ctx.font = FONT_SIZE + 'px sans';
-	this.h = FONT_SIZE * 1.1;
-	this.w = Math.ceil(ctx.measureText(text).width);
+	this.h = 100;
+	this.w = 100;
 	this.x = randInt(0, canvas.width - this.w);
 	this.y = randInt(0, canvas.height - this.h);
-	this.snd = randPred();
+	this.snd = snd;
+	this.color = randPred();
 	}
 
 	draw() {
-		//ctx.fillStyle = this.color;
-		//ctx.fillRect(this.x,this.y,this.w,this.h);
-		ctx.fillStyle = '#000000';
-		ctx.textBaseline = "hanging";
-		ctx.font = FONT_SIZE + 'px sans';
-		ctx.textAlign = 'center';
-		ctx.fillText(this.text,this.x + this.w/2,this.y + this.h * 0.1);
+		ctx.fillStyle = this.color;
+		ctx.fillRect(this.x, this.y, this.w, this.h);
+		ctx.drawImage(speaker_img, this.x, this.y, this.width * 0.7, this.height * 0.7);
 	}
+
+	play() { this.snd.play(); }
 }
 
 class United {
@@ -299,49 +302,61 @@ class United {
 	this.w = w;
 	this.x = x;
 	this.y = y;
-	this.text;
-	this.text_h = FONT_SIZE;
-	this.color = '#666666';
-	this.sound;
+	this.color = randColor();
+	//this.img_pos = [];
 	this.img = [];
+	this.snd = [];
+	this.txt = [];
 	}
 
-	draw() {
-		if( this.img.length > 1 ) 
-		{ 
-			for( let i = 0; i < this.img.length - 1; i++ ) {
-			ctx.drawImage(this.img[i], this.x, this.y, this.w, this.h) 
-			}
+	add(n)
+	{
+		if ( cards[n].img ) {
+			this.img.push(cards[n].img);
 		}
-		else {
-			ctx.fillStyle = '#bbbbbb';
-			ctx.fillRect(this.x,this.y,this.w,this.h);
-			ctx.fillStyle = '#ffffff';
-			//ctx.fillRect(this.x + BORDER,this.y + BORDER, this.w - BORDER * 2,this.h - BORDER * 2);
-			ctx.drawImage(this.img, this.x + (this.w - this.img.width * IMG_SCALE) / 2, this.y, this.img.width * IMG_SCALE, this.img.height * IMG_SCALE);
-			ctx.fillStyle = '#444444';
-			ctx.font = FONT_SIZE * 0.7 + 'px sans';
+		if ( cards[n].snd ) {
+			this.snd.push(cards[n].snd);
+		}
+		if (cards[n].txt) {
+			this.txt.push(cards[n].txt);
+			this.h += FONT_SIZE * 1.2;
+		}
+		
+		cards.splice(n,1);
+	}
+
+	draw()
+	{
+		//console.log('drawn');
+		ctx.fillStyle = this.color;
+		ctx.fillRect(this.x, this.y, this.w, this.h);
+		var imgl = this.img.length;
+		for ( let i = 0; i < imgl; i++) {
+			var offsetX = i * this.w / 2;
+			var offsetY = i * (this.h - FONT_SIZE * 1.2) / 2;
+			ctx.drawImage(this.img[i], this.x + offsetX , this.y + offsetY, 1.3 * this.img[i].width / imgl, 1.3 * this.img[i].height / imgl );
+		}
+		var txtl = this.txt.length;
+		for ( let i = 0; i < txtl; i++) {
+			ctx.fillStyle = '#000000';
+			ctx.textBaseline = "bottom";
+			ctx.font = FONT_SIZE + 'px sans';
 			ctx.textAlign = 'center';
-			ctx.fontBaseline = 'bottom';
-			ctx.fillText(this.text,this.x + this.w/2,this.y + this.h - FONT_SIZE);
-		}
-		if ( this.sound ) { 
-			ctx.drawImage(sound, this.x + this.w - sound.width, this.y);
+			ctx.fillText(this.txt[i], this.x + this.w / 2 , this.y + this.h + FONT_SIZE * 0.1);
 		}
 	}
+
+	play() { this.snd[0].play(); }
 }
+
+
+
 
 function init()
 {
 	ctx.canvas.width = window.innerWidth;
 	ctx.canvas.height = window.innerHeight;
 	lines = open(PAIRS).split('\n')
-
-	//for( let i = 0; i < CARDS_N; i++ ) 
-	//{ 
-		//cards[i] = new Card("test", 100, 100);
-		//cards[i].layer = i;
-	//}
 	
 	for(let i = 0; i <= CARDS_N; i++)
 	{
@@ -350,9 +365,10 @@ function init()
 		lines.splice(n,1);
 		for( let j = 0; j < cells.length; j++)
 		{
-			if ( cells[j].endsWith('png') || cells[j].endsWith('PNG'))
-			{
-			cards.push(new ImageCard(i,cells[j]));
+			if ( cells[j].endsWith('png') || cells[j].endsWith('PNG')) {
+			images[i] = new Image();
+			images[i].onload = function() { cards.push(new ImageCard(i,images[i])); draw();}
+			images[i].src = cells[j];
 			} 
 			else if  ( cells[j].endsWith('mp3') || cells[j].endsWith('wav'))
 			{
@@ -365,10 +381,12 @@ function init()
 		}
 	}
 
-	for( let i = 0; i < cards.length; i++) {
-		ctx.fillStyle  = cards[i].color;
-		cards[i].draw();
+	for (let i = 0; i < sounds.length; i++) {
+		cards.push(new SoundCard(i, sounds[i]));
 	}
+	////sleep(4000);
+
+	draw();
 
 	canvas.onmousedown = function(event) { layer(event.clientX,event.clientY); };
 	canvas.onmouseup = function(event) { mousedown = false; match(); };
@@ -378,4 +396,5 @@ function init()
 
 	window.addEventListener("resize", function(event) {resize();}, true);
 	//window.addEventListener("deviceorientation", rotate(event), true);
+	draw();
 }

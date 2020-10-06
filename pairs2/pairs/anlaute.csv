@@ -1,4 +1,5 @@
-A,/anlaute/A_Affe.PNG,/anlaute/A_Ameise.PNG,/anlaute/Ä_Äpfel.PNG
+A,/anlaute/A_Affe.PNG,/anlaute/A_Ameise.PNG
+Ä,/anlaute/Ae_Aepfel.PNG
 Au,/anlaute/Au_Auto.PNG
 B,/anlaute/B_Banane.PNG
 C,/anlaute/C_Computer.PNG
@@ -16,7 +17,7 @@ K,/anlaute/K_Kerze.PNG
 L,/anlaute/L_Löwe.PNG
 M,/anlaute/M_Maus.PNG
 N,/anlaute/N_Nadel.PNG
-Ö,/anlaute/Ö_Öl.PNG
+Ö,/anlaute/Oe_Oel.PNG
 O,/anlaute/O_Oma.PNG,/anlaute/O_Ordner_.PNG
 Pf,/anlaute/Pf_Pfeil.PNG
 P,/anlaute/P_Pirat.PNG
@@ -27,7 +28,7 @@ Sp,/anlaute/Sp_Spinne.PNG
 S,/anlaute/S_Sonne.PNG
 St,/anlaute/St_Stempel.PNG
 T,/anlaute/T_Tasse.PNG
-Ü,/anlaute/Ü_Überraschungsei.PNG
+Ü,/anlaute/Ue_Ueberraschungsei.PNG
 U,/anlaute/U_Ufo.PNG,/anlaute/U_Unfall.PNG
 V,/anlaute/V_Vase.PNG,/anlaute/V_Vogel.PNG
 W,/anlaute/W_Wolke.PNG
