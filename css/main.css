@@ -19,30 +19,30 @@ background-color: #EEEEFF;
 border-bottom-left-radius: 8px;
 border-bottom-right-radius: 8px;
 background-color: #4477f9;
-padding: 30px;
+padding: 10px;
 font-family: arial, verdana, sans serif;
 font-size: 100px;
 }
 h2 {
 font-family: arial, verdana, sans serif;
-font-size5em;
+font-size: 5em;
 }
 h3 {
 font-family: arial, verdana, sans serif;
-font-size5em;
-line-height5em;
+font-size: 5em;
+line-height: 1em;
 }
 
 h4 {
 font-family: arial, verdana, sans serif;
 font-size: 5em;
-line-height: 5em;
+line-height: 1em;
 }
 
 a, p, ul, ol, li {
 font-family: arial, verdana, sans serif;
 font-size: 5em;
-line-height: 5em;
+line-height: 1em;
 margin-bottom: 6px;
 }
 a, a:visited {
@@ -59,13 +59,13 @@ font-family: arial, verdana, sans serif;
 font-style: italic; 
 font-variant: small-caps;  
 font-size: 5em; 
-line-height: 5em;
+line-height: 1em;
 }
 
 blockquote {
 font-family: georgia, times, serif;
 font-size: 5em; 
-line-height: 5em;
+line-height: 1em;
 padding: 15px 8% 15px 8%;
 }
 
@@ -78,7 +78,7 @@ padding-left: 15px;
 tr, td {
 font-family: helvetica, arial, verdana, sans serif;  
 font-size: 05em; 
-line-height: 5em;
+line-height: 1em;
 padding: 3px 5px 3px 5px;
 }
 
