@@ -14,6 +14,8 @@ speaker_img.scr = '/anlaute/assets/speaker.png';
 
 var speaker = new Image();
 speaker.src = 'assets/speaker.png';
+var restart_img = new Image();
+restart_img.src = 'assets/restart.png';
 
 ctx.font = FONT_SIZE + 'px sans';
 ctx.textBaseline = "hanging";
@@ -41,6 +43,7 @@ colors = [
 
 var mousedown = false;
 var movestart = [0,0]
+var finished = false;
 for (let i = 0; i <= CARDS_N; i++) { csv.push([]); }
 
 function open(filePath) {
@@ -81,6 +84,42 @@ function randPred()
 	return colors[randInt(0,colors.length -1)];
 }
 
+function endcard ()
+{
+	ctx.fillStyle = randPred();
+	ctx.fillStyle = '#000000';
+	ctx.fillRect(canvas.width / 2 - CARD_SIZE, canvas.height / 2 - CARD_SIZE, CARD_SIZE * 2, CARD_SIZE * 2);
+	console.log('end');
+}
+
+function restart ()
+{
+	cards = [];
+	var csv = []
+colors = [ 
+	'#86C9B7',
+	'#87A7C7',
+	'#94D0A1',
+	'#8ECC85',
+	'#F69856',
+	'#F4A96D',
+	'#90A8CC',
+	'#93AACF',
+	'#B67BB4',
+	'#ABA9CE',
+	'#F086A2',
+	'#F1785B',
+	'#9AD078',
+	'#6DBFA9',
+	'#F3B23C',
+];
+
+	var mousedown = false;
+	var movestart = [0,0]
+	for (let i = 0; i <= CARDS_N; i++) { csv.push([]); }
+	draw();
+	init();
+}
 
 function draw()
 {
@@ -120,14 +159,19 @@ function match()
 		ly = card.y < cards[i].y && cards[i].y < card.y + card.w;
 		ry = cards[i].y < card.y && card.y < cards[i].y + cards[i].h;
 		if ( group && ((lx && (ly || ry )) || (rx && (ly || ry )))) { 
-			//cards[cards.length - 1].add(i);
-			cards[i].add(cards.length - 1);
+			cards[cards.length - 1].add(i);
+			//cards[i].add(cards.length - 1);
 			draw();
 			return;
 		}
 	}
 	if ( card.x === movestart[0] && card.y === movestart[1] ) {
-		if ( card.snd[0] ) { card.play(); };
+		if ( card instanceof Endcard) { 
+			console.log('ending');
+			restart(); 
+			return;
+		}
+		if ( card.snd[0] ) { card.play(); }
 	}
 }
 
@@ -166,6 +210,26 @@ function drag(x,y)
 	}
 }
 
+
+class Endcard {
+	constructor() {
+		this.group = 'uniqe';
+		this.w = CARD_SIZE * 2;
+		this.h = CARD_SIZE * 2;
+		this.x = canvas.width / 2 - this.w / 2;
+		this.y = canvas.height / 2 - this.h / 2;
+		this.color = randPred();
+		this.img = restart_img;
+	}
+
+	draw() { 
+		ctx.fillStyle = this.color;
+		ctx.fillRect(this.x, this.y, this.w, this.h);
+		ctx.globalAlpha = 0.3
+		ctx.drawImage(restart_img, this.x, this.y, this.w, this.h);
+		ctx.globalAlpha = 1;
+	}
+}
 
 class Card {
 	constructor(group,w,h) {
@@ -210,6 +274,14 @@ class Card {
 		if ( ! this.color ) { this.color = '#bbbbbb'; };
 		
 		cards.splice(n,1);
+
+		console.log(cards.length);
+		console.log(CARDS_N);
+
+		if ( cards.length === CARDS_N ) 
+		{ 
+			cards.push(new Endcard());
+		}
 	}
 
 	draw()
@@ -274,7 +346,7 @@ function init()
 	ctx.font = FONT_SIZE * SCALE;
 	ctx.textBaseline = "hanging";
 
-	for(let i = 0; i <= CARDS_N; i++)
+	for(let i = 0; i < CARDS_N; i++)
 	{
 		n = randInt(0,lines.length - 1);
 		c = randInt(0,colors.length - 1);
@@ -320,3 +392,4 @@ function init()
 	window.addEventListener("resize", function(event) {resize();}, true);
 	draw();
 }
+
