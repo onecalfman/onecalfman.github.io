@@ -5,6 +5,7 @@ const PAIRS = 'anlaute.csv';
 var FONT_SIZE = 80;
 var IMG_SCALE = 1;
 var SCALE = 1;
+const CARD_SIZE = 265;
 const BORDER = 5;
 const CARDS_N = 5;
 
@@ -185,10 +186,10 @@ class Card {
 		for ( let i = 0; i < cards[n].img.length; i++ ) {
 			this.img.push(cards[n].img[i]);
 			console.log('img');
-			if ( this.w < 265 * SCALE ) {
-				this.w = 265 * SCALE;
+			if ( this.w < CARD_SIZE * SCALE ) {
+				this.w = CARD_SIZE * SCALE;
 			}
-			this.h = 265 * SCALE;
+			this.h = CARD_SIZE * SCALE;
 		}
 		for ( let i = 0; i < cards[n].snd.length; i++ ) {
 			this.snd.push(cards[n].snd[i]);
@@ -202,8 +203,8 @@ class Card {
 		}
 		
 		if ( this.img[0] ) {
-			if ( this.w < 265 * SCALE ) { this.w = 265; }
-			else if (this.h < 265 * SCALE ) { this.h = 265; }
+			if ( this.w < CARD_SIZE * SCALE ) { this.w = CARD_SIZE * SCALE; }
+			if (this.h < CARD_SIZE * SCALE ) { this.h = CARD_SIZE* SCALE; }
 		}
 
 		if ( ! this.color ) { this.color = '#bbbbbb'; };
