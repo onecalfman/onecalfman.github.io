@@ -184,7 +184,10 @@ class Card {
 
 		for ( let i = 0; i < cards[n].img.length; i++ ) {
 			this.img.push(cards[n].img[i]);
-			this.w = 265 * SCALE;
+			console.log('img');
+			if ( this.w < 265 * SCALE ) {
+				this.w = 265 * SCALE;
+			}
 			this.h = 265 * SCALE;
 		}
 		for ( let i = 0; i < cards[n].snd.length; i++ ) {
@@ -192,14 +195,17 @@ class Card {
 			this.color = cards[n].color;
 		}
 		for ( let i = 0; i < cards[n].txt.length; i++ ) {
-			if ( this.w < cards[n].w ) { this.w = cards[n].w; }
+			if ( this.w < cards[n].w ) { 
+				this.w = cards[n].w; 
+			}
 			this.txt.push(cards[n].txt[i]);
 		}
 		
-		if ( this.img[0] && ( this.w < 265 * SCALE || this.h < 265 * SCALE )) {
-			this.w = 265;
-			this.h = 265;
+		if ( this.img[0] ) {
+			if ( this.w < 265 * SCALE ) { this.w = 265; }
+			else if (this.h < 265 * SCALE ) { this.h = 265; }
 		}
+
 		if ( ! this.color ) { this.color = '#bbbbbb'; };
 		
 		cards.splice(n,1);
