@@ -102,6 +102,9 @@ var RIGHT = 0;
 var WRONG = 0;
 var last_direction;
 var MAX_GEAR = Math.floor((canvas.width / ROBOT_W) * MAX_GEAR_SCALE);
+var LEVEL = 1;
+var key_restart;
+var touch_restart;
 
 const left = new Image();
 const right = new Image();
@@ -113,18 +116,11 @@ const shine = new Image();
 const controlls = new Image();
 const valve = new Image();
 const england = new Image();
+const assembly = new Image();
+const green = new Image();
+const red = new Image();
 
-left.src =  "assets/left.png";
-right.src = "assets/right.png";
-gear.src =  "assets/gear.png";
-happy.src = "assets/robot_happy.png";
-glow.src =  "assets/robot_happy_glow.png";
-sad.src =   "assets/robot_sad.png";
-shine.src = "assets/shine.png";
-controlls.src = "assets/controlls.png";
 valve.src = "assets/valve.png";
-england.src = "assets/england.png";
-
 
 var robot;
 var robot_img = left;
@@ -133,9 +129,12 @@ var GEAR_SPAWEND;
 var GEAR_ON_SCREEN = 0;
 var GEAR = [];
 var CATCH_TIMER = 0;
+var won;
 
 function restart() 
 {
+	document.removeEventListener('keydown', restart);
+	canvas.removeEventListener('touchstart', restart);
 	clearInterval(interval);
 	clearInterval(end);
 	PUNKTE = 0;
@@ -165,10 +164,14 @@ function start() {
 	ctx.fillStyle = BACKGROUND_COLOR;
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+	controlls.src = "assets/controlls.png";
+	england.src = "assets/england.png";
+
 	valve_x = canvas.width * 0.4;
 	valve_y = canvas.height * 0.02;
 	valve_h = canvas.height / 2;
 	valve_w = canvas.height;
+
 
 	let timer = setInterval(function() {
   		if ( ! LOOPS ) { clearInterval(timer);  drop(); }
@@ -184,20 +187,32 @@ function start() {
 }
 
 function drop() {
+	left.src =  "assets/left.png";
+	right.src = "assets/right.png";
+	gear.src =  "assets/gear.png";
+	happy.src = "assets/robot_happy.png";
+	glow.src =  "assets/robot_happy_glow.png";
+	sad.src =   "assets/robot_sad.png";
+	shine.src = "assets/shine.png";
+	assembly.src = "assets/assembly.png";
+	green.src = "assets/green.png";
+	red.src = "assets/red.png";
+
 	LOOPS = 0;
 	controlls_h = canvas.height * 0.27;
 	controlls_w = controlls_h * 3.11;
 	controlls_x = - controlls_w;
 	controlls_y = canvas.height * 0.7;
-	ctx.font = valve_h * 7/20 + 'px sans';
+	if ( REIHE < 10 ) { ctx.font = valve_h * 7/20 + 'px sans'; }
+	else { ctx.font = valve_h * 0.25 + 'px sans'; }
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'top';
 	let timer2 = setInterval(function() {
 		if ( LOOPS === 50 ) { 
 			clearInterval(timer2);
 			LOOPS = 0;
-			document.addEventListener('keydown', function(event) { key = true; }, false);
-			canvas.addEventListener("touchstart",   function(event) { key = true; });
+			document.addEventListener('keydown', restart);
+			canvas.addEventListener('touchstart', restart);
 			float(); 
 		}
 		else {
@@ -219,10 +234,8 @@ function drop() {
 function float() {
 	controlls_x += canvas.width / 3;
 	let timer3 = setInterval(function() {
-		if ( key ) { 
+		if ( ! LOOPS ) { 
 			clearInterval(timer3);
-			key = false;
-			restart();
 		}
 		else {
 			ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -244,6 +257,14 @@ function bounce(timeFraction) {
 	for (let a = 0, b = 1, result; 1; a += b, b /= 2) {
 		if (timeFraction >= (7 - 4 * a) / 11) {
 			return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2) } } }
+
+function levelup() {
+	LEVEL++;
+	GRAVITY += 1;
+	GEAR_SPAWN_INTERVAL -= 0.2;
+	MAX_GEAR_SCALE += 0.5;
+}
+	
 var Gear = function() {
 	const min = Math.ceil(1);
 	const max = Math.floor(REIHE * 10);
@@ -307,10 +328,23 @@ function endcard()
 	ctx.fillStyle = BACKGROUND_COLOR;
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+	ctx.font = 1.2 * canvas.width / END_MESSAGE.length + 'px sans';
+	ctx.fillStyle = FONT_COLOR;
+	ctx.textAlign = "center";
+	ctx.textBaseline = "bottom";
+	ctx.fillText(END_MESSAGE , canvas.width / 2 , canvas.height / 5);
+
+	assembly_w = canvas.width * 0.7;
+	assembly_h = assembly_w * 0.11;
+	ctx.drawImage(assembly, canvas.width / 2 - assembly_w / 2, canvas.height / 5, assembly_w, assembly_h);
+
+	ctx.textBaseline = "middle";
 	if ( PUNKTE / RIGHT  <= WINNING_PERCENTAGE )
 	{
 		y = ((canvas.height * 0.3 ) + ((Math.sin(Date.now()*FLOATING_SPEED * 0.001)+1) / 2 * canvas.height * ENDCARD_FLOATING_AMP_SAD));
 		ctx.drawImage(sad, canvas.width / 2 - canvas.height * 0.2, y, canvas.height * 0.45, canvas.height * 0.6);
+		ctx.drawImage(red, canvas.width / 2 - assembly_w / 2, canvas.height / 5, assembly_w, assembly_h);
+		ctx.fillText("NOCHMAL" , canvas.width / 2 , canvas.height / 5 + assembly_h * 0.55 );
 	}
 	else
 	{
@@ -320,17 +354,11 @@ function endcard()
 		alpha = ((Math.sin(Date.now()*FLOATING_SPEED * 0.0016)+1) / 2);
 		ctx.globalAlpha = alpha;
 		ctx.drawImage(glow, canvas.width / 2 - canvas.height * 0.25, y, canvas.height * 0.5, canvas.height * 0.6);
+		ctx.drawImage(green, canvas.width / 2 - assembly_w / 2, canvas.height / 5, assembly_w, assembly_h);
+		ctx.fillText("LEVEL " + LEVEL , canvas.width / 2 , canvas.height / 5 + assembly_h * 0.55 );
 		ctx.restore();
 	}
-	ctx.font = 1.2 * canvas.width / END_MESSAGE.length + 'px sans';
-	ctx.fillStyle = FONT_COLOR;
-	ctx.textAlign = "center";
-	ctx.fillText(END_MESSAGE , canvas.width / 2 , canvas.height / 4);
-	if ( key === 4 ) 
-	{ 
-		key = 0;
-		restart();
-	}
+
 }
 
 var Robot = function() {
@@ -516,13 +544,12 @@ Game = new function() {
 					RIGHT--; 
 				}
 			}
+			if ( PUNKTE / RIGHT <= WINNING_PERCENTAGE ) { levelup(); }
 			setTimeout(() => {
-				document.addEventListener('keydown', function(event) { key = 4; }, false);
-				canvas.addEventListener("touchstart",   function(event) { key = 4; });
+				document.addEventListener('keydown', restart);
+				canvas.addEventListener('touchstart', restart);
 			}, 2000);
 			end = setInterval(endcard, 1000/FPS);
-
-			return;
 		}
 	}
 
