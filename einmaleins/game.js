@@ -208,7 +208,7 @@ function drop() {
 			ctx.drawImage(controlls, controlls_x + LOOPS * canvas.width / 150 , controlls_y, controlls_w, controlls_h);
 			ctx.drawImage(england, valve_x + valve_w * 0.04 , canvas.height / 3  + LOOPS * canvas.height / 115 , canvas.height / 2 * 17/100, canvas.height / 2 * 68/165 );
 			ctx.drawImage(valve, valve_x, valve_y, valve_w, valve_h);
-			ctx.globalAlpha = LOOPS / 50;
+			ctx.globalAlpha = bounce(LOOPS / 50);
 			ctx.fillStyle = '#dddddd';
 			ctx.fillText(REIHE, valve_x + valve_w * 165/2000, valve_y + valve_h * 0.37 );
 			ctx.globalAlpha = 1;
