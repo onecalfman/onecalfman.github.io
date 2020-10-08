@@ -131,10 +131,25 @@ var GEAR = [];
 var CATCH_TIMER = 0;
 var won;
 
+function levelup() {
+	LEVEL++;
+	GRAVITY += 1;
+	GEAR_SPAWN_INTERVAL -= 0.2;
+	MAX_GEAR_SCALE += 0.5;
+	console.log('levelup')
+}
+
 function restart() 
 {
 	document.removeEventListener('keydown', restart);
 	canvas.removeEventListener('touchstart', restart);
+	//if ( won ) { levelup(); }
+	if ( won ) {
+		LEVEL++;
+		GRAVITY += 1;
+		GEAR_SPAWN_INTERVAL -= 0.2;
+		MAX_GEAR_SCALE += 0.5;
+	}
 	clearInterval(interval);
 	clearInterval(end);
 	PUNKTE = 0;
@@ -210,7 +225,7 @@ function drop() {
 	let timer2 = setInterval(function() {
 		if ( LOOPS === 50 ) { 
 			clearInterval(timer2);
-			LOOPS = 0;
+			LOOPS = 1;
 			document.addEventListener('keydown', restart);
 			canvas.addEventListener('touchstart', restart);
 			float(); 
@@ -258,12 +273,6 @@ function bounce(timeFraction) {
 		if (timeFraction >= (7 - 4 * a) / 11) {
 			return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2) } } }
 
-function levelup() {
-	LEVEL++;
-	GRAVITY += 1;
-	GEAR_SPAWN_INTERVAL -= 0.2;
-	MAX_GEAR_SCALE += 0.5;
-}
 	
 var Gear = function() {
 	const min = Math.ceil(1);
@@ -345,6 +354,7 @@ function endcard()
 		ctx.drawImage(sad, canvas.width / 2 - canvas.height * 0.2, y, canvas.height * 0.45, canvas.height * 0.6);
 		ctx.drawImage(red, canvas.width / 2 - assembly_w / 2, canvas.height / 5, assembly_w, assembly_h);
 		ctx.fillText("NOCHMAL" , canvas.width / 2 , canvas.height / 5 + assembly_h * 0.55 );
+		won = false;
 	}
 	else
 	{
@@ -357,6 +367,7 @@ function endcard()
 		ctx.drawImage(green, canvas.width / 2 - assembly_w / 2, canvas.height / 5, assembly_w, assembly_h);
 		ctx.fillText("LEVEL " + LEVEL , canvas.width / 2 , canvas.height / 5 + assembly_h * 0.55 );
 		ctx.restore();
+		won = true;
 	}
 
 }
@@ -544,7 +555,7 @@ Game = new function() {
 					RIGHT--; 
 				}
 			}
-			if ( PUNKTE / RIGHT <= WINNING_PERCENTAGE ) { levelup(); }
+			//if ( PUNKTE / RIGHT >= WINNING_PERCENTAGE ) { levelup(); }
 			setTimeout(() => {
 				document.addEventListener('keydown', restart);
 				canvas.addEventListener('touchstart', restart);
