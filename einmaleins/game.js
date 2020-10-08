@@ -111,7 +111,7 @@ const glow = new Image();
 const sad = new Image();
 const shine = new Image();
 const controlls = new Image();
-const vault = new Image();
+const valve = new Image();
 const england = new Image();
 
 left.src =  "assets/left.png";
@@ -122,7 +122,7 @@ glow.src =  "assets/robot_happy_glow.png";
 sad.src =   "assets/robot_sad.png";
 shine.src = "assets/shine.png";
 controlls.src = "assets/controlls.png";
-vault.src = "assets/vault.png";
+valve.src = "assets/valve.png";
 england.src = "assets/england.png";
 
 
@@ -134,6 +134,107 @@ var GEAR_ON_SCREEN = 0;
 var GEAR = [];
 var CATCH_TIMER = 0;
 
+function restart() 
+{
+	clearInterval(interval);
+	clearInterval(end);
+	PUNKTE = 0;
+	LOOPS = 0;
+	TOUCH_LOOP = 0;
+	LAST_SPAWN = -GEAR_SPAWN_INTERVAL * FPS;
+	keyOn = [];
+	touch_x = -1;
+	robot = new Robot;
+	RIGHT = 0;
+	WRONG = 0;
+	MAX_GEAR = Math.floor((canvas.width / ROBOT_W) * MAX_GEAR_SCALE);
+	BACKGROUND = BACKGROUND_COLOR; 
+	GEAR_SPAWEND;
+	GEAR_ON_SCREEN = 0;
+	GEAR = [];
+	CATCH_TIMER = 0;
+	Game.init();
+}
+
+
+function start() { 
+	LOOPS = 50;
+	ctx.canvas.width = window.innerWidth;
+	ctx.canvas.height = window.innerHeight;
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	ctx.fillStyle = BACKGROUND_COLOR;
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+	valve_x = canvas.width * 0.4;
+	valve_y = canvas.height * 0.02;
+	valve_h = canvas.height / 2;
+	valve_w = canvas.height;
+
+	let timer = setInterval(function() {
+  		if ( ! LOOPS ) { clearInterval(timer);  drop(); }
+  		else  {
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			ctx.fillStyle = BACKGROUND_COLOR;
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			ctx.drawImage(valve, valve_x + bounce(LOOPS/50) * canvas.width / 2 , valve_y, valve_w, valve_h);
+			LOOPS--;
+		}} , 1000/FPS);
+
+
+}
+
+function drop() {
+	LOOPS = 0;
+	controlls_h = canvas.height * 0.27;
+	controlls_w = controlls_h * 3.11;
+	controlls_x = - controlls_w;
+	controlls_y = canvas.height * 0.7;
+	let timer2 = setInterval(function() {
+		if ( LOOPS === 50 ) { 
+			clearInterval(timer2);
+			LOOPS = 0;
+			document.addEventListener('keydown', function(event) { key = true; }, false);
+			canvas.addEventListener("touchstart",   function(event) { key = true; });
+			float(); 
+		}
+		else {
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			ctx.fillStyle = BACKGROUND_COLOR;
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.drawImage(controlls, controlls_x + LOOPS * canvas.width / 150 , controlls_y, controlls_w, controlls_h);
+			ctx.drawImage(england, valve_x + valve_w * 0.04 , canvas.height / 3  + LOOPS * canvas.height / 115 , canvas.height / 2 * 17/100, canvas.height / 2 * 68/165 );
+			ctx.drawImage(valve, valve_x, valve_y, valve_w, valve_h);
+			LOOPS++;
+		}} , 1000/FPS);
+}
+
+function float() {
+	controlls_x += canvas.width / 3;
+	let timer3 = setInterval(function() {
+		if ( key ) { 
+			clearInterval(timer3);
+			key = false;
+			restart();
+		}
+		else {
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			ctx.fillStyle = BACKGROUND_COLOR;
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.drawImage(controlls, controlls_x, controlls_y, controlls_w, controlls_h);
+			y = ( canvas.height * 53/69 + (Math.sin(LOOPS * 0.05) * canvas.height * 0.025));
+			ctx.drawImage(england, valve_x + valve_w * 0.04 , y, canvas.height * 17/200, canvas.height / 2 * 68/165 );
+			ctx.drawImage(valve, valve_x , valve_y, valve_w, valve_h);
+			LOOPS++;
+		}} , 1000/FPS);
+}
+
+
+function bounce(timeFraction) {
+	for (let a = 0, b = 1, result; 1; a += b, b /= 2) {
+		if (timeFraction >= (7 - 4 * a) / 11) {
+			return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2) } } }
 var Gear = function() {
 	const min = Math.ceil(1);
 	const max = Math.floor(REIHE * 10);
@@ -189,99 +290,6 @@ var Gear = function() {
 	}
 }
 
-function restart() 
-{
-	clearInterval(interval);
-	clearInterval(end);
-	PUNKTE = 0;
-	LOOPS = 0;
-	TOUCH_LOOP = 0;
-	LAST_SPAWN = -GEAR_SPAWN_INTERVAL * FPS;
-	keyOn = [];
-	touch_x = -1;
-	robot = new Robot;
-	RIGHT = 0;
-	WRONG = 0;
-	MAX_GEAR = Math.floor((canvas.width / ROBOT_W) * MAX_GEAR_SCALE);
-	BACKGROUND = BACKGROUND_COLOR; 
-	GEAR_SPAWEND;
-	GEAR_ON_SCREEN = 0;
-	GEAR = [];
-	CATCH_TIMER = 0;
-	Game.init();
-}
-
-
-function start() { 
-	LOOPS = 50;
-	ctx.canvas.width = window.innerWidth;
-	ctx.canvas.height = window.innerHeight;
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-	ctx.fillStyle = BACKGROUND_COLOR;
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-	vault_left = canvas.width * 0.4;
-
-	let timer = setInterval(function() {
-  		if ( ! LOOPS ) { clearInterval(timer);  drop(); }
-  		else  {
-			ctx.clearRect(0,0,canvas.width,canvas.height);
-			ctx.fillStyle = BACKGROUND_COLOR;
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(vault, vault_left + bounce(LOOPS/50) * canvas.width / 2 , canvas.height * 0.02, canvas.height / 2, canvas.height / 2);
-			LOOPS--;
-		}} , 1000/FPS);
-
-
-}
-
-function drop() {
-	LOOPS = 0;
-	let timer2 = setInterval(function() {
-		if ( LOOPS === 50 ) { 
-			clearInterval(timer2);
-			LOOPS = 0;
-			document.addEventListener('keydown', function(event) { key = true; }, false);
-			canvas.addEventListener("touchstart",   function(event) { key = true; });
-			float(); 
-		}
-		else {
-			ctx.clearRect(0,0,canvas.width,canvas.height);
-			ctx.fillStyle = BACKGROUND_COLOR;
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-			ctx.drawImage(controlls, - controlls.width + LOOPS * canvas.width / 250 , canvas.height * 0.75, canvas.width * 1.03, canvas.width / 3);
-			ctx.drawImage(england, vault_left * 1.2 , canvas.height / 3  + LOOPS * canvas.height / 115 , canvas.height / 2 * 17/100, canvas.height / 2 * 68/165 );
-			ctx.drawImage(vault, vault_left , canvas.height * 0.02, canvas.height / 2, canvas.height / 2);
-			LOOPS++;
-		}} , 1000/FPS);
-}
-
-function float() {
-	let timer3 = setInterval(function() {
-		if ( key ) { 
-			clearInterval(timer3);
-			key = false;
-			restart();
-		}
-		else {
-			ctx.clearRect(0,0,canvas.width,canvas.height);
-			ctx.fillStyle = BACKGROUND_COLOR;
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-			ctx.drawImage(controlls, - controlls.width + 50 * canvas.width / 250 , canvas.height * 0.75, canvas.width * 1.03, canvas.width / 3);
-			y = ((canvas.height * 53/69) + ((Math.sin(Date.now()*FLOATING_SPEED * 0.001)+1) / 2 * canvas.height * 0.05));
-			ctx.drawImage(england, vault_left * 1.2 , y, canvas.height / 2 * 17/100, canvas.height / 2 * 68/165 );
-			ctx.drawImage(vault, vault_left , canvas.height * 0.02, canvas.height / 2, canvas.height / 2);
-			LOOPS++;
-		}} , 1000/FPS);
-}
-
-
-function bounce(timeFraction) {
-	for (let a = 0, b = 1, result; 1; a += b, b /= 2) {
-		if (timeFraction >= (7 - 4 * a) / 11) {
-			return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2) } } }
 
 
 //Start = new function()
