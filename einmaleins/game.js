@@ -343,7 +343,11 @@ function endcard()
 	ctx.fillStyle = FONT_COLOR;
 	ctx.textAlign = "center";
 	ctx.fillText(END_MESSAGE , canvas.width / 2 , canvas.height / 4);
-	if ( key === 4 ) { restart(); }
+	if ( key === 4 ) 
+	{ 
+		key = 0;
+		restart();
+	}
 }
 
 var Robot = function() {
