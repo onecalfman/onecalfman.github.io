@@ -7,7 +7,8 @@ var IMG_SCALE = 1;
 var SCALE = 1;
 const CARD_SIZE = 265;
 const BORDER = 5;
-const CARDS_N = 5;
+const CARDS_N = 6;
+const epsilon = 5;
 
 const speaker_img = new Image();
 speaker_img.scr = '/anlaute/assets/speaker.png';
@@ -22,6 +23,8 @@ ctx.textBaseline = "hanging";
 
 var cards = [];
 var csv = []
+
+var time_counter = 0;
 
 colors = [ 
 	'#86C9B7',
@@ -95,6 +98,7 @@ function endcard ()
 function restart ()
 {
 	cards = [];
+	var time_counter = 0;
 	var csv = []
 colors = [ 
 	'#86C9B7',
@@ -127,9 +131,6 @@ function draw()
 	ctx.fillStyle = '#ddd';
 	ctx.fillRect(0,0,canvas.width, canvas.height);
 	cards.forEach(function(card) {card.draw()});
-	//for( let i = 0; i < cards.length; i++) {
-		//cards[i].draw();
-	//}
 }
 
 
@@ -146,6 +147,41 @@ function resize()
 		cards[i].x = canvas.width * cards[i].x / old_w;
 		cards[i].y = canvas.height * cards[i].y / old_h;
 	}
+	draw();
+}
+
+function angle(p1, p2) {
+	return Math.atan2(p2.y - p1.y, p2.x - p1.x).toFixed(4);
+}
+
+function electric(p1, p2) {
+	return ( epsilon * p1.charge * p2.charge) / (Math.pow(p1.x - p2.x,2) + Math.pow(p1.y - p2.y,2)); 
+}
+
+function move() {
+	for(let i = 0; i < cards.length; i++) {
+		accx = 0;
+		accy = 0;
+		for(let j = 0; j < cards.length; j++) {
+			if ( i != j ) {
+			f = electric(cards[i],cards[j]).toFixed(2);
+			fx = Math.cos(angle(cards[i],cards[j])).toFixed(2);
+			fy = Math.sin(angle(cards[i],cards[j])).toFixed(2);
+			accx += - f * fx;
+			accy += - f * fy;
+			if ( Math.abs(accx) > 10 ) accx = 10 * Math.sign(accx);
+			if ( Math.abs(accy) > 10 ) accy = 10 * Math.sign(accy);
+
+			if ( cards[i].x < canvas.width * 0.04 || cards[i].x + cards[i].w > canvas.width * 0.96) { accx = 0; } 
+			if ( cards[i].y < canvas.height * 0.04 || cards[i].y + cards[i].h > canvas.height * 0.96) { accy = 0; }
+	
+			cards[i].x += accx;
+			cards[i].y += accy;
+			}
+		}
+	}
+	time_counter++;
+	if ( time_counter === 400 ) { clearInterval(timer); }
 	draw();
 }
 
@@ -232,16 +268,19 @@ class Endcard {
 }
 
 class Card {
-	constructor(group,w,h) {
+	constructor(group,w,h,c) {
 	this.group = group;
 	this.w = w;
 	this.h = h;
-	this.x = randInt(0, canvas.width - this.w);
-	this.y = randInt(0, canvas.height - this.h);
+	//this.x = randInt(0, canvas.width - this.w);
+	//this.y = randInt(0, canvas.height - this.h);
+	this.x = randInt(canvas.width * 0.4 - this.w/2 , canvas.width * 0.6 - this.w);
+	this.y = randInt(canvas.height * 0.4 - this.h/2 , canvas.height * 0.6 - this.h);
 	this.img = [];
 	this.snd = [];
 	this.txt = [];
 	this.color;
+	this.charge = c;
 	}
 
 	add(n)
@@ -357,7 +396,7 @@ function init()
 			if ( cell.endsWith('png') || cell.endsWith('PNG') || cell.endsWith('jpg') || cell.endsWith('JPG')) {
 			csv[i][j] = new Image();
 			csv[i][j].onload = function() { 
-				cards.push(new Card(i, csv[i][j].width, csv[i][j].height )); 
+				cards.push(new Card(i, csv[i][j].width, csv[i][j].height, 100)); 
 				cards[cards.length - 1].img[0] = csv[i][j];
 				draw();
 			}
@@ -366,20 +405,22 @@ function init()
 			else if  ( cell.endsWith('mp3') || cell.endsWith('wav'))
 			{ 
 				csv[i][j] = new Audio(cell);
-				cards.push(new Card( i, 100 * SCALE, 100 * SCALE ));
+				cards.push(new Card( i, 100 * SCALE, 100 * SCALE, 20));
 				cards[cards.length - 1].snd[0] = csv[i][j];
 				cards[cards.length - 1].color = randPred();
 			} 
 			else if ( /\S/.test(cell) )
 			{
 				csv[i][j] = cell;
-				cards.push(new Card( i, ctx.measureText(cell).width * 10 , FONT_SIZE * 1.1));
+				cards.push(new Card( i, ctx.measureText(cell).width * 10 , FONT_SIZE * 1.1, 20));
 				cards[cards.length - 1].txt[0] = cell;
 			}
 		}
 		lines.splice(n,1);
 		colors.splice(c,1);
 	}
+
+	timer = setInterval(move, 5);
 
 	draw();
 
