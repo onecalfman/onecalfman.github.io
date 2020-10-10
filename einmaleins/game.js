@@ -134,22 +134,28 @@ var won;
 function levelup() {
 	LEVEL++;
 	GRAVITY += 1;
-	GEAR_SPAWN_INTERVAL -= 0.2;
-	MAX_GEAR_SCALE += 0.5;
-	console.log('levelup')
+	if (GEAR_SPAWN_INTERVAL > 0.3) {
+		GEAR_SPAWN_INTERVAL -= 0.2; 
+		GEAR_SPAWN_INTERVAL = GEAR_SPAWN_INTERVAL.toFixed(1);
+	}
+	MAX_GEAR *= 1.2;
+	console.log('levelup: ' + LEVEL);
+	console.log('max: ' + MAX_GEAR);
+	console.log('interveral: ' + GEAR_SPAWN_INTERVAL);
+	console.log('gravity: ' + GRAVITY);
 }
 
 function restart() 
 {
 	document.removeEventListener('keydown', restart);
 	canvas.removeEventListener('touchstart', restart);
-	//if ( won ) { levelup(); }
-	if ( won ) {
-		LEVEL++;
-		GRAVITY += 1;
-		GEAR_SPAWN_INTERVAL -= 0.2;
-		MAX_GEAR_SCALE += 0.5;
-	}
+	if ( won ) { levelup(); }
+	//if ( won ) {
+	//	LEVEL++;
+	//	GRAVITY += 1;
+	//	GEAR_SPAWN_INTERVAL -= 0.2;
+	//	MAX_GEAR_SCALE += 0.5;
+	//}
 	clearInterval(interval);
 	clearInterval(end);
 	PUNKTE = 0;
@@ -163,7 +169,7 @@ function restart()
 	WRONG = 0;
 	MAX_GEAR = Math.floor((canvas.width / ROBOT_W) * MAX_GEAR_SCALE);
 	BACKGROUND = BACKGROUND_COLOR; 
-	GEAR_SPAWEND;
+	GEAR_SPAWEND = 0;
 	GEAR_ON_SCREEN = 0;
 	GEAR = [];
 	CATCH_TIMER = 0;
