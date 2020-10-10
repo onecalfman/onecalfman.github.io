@@ -98,8 +98,8 @@ function endcard ()
 function restart ()
 {
 	cards = [];
-	var time_counter = 0;
-	var csv = []
+	time_counter = 0;
+	csv = []
 colors = [ 
 	'#86C9B7',
 	'#87A7C7',
@@ -396,8 +396,8 @@ function init()
 			if ( cell.endsWith('png') || cell.endsWith('PNG') || cell.endsWith('jpg') || cell.endsWith('JPG')) {
 			csv[i][j] = new Image();
 			csv[i][j].onload = function() { 
-				cards.push(new Card(i, csv[i][j].width, csv[i][j].height, 100)); 
-				cards[cards.length - 1].img[0] = csv[i][j];
+				cards.unshift(new Card(i, csv[i][j].width, csv[i][j].height, 100)); 
+				cards[0].img[0] = csv[i][j];
 				draw();
 			}
 			csv[i][j].src = cell;
