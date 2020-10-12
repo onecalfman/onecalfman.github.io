@@ -322,7 +322,7 @@ class Card {
 				var offsetX = i * this.w / 2 + 0.07 * this.w;
 				var offsetY = i * (this.h - FONT_SIZE * 1.2) / 2 + 0.07 * this.w;
 			}
-			ctx.drawImage(this.img[i], this.x + offsetX, this.y + offsetY, this.img[i].width / imgl* IMG_SCALE , this.img[i].height / imgl * IMG_SCALE );
+			ctx.drawImage(this.img[i], this.x + offsetX, this.y + offsetY, (this.img[i].width / imgl) * IMG_SCALE , (this.img[i].height / imgl) * IMG_SCALE );
 		}
 
 		if (this.snd[0] ) {
