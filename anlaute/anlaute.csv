@@ -1,37 +1,37 @@
-A a,	assets/A_Affe.PNG,	assets/A_Ameise.PNG	,	assets/snd/Ameise-Affe.mp3
-Ä ä,	assets/Ae_Aepfel.PNG,			  	,	assets/snd/Aepfel.mp3
-Au au,	assets/Au_Auto.PNG,				,	assets/snd/Auto.mp3
-B b,	assets/B_Banane.PNG,				,	assets/snd/Banane.mp3
-C c,	assets/C_Computer.PNG, 				,	assets/snd/Computer.mp3
-Ch ch,	assets/Ch_Buch.PNG,	assets/Ch_Milch.PNG	,	assets/snd/Buch-Milch.mp3
-D d,	assets/D_Dino.PNG,				,	assets/snd/Dino.mp3
-E e,	assets/E_Elefant.PNG,	assets/E_Ente.PNG	,	assets/snd/Elefant-Ente.mp3
-Ei ei,	assets/Ei_Eis.PNG,				,	assets/snd/Eis.mp3
-Eu eu,	assets/Eu_Euro.PNG,				,	assets/snd/Euro.mp3
-F f,	assets/F_Feder.PNG,				,	assets/snd/Feder.mp3
-G g,	assets/G_Gabel.PNG,				,	assets/snd/Gabel.mp3
-H h,	assets/H_Hose.PNG,				,	assets/snd/Hose.mp3
-I i,	assets/I_Igel.PNG,	assets/I_Indiander.PNG	,	assets/snd/Igel-Indianer.mp3
-J j,	assets/J_Jojo.PNG,				,	assets/snd/Jo-Jo.mp3
-K k,	assets/K_Kerze.PNG,				,	assets/snd/Kerze.mp3
-L l,	assets/L_Löwe.PNG,				,	assets/snd/Loewe.mp3
-M m,	assets/M_Maus.PNG,				,	assets/snd/Maus.mp3
-N n,	assets/N_Nadel.PNG,				,	assets/snd/Nadel.mp3
-Ö ö,	assets/Oe_Oel.PNG,				,	assets/snd/Oel.mp3
-O o,	assets/O_Oma.PNG,	assets/O_Ordner_.PNG 	,	assets/snd/Oma-Ordner.mp3
-Pf pf,	assets/Pf_Pfeil.PNG,				,	assets/snd/Pfeil.mp3
-P p,	assets/P_Pirat.PNG,				,	assets/snd/Pirat.mp3
-Qu qu,	assets/Qu_Qualle.PNG,				,	assets/snd/Qualle.mp3
-R r,	assets/R_Rakete.PNG,				,	assets/snd/Rakete.mp3
-Sch sch,assets/Sch_Schaf.PNG,				,	assets/snd/Schaf.mp3
-Sp sp,	assets/Sp_Spinne.PNG,				,	assets/snd/Spinne.mp3
-S s,	assets/S_Sonne.PNG,				,	assets/snd/Sonne.mp3
-St st,	assets/St_Stempel.PNG,				,	assets/snd/Stempel.mp3
-T t,	assets/T_Tasse.PNG,				,	assets/snd/Tasse.mp3
-Ü ü,	assets/Ue_Ueberraschungsei.PNG,			,	assets/snd/Ueberraschungsei.mp3
-U u,	assets/U_Ufo.PNG,	assets/U_Unfall.PNG	,	assets/snd/Ufo-Unfall.mp3
-V v,	assets/V_Vase.PNG,	assets/V_Vogel.PNG	,	assets/snd/Vogel-Vase.mp3
-W w,	assets/W_Wolke.PNG,				,	assets/snd/Wolke.mp3
-X x,	assets/X_Xylophon.PNG,				,	assets/snd/Xylophon.mp3
-Y y,	assets/Y_Yak.PNG,				,	assets/snd/Yack.mp3
-Z z,	assets/Z_Zaun.PNG,				,	assets/snd/Zaun.mp3
+A a,	assets/mobile/A_Affe.PNG,	assets/mobile/A_Ameise.PNG	,	assets/mobile/snd/Ameise-Affe.mp3
+Ä ä,	assets/mobile/Ae_Aepfel.PNG,			  	,	assets/mobile/snd/Aepfel.mp3
+Au au,	assets/mobile/Au_Auto.PNG,				,	assets/mobile/snd/Auto.mp3
+B b,	assets/mobile/B_Banane.PNG,				,	assets/mobile/snd/Banane.mp3
+C c,	assets/mobile/C_Computer.PNG, 				,	assets/mobile/snd/Computer.mp3
+Ch ch,	assets/mobile/Ch_Buch.PNG,	assets/mobile/Ch_Milch.PNG	,	assets/mobile/snd/Buch-Milch.mp3
+D d,	assets/mobile/D_Dino.PNG,				,	assets/mobile/snd/Dino.mp3
+E e,	assets/mobile/E_Elefant.PNG,	assets/mobile/E_Ente.PNG	,	assets/mobile/snd/Elefant-Ente.mp3
+Ei ei,	assets/mobile/Ei_Eis.PNG,				,	assets/mobile/snd/Eis.mp3
+Eu eu,	assets/mobile/Eu_Euro.PNG,				,	assets/mobile/snd/Euro.mp3
+F f,	assets/mobile/F_Feder.PNG,				,	assets/mobile/snd/Feder.mp3
+G g,	assets/mobile/G_Gabel.PNG,				,	assets/mobile/snd/Gabel.mp3
+H h,	assets/mobile/H_Hose.PNG,				,	assets/mobile/snd/Hose.mp3
+I i,	assets/mobile/I_Igel.PNG,	assets/mobile/I_Indiander.PNG	,	assets/mobile/snd/Igel-Indianer.mp3
+J j,	assets/mobile/J_Jojo.PNG,				,	assets/mobile/snd/Jo-Jo.mp3
+K k,	assets/mobile/K_Kerze.PNG,				,	assets/mobile/snd/Kerze.mp3
+L l,	assets/mobile/L_Löwe.PNG,				,	assets/mobile/snd/Loewe.mp3
+M m,	assets/mobile/M_Maus.PNG,				,	assets/mobile/snd/Maus.mp3
+N n,	assets/mobile/N_Nadel.PNG,				,	assets/mobile/snd/Nadel.mp3
+Ö ö,	assets/mobile/Oe_Oel.PNG,				,	assets/mobile/snd/Oel.mp3
+O o,	assets/mobile/O_Oma.PNG,	assets/mobile/O_Ordner_.PNG 	,	assets/mobile/snd/Oma-Ordner.mp3
+Pf pf,	assets/mobile/Pf_Pfeil.PNG,				,	assets/mobile/snd/Pfeil.mp3
+P p,	assets/mobile/P_Pirat.PNG,				,	assets/mobile/snd/Pirat.mp3
+Qu qu,	assets/mobile/Qu_Qualle.PNG,				,	assets/mobile/snd/Qualle.mp3
+R r,	assets/mobile/R_Rakete.PNG,				,	assets/mobile/snd/Rakete.mp3
+Sch sch,assets/mobile/Sch_Schaf.PNG,				,	assets/mobile/snd/Schaf.mp3
+Sp sp,	assets/mobile/Sp_Spinne.PNG,				,	assets/mobile/snd/Spinne.mp3
+S s,	assets/mobile/S_Sonne.PNG,				,	assets/mobile/snd/Sonne.mp3
+St st,	assets/mobile/St_Stempel.PNG,				,	assets/mobile/snd/Stempel.mp3
+T t,	assets/mobile/T_Tasse.PNG,				,	assets/mobile/snd/Tasse.mp3
+Ü ü,	assets/mobile/Ue_Ueberraschungsei.PNG,			,	assets/mobile/snd/Ueberraschungsei.mp3
+U u,	assets/mobile/U_Ufo.PNG,	assets/mobile/U_Unfall.PNG	,	assets/mobile/snd/Ufo-Unfall.mp3
+V v,	assets/mobile/V_Vase.PNG,	assets/mobile/V_Vogel.PNG	,	assets/mobile/snd/Vogel-Vase.mp3
+W w,	assets/mobile/W_Wolke.PNG,				,	assets/mobile/snd/Wolke.mp3
+X x,	assets/mobile/X_Xylophon.PNG,				,	assets/mobile/snd/Xylophon.mp3
+Y y,	assets/mobile/Y_Yak.PNG,				,	assets/mobile/snd/Yack.mp3
+Z z,	assets/mobile/Z_Zaun.PNG,				,	assets/mobile/snd/Zaun.mp3
