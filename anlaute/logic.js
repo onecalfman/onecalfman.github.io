@@ -7,7 +7,7 @@ var IMG_SCALE = 1;
 var SCALE = 1;
 const CARD_SIZE = 265;
 const BORDER = 5;
-const CARDS_N = 6;
+const CARDS_N = 2;
 const epsilon = 5;
 
 const speaker_img = new Image();
@@ -27,21 +27,10 @@ var csv = []
 var time_counter = 0;
 
 colors = [ 
-	'#86C9B7',
-	'#87A7C7',
-	'#94D0A1',
-	'#8ECC85',
-	'#F69856',
-	'#F4A96D',
-	'#90A8CC',
-	'#93AACF',
-	'#B67BB4',
-	'#ABA9CE',
-	'#F086A2',
-	'#F1785B',
-	'#9AD078',
-	'#6DBFA9',
-	'#F3B23C',
+	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
+	'#F69856', '#F4A96D', '#90A8CC', '#93AACF',
+	'#B67BB4', '#ABA9CE', '#F086A2', '#F1785B',
+	'#9AD078', '#6DBFA9', '#F3B23C',
 ];
 
 var mousedown = false;
@@ -95,29 +84,21 @@ function endcard ()
 	console.log('end');
 }
 
+function recolor() {
+	colors = [ 
+		'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
+		'#F69856', '#F4A96D', '#90A8CC', '#93AACF',
+		'#B67BB4', '#ABA9CE', '#F086A2', '#F1785B',
+		'#9AD078', '#6DBFA9', '#F3B23C',
+	];
+}
+
 function restart ()
 {
 	cards = [];
 	time_counter = 0;
 	csv = []
-colors = [ 
-	'#86C9B7',
-	'#87A7C7',
-	'#94D0A1',
-	'#8ECC85',
-	'#F69856',
-	'#F4A96D',
-	'#90A8CC',
-	'#93AACF',
-	'#B67BB4',
-	'#ABA9CE',
-	'#F086A2',
-	'#F1785B',
-	'#9AD078',
-	'#6DBFA9',
-	'#F3B23C',
-];
-
+	recolor();
 	var mousedown = false;
 	var movestart = [0,0]
 	for (let i = 0; i <= CARDS_N; i++) { csv.push([]); }
@@ -151,14 +132,14 @@ function resize()
 }
 
 function angle(p1, p2) {
-	return Math.atan2(p2.y - p1.y, p2.x - p1.x).toFixed(4);
+	return Math.atan2((p2.y + p2.h) - (p1.y + p1.h), (p2.x + p2.w) - (p1.x + p1.w)).toFixed(4);
 }
 
 function electric(p1, p2) {
-	return ( epsilon * p1.charge * p2.charge) / (Math.pow(p1.x - p2.x,2) + Math.pow(p1.y - p2.y,2)); 
+	return ( epsilon * p1.charge * p2.charge) / (Math.pow((p1.x + p1.w / 2) - (p2.x + p2.w / 2),2) + Math.pow((p1.y + p1.h / 2) - (p2.y + p2.h / 2),2)); 
 }
 
-function move() {
+function move(time) {
 	for(let i = 0; i < cards.length; i++) {
 		accx = 0;
 		accy = 0;
@@ -181,7 +162,7 @@ function move() {
 		}
 	}
 	time_counter++;
-	if ( time_counter === 400 ) { clearInterval(timer); }
+	if ( Date.now() - time > 2000 ) { clearInterval(timer); }
 	draw();
 }
 
@@ -250,10 +231,12 @@ function drag(x,y)
 class Endcard {
 	constructor() {
 		this.group = 'uniqe';
-		this.w = CARD_SIZE * 2;
-		this.h = CARD_SIZE * 2;
-		this.x = canvas.width / 2 - this.w / 2;
-		this.y = canvas.height / 2 - this.h / 2;
+		this.w = CARD_SIZE * 0.7;
+		this.h = CARD_SIZE * 0.7;
+		//this.x = canvas.width / 2 - this.w / 2;
+		//this.y = canvas.height / 2 - this.h / 2;
+		this.x = canvas.width - this.w; 
+		this.y = canvas.height - this.h;
 		this.color = randPred();
 		this.img = restart_img;
 	}
@@ -280,7 +263,7 @@ class Card {
 	this.snd = [];
 	this.txt = [];
 	this.color;
-	this.charge = c;
+	this.charge = 0.002 * this.w * this.h;
 	}
 
 	add(n)
@@ -313,9 +296,6 @@ class Card {
 		if ( ! this.color ) { this.color = '#bbbbbb'; };
 		
 		cards.splice(n,1);
-
-		console.log(cards.length);
-		console.log(CARDS_N);
 
 		if ( cards.length === CARDS_N ) 
 		{ 
@@ -418,9 +398,11 @@ function init()
 		}
 		lines.splice(n,1);
 		colors.splice(c,1);
+		if ( ! colors.length ) { recolor(); }
+
 	}
 
-	timer = setInterval(move, 5);
+	timer = setInterval(move, 5, Date.now());
 
 	draw();
 
