@@ -2,12 +2,12 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 //const PAIRS = 'pairs.csv';
 const PAIRS = 'anlaute.csv';
-var FONT_SIZE = 80;
-var IMG_SCALE = 1;
+var FONT_SIZE = 60;
+var IMG_SCALE = 0.8;
 var SCALE = 1;
 const CARD_SIZE = 265;
 const BORDER = 5;
-const CARDS_N = 2;
+const CARDS_N = 5;
 const epsilon = 5;
 
 const speaker_img = new Image();
