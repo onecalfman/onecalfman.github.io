@@ -7,7 +7,7 @@ var IMG_SCALE = 1;
 var SCALE = 1;
 const CARD_SIZE = 265;
 const BORDER = 5;
-const CARDS_N = 2;
+const CARDS_N = 5;
 const epsilon = 5;
 
 const speaker_img = new Image();
