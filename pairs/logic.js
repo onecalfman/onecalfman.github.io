@@ -7,7 +7,7 @@ const BORDER = 8;
 const sound = new Image();
 sound.scr = "assets/sound.png";
 
-ctx.font = FONT_SIZE + 'px sans';
+ctx.font = FONT_SIZE + 'px Arial';
 ctx.textBaseline = "hanging";
 
 var cards = [];
