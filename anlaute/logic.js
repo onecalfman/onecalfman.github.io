@@ -5,6 +5,7 @@ const PAIRS = 'anlaute.csv';
 var FONT_SIZE = 60;
 var IMG_SCALE = 0.8;
 var SCALE = 0.8;
+var charge = 0.001;
 const CARD_SIZE = 265;
 const BORDER = 5;
 const CARDS_N = 5;
@@ -32,6 +33,10 @@ colors = [
 	'#B67BB4', '#ABA9CE', '#F086A2', '#F1785B',
 	'#9AD078', '#6DBFA9', '#F3B23C',
 ];
+
+const par = new URLSearchParams(window.location.search);
+	
+if ( par.get('c')) 		{ charge = par.get('c');}
 
 var mousedown = false;
 var movestart = [0,0]
@@ -263,7 +268,7 @@ class Card {
 	this.snd = [];
 	this.txt = [];
 	this.color;
-	this.charge = 0.002 * this.w * this.h;
+	this.charge = charge * this.w * this.h;
 	}
 
 	add(n)
