@@ -115,7 +115,7 @@ const sad = new Image();
 const shine = new Image();
 const controlls = new Image();
 const valve = new Image();
-const england = new Image();
+const arm = new Image();
 const assembly = new Image();
 const green = new Image();
 const red = new Image();
@@ -186,12 +186,15 @@ function start() {
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	controlls.src = "assets/controlls.png";
-	england.src = "assets/england.png";
+	arm.src = "assets/arm.png";
+	left.src =  "assets/left.png";
+	right.src = "assets/right.png";
+	gear.src =  "assets/gear.png";
 
 	valve_x = canvas.width * 0.4;
 	valve_y = canvas.height * 0.02;
 	valve_h = canvas.height / 2;
-	valve_w = canvas.height;
+	valve_w = canvas.height * 1.5;
 
 
 	let timer = setInterval(function() {
@@ -208,9 +211,6 @@ function start() {
 }
 
 function drop() {
-	left.src =  "assets/left.png";
-	right.src = "assets/right.png";
-	gear.src =  "assets/gear.png";
 	happy.src = "assets/robot_happy.png";
 	glow.src =  "assets/robot_happy_glow.png";
 	sad.src =   "assets/robot_sad.png";
@@ -242,11 +242,11 @@ function drop() {
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 			ctx.drawImage(controlls, controlls_x + LOOPS * canvas.width / 150 , controlls_y, controlls_w, controlls_h);
-			ctx.drawImage(england, valve_x + valve_w * 0.04 , canvas.height / 3  + LOOPS * canvas.height / 115 , canvas.height / 2 * 17/100, canvas.height / 2 * 68/165 );
+			ctx.drawImage(arm, valve_x + valve_w * 0.08 , canvas.height / 3  + LOOPS * canvas.height / 115 , canvas.height / 2 * 17/100, canvas.height / 2 * 68/165 );
 			ctx.drawImage(valve, valve_x, valve_y, valve_w, valve_h);
 			ctx.globalAlpha = bounce(LOOPS / 50);
 			ctx.fillStyle = '#dddddd';
-			ctx.fillText(REIHE, valve_x + valve_w * 165/2000, valve_y + valve_h * 0.37 );
+			ctx.fillText(REIHE, valve_x + valve_w * 165/1500, valve_y + valve_h * 0.37 );
 			ctx.globalAlpha = 1;
 			LOOPS++;
 		}} , 1000/FPS);
@@ -265,10 +265,10 @@ function float() {
 
 			ctx.drawImage(controlls, controlls_x, controlls_y, controlls_w, controlls_h);
 			y = ( canvas.height * 53/69 + (Math.sin(LOOPS * 0.05) * canvas.height * 0.025));
-			ctx.drawImage(england, valve_x + valve_w * 0.04 , y, canvas.height * 17/200, canvas.height / 2 * 68/165 );
+			ctx.drawImage(arm, valve_x + valve_w * 0.08 , y, canvas.height * 17/200, canvas.height / 2 * 68/165 );
 			ctx.drawImage(valve, valve_x , valve_y, valve_w, valve_h);
 			ctx.fillStyle = '#dddddd';
-			ctx.fillText(REIHE, valve_x + valve_w * 165/2000, valve_y + valve_h * 0.37 );
+			ctx.fillText(REIHE, valve_x + valve_w * 165/1500, valve_y + valve_h * 0.37 );
 			LOOPS++;
 		}} , 1000/FPS);
 }
