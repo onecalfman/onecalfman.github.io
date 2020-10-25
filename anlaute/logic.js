@@ -19,7 +19,7 @@ speaker.src = 'assets/speaker.png';
 var restart_img = new Image();
 restart_img.src = 'assets/restart.png';
 
-ctx.font = FONT_SIZE + 'px serif';
+ctx.font = FONT_SIZE + 'px sans';
 ctx.textBaseline = "hanging";
 
 var cards = [];
