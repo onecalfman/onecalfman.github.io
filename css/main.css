@@ -1,5 +1,7 @@
-/*Stylesheet KunstWerk*/
-
+@font-face {
+  font-family: Grundschrift;
+  src: url('/fonts/grundschrift.tff');
+}
 * {margin: 0px; padding: 0px;}
 
 img {
@@ -11,31 +13,31 @@ padding: 10px;
 }
 
 h1 {
-font-family: arial, verdana, sans serif;
+font-family: Grundschrift, arial, verdana, sans serif;
 font-size: 1.6em;
 line-height: 2em;
 }
 
 h2 {
-font-family: arial, verdana, sans serif;
+font-family: Grundschrift, arial, verdana, sans serif;
 font-size: 1.4em;
 line-height: 1.8em;
 }
 
 h3 {
-font-family: arial, verdana, sans serif;
+font-family: Grundschrift, arial, verdana, sans serif;
 font-size: 1.2em;
 line-height: 1.5em;
 }
 
 h4 {
-font-family: arial, verdana, sans serif;
+font-family: Grundschrift, arial, verdana, sans serif;
 font-size: 1.1em;
 line-height: 1.4em;
 }
 
 a, p, ul, ol, li {
-font-family: arial, verdana, sans serif;
+font-family: Grundschrift, arial, verdana, sans serif;
 font-size: 1.0em;
 line-height: 1.4em;
 margin-bottom: 6px;
