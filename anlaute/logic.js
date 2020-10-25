@@ -1,4 +1,3 @@
-
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 //const PAIRS = 'pairs.csv';
@@ -7,7 +6,7 @@ var FONT = "Grundschrift";
 var FONT_SIZE = 60;
 var IMG_SCALE = 0.8;
 var SCALE = 0.8;
-var charge = 0.001;
+var charge = 1;
 const CARD_SIZE = 265;
 const BORDER = 5;
 const CARDS_N = 5;
@@ -271,7 +270,7 @@ class Card {
 	this.snd = [];
 	this.txt = [];
 	this.color;
-	this.charge = charge * this.w * this.h;
+	this.charge = charge * Math.log(this.w * this.h);
 	}
 
 	add(n)
