@@ -1,7 +1,9 @@
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 //const PAIRS = 'pairs.csv';
 const PAIRS = 'anlaute.csv';
+var FONT = "Grundschrift";
 var FONT_SIZE = 60;
 var IMG_SCALE = 0.8;
 var SCALE = 0.8;
@@ -19,7 +21,8 @@ speaker.src = 'assets/speaker.png';
 var restart_img = new Image();
 restart_img.src = 'assets/restart.png';
 
-ctx.font = FONT_SIZE + 'px sans';
+const px = 'px ';
+ctx.font = FONT_SIZE + px + FONT;
 ctx.textBaseline = "hanging";
 
 var cards = [];
@@ -286,11 +289,20 @@ class Card {
 			this.snd.push(cards[n].snd[i]);
 			this.color = cards[n].color;
 		}
-		for ( let i = 0; i < cards[n].txt.length; i++ ) {
-			if ( this.w < cards[n].w ) { 
-				this.w = cards[n].w; 
+		if ( ! this.txt[0] ) { this.txt = cards[n].txt; }
+		else {
+			for ( let i = 0; i < cards[n].txt.length; i++ ) {
+				if ( cards[n].txt[0][0] === cards[n].txt[0][0].toUpperCase()) {
+					this.txt[0] = cards[n].txt[i] + " " + this.txt[0];
+				} else {
+					this.txt[0] = this.txt[0] + " " + cards[n].txt[0];
+				}
+				if ( this.w < ctx.measureText(this.txt[0]).width * 1.4) { 
+					this.w = ctx.measureText(this.txt[0]).width * 1.4
+				}
+				this.txt.push(cards[n].txt[i]);
+				this.txt.pop();
 			}
-			this.txt.push(cards[n].txt[i]);
 		}
 		
 		if ( this.img[0] ) {
@@ -348,7 +360,7 @@ class Card {
 			ctx.globalAlpha = 1;
 			ctx.fillStyle = '#000000';
 			ctx.textBaseline = "bottom";
-			ctx.font = FONT_SIZE + 'px sans';
+			ctx.font = FONT_SIZE + px + FONT;
 			ctx.textAlign = 'center';
 			ctx.fillText(this.txt[i], this.x + this.w / 2 , this.y + this.h + FONT_SIZE * 0.1);
 		}
@@ -367,7 +379,7 @@ function init()
 	ctx.canvas.height = window.innerHeight;
 	lines = open(PAIRS).split('\n')
 	
-	ctx.font = FONT_SIZE * SCALE;
+	ctx.font = FONT_SIZE * SCALE + px + FONT;
 	ctx.textBaseline = "hanging";
 
 	for(let i = 0; i < CARDS_N; i++)
@@ -397,7 +409,7 @@ function init()
 			else if ( /\S/.test(cell) )
 			{
 				csv[i][j] = cell;
-				cards.push(new Card( i, ctx.measureText(cell).width * 10 , FONT_SIZE * 1.1, 20));
+				cards.push(new Card( i, ctx.measureText(cell).width * 1.4 , FONT_SIZE * 1.1, 20));
 				cards[cards.length - 1].txt[0] = cell;
 			}
 		}
