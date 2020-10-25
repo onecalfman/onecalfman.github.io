@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
 body, html, p { 
 	margin: 0px; 
 	padding: 0px; 
 	width: 100%;
 	height: 100%;
 	position: fixed; 
-	font-family: Arial, Sans-Serif;
+	font-family: "Open Sans", Arial, Sans-Serif;
 	font-style: regular;
 	font-weight: 700
 } 
@@ -13,7 +15,7 @@ body, html, p {
 	border: 0px solid #444; 
 	min-width: 300px;
 	margin: 0px;
-	font-family: Arial, Sans-Serif;
+	font-family: "Open Sans", Arial, Sans-Serif;
 	font-style: regular;
 	font-weight: 700
 } 
