@@ -1,9 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
-
 @font-face {
   font-family: Grundschrift;
-  src: url('https://grundschulverband.de/wp-content/uploads/grundschrift-beta.ttf');
+  src: url('/fonts/grundschrift.ttf');
 }
 
 
