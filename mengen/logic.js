@@ -56,18 +56,12 @@ async function log(l) {
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 		ctx.drawImage(restart_img, canvas.width / 2 - restart_img.width / 2,canvas.height / 2 - restart_img.height / 2);
 	}
-	window.addEventListener('click', restart);
+	canvas.addEventListener('click', restart);
 }
 
 function restart() {
-	window.removeEventListener('click', restart);
+	canvas.removeEventListener('click', restart);
 	start();
-}
-
-async function overdraw() {
-	await sleep(t);
-	ctx.fillStyle = '#ffffff';
-	ctx.fillRect(0,0,canvas.width,canvas.height)
 }
 
 augen = [
@@ -103,7 +97,7 @@ for (let i = 0; i < src.length; i++) {
 
 }
 
-function show() {
+async function show() {
 	if ( img.width < img.height ) {
 		y = canvas.height;
 		x = y * img.width / img.height;
@@ -115,7 +109,9 @@ function show() {
 	console.log(y);
 
 	ctx.drawImage(img, canvas.width / 2 - x / 2, canvas.height  / 2- y / 2, x, y);
-	overdraw();
+	await sleep(t);
+	ctx.fillStyle = '#ffffff';
+	ctx.fillRect(0,0,canvas.width,canvas.height)
 }
 
 function start() {
