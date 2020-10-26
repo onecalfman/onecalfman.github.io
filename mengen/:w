@@ -19,11 +19,11 @@ var t = 1000;
 
 right = new Image;
 wrong = new Image;
-restart_img = new Image;
+restart = new Image;
 
 right.src = 'assets/right.png';
 wrong.src = 'assets/wrong.png';
-restart_img.src = 'assets/restart.png';
+restart.src = 'assets/restart.png';
 
 button = [];
 
@@ -45,7 +45,7 @@ async function log(l) {
 		ctx.drawImage(right,canvas.width / 2 - right.width / 2,canvas.height / 2 - right.height / 2);
 		await sleep(t);
 		ctx.fillRect(0,0,canvas.width,canvas.height);
-		ctx.drawImage(restart_img, canvas.width / 2 - restart_img.width / 2,canvas.height / 2 - restart_img.height / 2);
+		ctx.drawImage(restart, canvas.width / 2 - restart.width / 2,canvas.height / 2 - restart.height / 2);
 	}
 	else { 
 		ctx.fillStyle = '#933';
@@ -54,14 +54,21 @@ async function log(l) {
 		await sleep(t);
 		ctx.fillStyle = '#933';
 		ctx.fillRect(0,0,canvas.width,canvas.height);
-		ctx.drawImage(restart_img, canvas.width / 2 - restart_img.width / 2,canvas.height / 2 - restart_img.height / 2);
+		ctx.drawImage(restart, canvas.width / 2 - restart.width / 2,canvas.height / 2 - restart.height / 2);
 	}
 	canvas.addEventListener('click', restart);
 }
 
 function restart() {
-	canvas.removeEventListener('click', restart);
+	console.log('new');
+	canvas.removeEventListener('click', start);
 	start();
+}
+
+async function overdraw() {
+	await sleep(t);
+	ctx.fillStyle = '#ffffff';
+	ctx.fillRect(0,0,canvas.width,canvas.height)
 }
 
 augen = [
@@ -86,14 +93,8 @@ finger = [
 	'assets/finger/Linke_Hand_5_Zahl_10.png',
 ]
 
-if ( set == 'augen') { src = augen; 
-	console.log(document.getElementById("div").classList.toggle('grid3'))
-}
-else if ( set = 'finger') { 
-	document.getElementById("div").classList.toggle('grid5');
-	src = finger; 
-}
-
+if ( set == 'augen') { src = augen; }
+else if ( set = 'finger') { src = finger; }
 
 for (let i = 0; i < src.length; i++) {
 	button[i] = document.createElement("button");
@@ -103,7 +104,7 @@ for (let i = 0; i < src.length; i++) {
 
 }
 
-async function show() {
+function show() {
 	if ( img.width < img.height ) {
 		y = canvas.height;
 		x = y * img.width / img.height;
@@ -115,9 +116,7 @@ async function show() {
 	console.log(y);
 
 	ctx.drawImage(img, canvas.width / 2 - x / 2, canvas.height  / 2- y / 2, x, y);
-	await sleep(t);
-	ctx.fillStyle = '#ffffff';
-	ctx.fillRect(0,0,canvas.width,canvas.height)
+	overdraw();
 }
 
 function start() {

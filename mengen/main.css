@@ -1,9 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+@font-face {
+	font-familiy: 'Roboto', sans-serif;
+}
+
 body, html, p { 
 	margin: 0px; 
 	padding: 0px; 
 	width: 100%;
 	height: 100%;
 	position: fixed; 
+	font-family: Roboto, arial, verdana, sans serif;
 } 
   
 canvas { 
@@ -14,12 +21,27 @@ canvas {
 
 button {
 	background-color: '#90A8CC'; /* Green */
-	border: none;
+	border: 1px solid black;
 	color: black;
-	padding: 20px 20px;
-	margin: 7px;
+	padding: 10px 10px;
+	margin: 0px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
 	font-size: 40px;
+	font-family: Roboto, arial, verdana, sans serif;
+}
+
+.grid3 {
+  margin: 0px;
+  display:grid; 
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap:0px;
+}
+
+.grid5 {
+  margin: 0px;
+  display:grid; 
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap:0px;
 }
