@@ -8,14 +8,11 @@ if ( window.innerWidth < 400 ) {
 }
 
 
-const par = new URLSearchParams(window.location.search);
-
-
-
 var num;
 var set = 'augen';
 var img = new Image;
-var t = 1000;
+var t = 700;
+var ready = false;
 
 right = new Image;
 wrong = new Image;
@@ -27,6 +24,7 @@ restart_img.src = 'assets/restart.png';
 
 button = [];
 
+const par = new URLSearchParams(window.location.search);
 if ( par.get('set'))          { set = par.get('set');}
 if ( par.get('t'))          { t = par.get('t');}
 
@@ -39,23 +37,32 @@ function sleep(milliseconds) {
 }
 
 async function log(l) {
+	ready = false;
 	if (num == l) {
 		ctx.fillStyle = '#393';
 		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.globalAlpha = 0.4;
 		ctx.drawImage(right,canvas.width / 2 - right.width / 2,canvas.height / 2 - right.height / 2);
 		await sleep(t);
+		ctx.globalAlpha = 1;
 		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.globalAlpha = 0.4;
 		ctx.drawImage(restart_img, canvas.width / 2 - restart_img.width / 2,canvas.height / 2 - restart_img.height / 2);
 	}
 	else { 
 		ctx.fillStyle = '#933';
 		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.globalAlpha = 0.4;
 		ctx.drawImage(wrong,canvas.width / 2 - wrong.width / 2,canvas.height / 2 - wrong.height / 2);
 		await sleep(t);
 		ctx.fillStyle = '#933';
+		ctx.globalAlpha = 1;
 		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.globalAlpha = 0.4;
 		ctx.drawImage(restart_img, canvas.width / 2 - restart_img.width / 2,canvas.height / 2 - restart_img.height / 2);
 	}
+	
+	ctx.globalAlpha = 1;
 	canvas.addEventListener('click', restart);
 }
 
@@ -87,7 +94,8 @@ finger = [
 ]
 
 if ( set == 'augen') { src = augen; 
-	console.log(document.getElementById("div").classList.toggle('grid3'))
+	document.getElementById("div").classList.toggle('grid3')
+	src = augen;
 }
 else if ( set = 'finger') { 
 	document.getElementById("div").classList.toggle('grid5');
@@ -99,11 +107,19 @@ for (let i = 0; i < src.length; i++) {
 	button[i] = document.createElement("button");
 	button[i].innerHTML = i + 1;
 	div.appendChild(button[i]);
-	button[i].addEventListener ("click", function() { log(i+1); });
+	button[i].addEventListener ("click", function() { if ( ready ) { log(i+1); } });
+	document.getElementsByTagName("button")[i].classList.toggle('button');
 
 }
 
 async function show() {
+	for( let i = 0; i < src.length; i++) {
+		document.getElementsByTagName("button")[i].classList.toggle('button'); 
+		document.getElementsByTagName("button")[i].classList.toggle('inactive'); 
+	}
+	for ( let i = 0; i < src.lengt; i++) {
+		document.getElementsByTagName("button")[i].classList.toggle('inactive');
+	}
 	if ( img.width < img.height ) {
 		y = canvas.height;
 		x = y * img.width / img.height;
@@ -111,11 +127,14 @@ async function show() {
 		x = canvas.width;
 		y = x * img.height / img.width;
 	}
-	console.log(x);
-	console.log(y);
 
 	ctx.drawImage(img, canvas.width / 2 - x / 2, canvas.height  / 2- y / 2, x, y);
 	await sleep(t);
+	ready = true;
+	for( let i = 0; i < src.length; i++) {
+		document.getElementsByTagName("button")[i].classList.toggle('button'); 
+		document.getElementsByTagName("button")[i].classList.toggle('inactive'); 
+	}
 	ctx.fillStyle = '#ffffff';
 	ctx.fillRect(0,0,canvas.width,canvas.height)
 }
