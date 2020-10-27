@@ -138,8 +138,11 @@ if ( set == 'augen') {
 	document.getElementById("div").classList.toggle('grid5');
 }
 
-greeter = new Image;
-greeter.src = src[randInt(0,uniq(src) - 1)][1];
+function greet() {
+	greeter = new Image;
+	greeter.onload = function() { init(); }
+	greeter.src = src[randInt(0,uniq(src) - 1)][1];
+}
 
 
 async function show() {
