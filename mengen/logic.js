@@ -2,17 +2,20 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const div = document.getElementById('div');
 
-if ( window.innerWidth < 400 ) {
+if ( window.innerHeight * 2/3 < window.innerWidth  ) {
+	ctx.canvas.width = window.innerHeight * 2/3;
+	ctx.canvas.height = window.innerHeight * 2/3;
+} else {
 	ctx.canvas.width = window.innerWidth;
 	ctx.canvas.height = window.innerWidth;
 }
-
 
 var num;
 var set = 'augen';
 var img = new Image;
 var t = 700;
 var ready = false;
+var s;
 
 right = new Image;
 wrong = new Image;
@@ -25,8 +28,9 @@ restart_img.src = 'assets/restart.png';
 button = [];
 
 const par = new URLSearchParams(window.location.search);
-if ( par.get('set'))          { set = par.get('set');}
-if ( par.get('t'))          { t = par.get('t');}
+if ( par.get('set'))    { set = par.get('set');}
+if ( par.get('t'))      { t = par.get('t');}
+if ( par.get('s'))	{ s = par.get('s');}
 
 function randInt(min, max)	{
 	return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
@@ -38,6 +42,10 @@ function sleep(milliseconds) {
 
 async function log(l) {
 	ready = false;
+	for( let i = 0; i < src.length; i++) {
+		document.getElementsByTagName("button")[i].classList.toggle('button'); 
+		document.getElementsByTagName("button")[i].classList.toggle('inactive'); 
+	}
 	if (num == l) {
 		ctx.fillStyle = '#393';
 		ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -69,6 +77,7 @@ async function log(l) {
 function restart() {
 	canvas.removeEventListener('click', restart);
 	start();
+	if ( s ) { t *= 0.98 }
 }
 
 augen = [
@@ -108,18 +117,11 @@ for (let i = 0; i < src.length; i++) {
 	button[i].innerHTML = i + 1;
 	div.appendChild(button[i]);
 	button[i].addEventListener ("click", function() { if ( ready ) { log(i+1); } });
-	document.getElementsByTagName("button")[i].classList.toggle('button');
+	document.getElementsByTagName("button")[i].classList.toggle('inactive'); 
 
 }
 
 async function show() {
-	for( let i = 0; i < src.length; i++) {
-		document.getElementsByTagName("button")[i].classList.toggle('button'); 
-		document.getElementsByTagName("button")[i].classList.toggle('inactive'); 
-	}
-	for ( let i = 0; i < src.lengt; i++) {
-		document.getElementsByTagName("button")[i].classList.toggle('inactive');
-	}
 	if ( img.width < img.height ) {
 		y = canvas.height;
 		x = y * img.width / img.height;
