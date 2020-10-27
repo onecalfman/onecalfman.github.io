@@ -19,8 +19,16 @@ canvas {
 	margin: 0px; 
 } 
 
+section {
+  display: flex;
+  flex-flow: column;
+  height: 300px;
+}
+
 div {
-	max-width: 406px;
+	flex: 1;
+	overflow: auto;
+	max-width: device-width;
 }
 
 .button {
