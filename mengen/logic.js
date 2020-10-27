@@ -126,6 +126,20 @@ zehner = [
 	['10','assets/zehner/ZF10-5-5.png']
 ]
 
+if ( set == 'augen') { 
+	src = augen; 
+	document.getElementById("div").classList.toggle('grid3')
+	src = augen;
+} else if ( set == 'finger') { 
+	src = finger; 
+	document.getElementById("div").classList.toggle('grid5');
+} else if ( set == 'zehner' ) {
+	src = zehner;
+	document.getElementById("div").classList.toggle('grid5');
+}
+
+greeter = new Image;
+greeter.src = src[randInt(0,uniq(src) - 1)][1];
 
 
 async function show() {
@@ -149,9 +163,9 @@ async function show() {
 }
 
 function setup() {
-	if ( window.innerHeight * 2/3 < window.innerWidth  ) {
-		ctx.canvas.width = window.innerHeight * 2/3;
-		ctx.canvas.height = window.innerHeight * 2/3;
+	if ( window.innerHeight * 3/4 < window.innerWidth  ) {
+		ctx.canvas.width = window.innerHeight * 3/4;
+		ctx.canvas.height = window.innerHeight * 3/4;
 	} else {
 		ctx.canvas.width = window.innerWidth;
 		ctx.canvas.height = window.innerWidth;
@@ -173,7 +187,6 @@ function setup() {
 function init() {
 	console.log('init');
 	titelmaus = new Image;
-	greeter = new Image;
 	if ( window.innerHeight < window.innerWidth  ) {
 		ctx.canvas.width = window.innerHeight;
 		ctx.canvas.height = window.innerHeight;
@@ -200,19 +213,6 @@ function init() {
 		canvas.addEventListener('click', setup);
 	};
 
-	if ( set == 'augen') { 
-		src = augen; 
-		document.getElementById("div").classList.toggle('grid3')
-		src = augen;
-	} else if ( set == 'finger') { 
-		src = finger; 
-		document.getElementById("div").classList.toggle('grid5');
-	} else if ( set == 'zehner' ) {
-		src = zehner;
-		document.getElementById("div").classList.toggle('grid5');
-	}
-
-	greeter.src = src[randInt(0,uniq(src) - 1)][1];
 	titelmaus.src = 'assets/Titelmaus.png'
 	right.src = 'assets/right.png';
 	wrong.src = 'assets/wrong.png';
