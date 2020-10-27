@@ -76,7 +76,7 @@ function restart() {
 	if ( s ) { t *= 0.98 }
 	ctx.fillStyle = '#ffffff';
 	ctx.fillRect(0,0,canvas.width,canvas.height)
-	num = randInt(0,uniq(src) - 1);
+	num = randInt(0,src.length - 1);
 	img.onload = function() {show()};
 	img.src = src[num][1];
 }
@@ -141,7 +141,7 @@ if ( set == 'augen') {
 function greet() {
 	greeter = new Image;
 	greeter.onload = function() { init(); }
-	greeter.src = src[randInt(0,uniq(src) - 1)][1];
+	greeter.src = src[randInt(0,src.length - 1)][1];
 }
 
 
