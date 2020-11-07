@@ -8,18 +8,25 @@ var img = new Image;
 var t = 700;
 var ready = false;
 var s;
-
-right = new Image;
-wrong = new Image;
-restart_img = new Image;
-
-
+var x_dim = 2
+var y_dim = 2
+var runden = 4;
+var RIGHT = 0;
+var WRONG = 0;
+var n;
+var buttons = [];
 button = [];
+
+var right = new Image;
+var wrong = new Image;
+var restart_img = new Image;
+
 
 const par = new URLSearchParams(window.location.search);
 if ( par.get('set'))    { set = par.get('set');}
 if ( par.get('t'))      { t = par.get('t');}
 if ( par.get('s'))	{ s = par.get('s');}
+if ( par.get('r'))	{ runden = par.get('r');}
 
 function randInt(min, max)	{
 	return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
@@ -37,12 +44,21 @@ for (let i = 0; i < arr.length; i++) {
 return counts.length - 1;
 }
 
-async function log(l) {
+function end() {
+	ctx.fillStyle = colors[randInt(0,colors.length)]
+	ctx.fillRect(0,0,canvas.width,canvas.height)
+
+	message = Math.round(RIGHT / (RIGHT + WRONG) * 100) + '% richtig';
+	message = RIGHT + ' von ' + (RIGHT + WRONG) + ' richtig';
+	ctx.font = '80px Roboto';
+	ctx.fillStyle = '#333333';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.fillText(message,canvas.width / 2 ,canvas.height / 2);
+}
+
+async function check(l) {
 	ready = false;
-	for( let i = 0; i < uniq(src); i++) {
-		document.getElementsByTagName("button")[i].classList.toggle('button'); 
-		document.getElementsByTagName("button")[i].classList.toggle('inactive'); 
-	}
 	if (src[num][0] == l) {
 		ctx.fillStyle = '#393';
 		ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -53,6 +69,7 @@ async function log(l) {
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 		ctx.globalAlpha = 0.4;
 		ctx.drawImage(restart_img, canvas.width / 2 - restart_img.width / 2,canvas.height / 2 - restart_img.height / 2);
+		RIGHT++;
 	}
 	else { 
 		ctx.fillStyle = '#933';
@@ -65,21 +82,35 @@ async function log(l) {
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 		ctx.globalAlpha = 0.4;
 		ctx.drawImage(restart_img, canvas.width / 2 - restart_img.width / 2,canvas.height / 2 - restart_img.height / 2);
+		WRONG++;
 	}
 	
 	ctx.globalAlpha = 1;
-	canvas.addEventListener('click', restart);
+	if (RIGHT + WRONG >= runden) {
+		end()
+	}
+	else {
+		buttons = [];
+		canvas.addEventListener('click', restart);
+	}
 }
 
 function restart() {
 	canvas.removeEventListener('click', restart);
-	if ( s ) { t *= 0.98 }
+	if ( s ) { t *= s }
 	ctx.fillStyle = '#ffffff';
 	ctx.fillRect(0,0,canvas.width,canvas.height)
 	num = randInt(0,src.length - 1);
 	img.onload = function() {show()};
 	img.src = src[num][1];
 }
+
+colors = [ 
+	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
+	'#F69856', '#F4A96D', '#90A8CC', '#93AACF',
+	'#B67BB4', '#ABA9CE', '#F086A2', '#F1785B',
+	'#9AD078', '#6DBFA9', '#F3B23C',
+];
 
 augen = [
 	['1','assets/wuerfel/Wuerfelbilder_Blau_1.png'], 
@@ -147,48 +178,70 @@ function greet() {
 
 async function show() {
 	if ( img.width < img.height ) {
-		y = canvas.height;
+		y = canvas.height * 0.5;
 		x = y * img.width / img.height;
 	} else {
-		x = canvas.width;
+		x = canvas.width * 0.5;
 		y = x * img.height / img.width;
 	}
 
-	ctx.drawImage(img, canvas.width / 2 - x / 2, canvas.height  / 2- y / 2, x, y);
+	ctx.drawImage(img, canvas.width / 2 - x / 2, 0, x, y);
 	await sleep(t);
 	ready = true;
-	for( let i = 0; i < uniq(src); i++) {
-		document.getElementsByTagName("button")[i].classList.toggle('button'); 
-		document.getElementsByTagName("button")[i].classList.toggle('inactive'); 
-	}
 	ctx.fillStyle = '#ffffff';
 	ctx.fillRect(0,0,canvas.width,canvas.height)
+	buttonCreate(uniq(src)/y_dim,y_dim,canvas.height / 2);
 }
 
 function setup() {
-	if ( window.innerHeight * 3/4 < window.innerWidth  ) {
-		ctx.canvas.width = window.innerHeight * 3/4;
-		ctx.canvas.height = window.innerHeight * 3/4;
-	} else {
-		ctx.canvas.width = window.innerWidth;
-		ctx.canvas.height = window.innerWidth;
-	}
-
+	ctx.canvas.width = window.innerWidth;
+	ctx.canvas.height = window.innerHeight;
 	canvas.removeEventListener('click', setup);
-
-	
-	for (let i = 0; i < uniq(src); i++) {
-		button[i] = document.createElement("button");
-		button[i].innerHTML = i + 1;
-		div.appendChild(button[i]);
-		button[i].addEventListener ("click", function() { if ( ready ) { log(i+1); } });
-		document.getElementsByTagName("button")[i].classList.toggle('inactive'); 
-	}
 	restart();
 }
 
+function buttonEval(event) {
+	x = event.clientX;
+	y = event.clientY;
+	for(let i = 0; i < buttons.length; i++) {
+		if (buttons[i][0] < x && x < buttons[i][2] && buttons[i][1] < y && y < buttons[i][3]) {
+			canvas.removeEventListener('click', buttonEval);
+			check(i+1);
+			return i + 1;
+		}
+	}
+}
+
+function buttonCreate(x_dim,y_dim,height) {
+	total_w = window.innerWidth;
+	total_h = window.innerHeight - height;
+
+	ctx.font = '70px Roboto';
+	ctx.fillStyle = '#333333';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+
+	w = Math.ceil(total_w/x_dim);
+	h = Math.ceil(total_h/y_dim);
+	for(let i = 0; i < y_dim; i++) {
+		if (n && i == y_dim - 1 && n < x_dim * y_dim) {
+			n_last_row = n - x_dim * (y_dim - 1);
+			w = Math.ceil(total_w/n_last_row);
+		}
+		for(let j = 0; j < x_dim; j++) {
+			ctx.fillStyle = colors[randInt(0,colors.length-1)];
+			x = Math.floor(j * w);
+			y = Math.floor(i * h);
+			ctx.fillRect(x,height + y,w,h);
+			ctx.fillStyle = '#333333';
+			buttons.push([x,height + y,x + w,height + y + h]);
+			ctx.fillText(buttons.length, x + w / 2,height + y + h/2);
+		}
+	}
+	canvas.addEventListener('click', buttonEval);
+}
+
 function init() {
-	console.log('init');
 	titelmaus = new Image;
 	if ( window.innerHeight < window.innerWidth  ) {
 		ctx.canvas.width = window.innerHeight;
@@ -200,11 +253,9 @@ function init() {
 	titelmaus.onload = function() {
 		ctx.drawImage(titelmaus, 0,0, canvas.width, canvas.height);
 		if ( greeter.width < canvas.height * 2) {
-			console.log(1)
 			greeter_y_dim = canvas.height * 0.3;
 			greeter_x_dim = canvas.height * 0.3 * greeter.width / greeter.height;
 		} else {
-			console.log(2)
 			greeter_x_dim = canvas.width * 0.5;
 			greeter_y_dim = canvas.height * 0.5 * greeter.height / greeter.width;
 		}
