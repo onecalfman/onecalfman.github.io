@@ -187,15 +187,16 @@ function greet() {
 
 
 async function show() {
+	size = Math.min.apply( Math, [canvas.width, canvas.height, 600] );
 	if ( canvas.width > canvas.height ) {
-		y = canvas.height;
+		y = size;
 		x = y * img.width / img.height;
 		if ( x > canvas.width ) {
 			y = y * canvas.width / x;
 			x = x * canvas.width / x 
 		}
 	} else {
-		x = canvas.width;
+		x = size;
 		y = x * img.height / img.width;
 		if ( y > canvas.width ) {
 			x = x * canvas.width / y;
