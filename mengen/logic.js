@@ -1,6 +1,8 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const div = document.getElementById('div');
+ctx.canvas.height = window.innerHeight;
+ctx.canvas.width = window.innerWidth;
 
 var num;
 var set = 'augen';
@@ -10,12 +12,13 @@ var ready = false;
 var s;
 var x_dim = 2
 var y_dim = 2
-var runden = 4;
+var runden = 10;
 var RIGHT = 0;
 var WRONG = 0;
 var n;
 var buttons = [];
-button = [];
+var fontSize = 60;
+var c = false;
 
 var right = new Image;
 var wrong = new Image;
@@ -27,6 +30,7 @@ if ( par.get('set'))    { set = par.get('set');}
 if ( par.get('t'))      { t = par.get('t');}
 if ( par.get('s'))	{ s = par.get('s');}
 if ( par.get('r'))	{ runden = par.get('r');}
+if ( par.get('c'))	{ c = true;}
 
 function randInt(min, max)	{
 	return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
@@ -44,17 +48,26 @@ for (let i = 0; i < arr.length; i++) {
 return counts.length - 1;
 }
 
-function end() {
+async function end() {
 	ctx.fillStyle = colors[randInt(0,colors.length)]
 	ctx.fillRect(0,0,canvas.width,canvas.height)
 
 	message = Math.round(RIGHT / (RIGHT + WRONG) * 100) + '% richtig';
 	message = RIGHT + ' von ' + (RIGHT + WRONG) + ' richtig';
-	ctx.font = '80px Roboto';
+		fontsize = 1.7 * canvas.width / message.length
+	ctx.font = fontsize + 'px Roboto';
 	ctx.fillStyle = '#333333';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillText(message,canvas.width / 2 ,canvas.height / 2);
+	RIGHT = 0;
+	WRONG = 0;
+	buttons = [];
+	await sleep(2000);
+	ctx.globalAlpha = 0.4;
+	ctx.drawImage(restart_img,canvas.width /2 - restart_img.width / 2, canvas.height * 0.75 - restart_img.height / 2);
+	ctx.globalAlpha = 1;
+	canvas.addEventListener('click', restart);
 }
 
 async function check(l) {
@@ -159,15 +172,12 @@ zehner = [
 
 if ( set == 'augen') { 
 	src = augen; 
-	document.getElementById("div").classList.toggle('grid3')
-	src = augen;
 } else if ( set == 'finger') { 
 	src = finger; 
-	document.getElementById("div").classList.toggle('grid5');
 } else if ( set == 'zehner' ) {
 	src = zehner;
-	document.getElementById("div").classList.toggle('grid5');
 }
+n = uniq(src)
 
 function greet() {
 	greeter = new Image;
@@ -177,25 +187,43 @@ function greet() {
 
 
 async function show() {
-	if ( img.width < img.height ) {
-		y = canvas.height * 0.5;
+	if ( canvas.width > canvas.height ) {
+		y = canvas.height;
 		x = y * img.width / img.height;
+		if ( x > canvas.width ) {
+			y = y * canvas.width / x;
+			x = x * canvas.width / x 
+		}
 	} else {
-		x = canvas.width * 0.5;
+		x = canvas.width;
 		y = x * img.height / img.width;
+		if ( y > canvas.width ) {
+			x = x * canvas.width / y;
+			y = y * canvas.width / y 
+		}
 	}
 
-	ctx.drawImage(img, canvas.width / 2 - x / 2, 0, x, y);
+	ctx.globalAlpha = 1;
+	ctx.fillStyle = '#cccccc';
+	ctx.fillRect(0,0,canvas.width,canvas.height)
+	ctx.drawImage(img, canvas.width / 2 - x / 2, canvas.height / 2 - y / 2, x, y);
 	await sleep(t);
 	ready = true;
-	ctx.fillStyle = '#ffffff';
+	ctx.fillStyle = '#cccccc';
 	ctx.fillRect(0,0,canvas.width,canvas.height)
-	buttonCreate(uniq(src)/y_dim,y_dim,canvas.height / 2);
+	if ( canvas.width < 600 ) { 
+		button_w = canvas.width;
+		button_h = canvas.height;
+		if ( n >= 9) { y_dim = 4 }
+	}
+	else { 
+		button_w = 600; 
+		button_h = 130;
+	}
+	buttonCreate(Math.ceil(uniq(src)/y_dim),y_dim,button_w, button_w);
 }
 
 function setup() {
-	ctx.canvas.width = window.innerWidth;
-	ctx.canvas.height = window.innerHeight;
 	canvas.removeEventListener('click', setup);
 	restart();
 }
@@ -212,30 +240,44 @@ function buttonEval(event) {
 	}
 }
 
-function buttonCreate(x_dim,y_dim,height) {
-	total_w = window.innerWidth;
-	total_h = window.innerHeight - height;
+function buttonCreate(x_dim,y_dim,height,width) {
+	var selected =  [];
+	height = window.innerHeight - height;
 
-	ctx.font = '70px Roboto';
+	w = Math.ceil(width/x_dim);
+	h = Math.ceil(height/y_dim);
+	offsetX = (window.innerWidth - width) / 2;
+	offsetY = (window.innerHeight - height);
+
+	fontsize = w / 2;
+	ctx.font = fontsize + 'px Roboto';
 	ctx.fillStyle = '#333333';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 
-	w = Math.ceil(total_w/x_dim);
-	h = Math.ceil(total_h/y_dim);
 	for(let i = 0; i < y_dim; i++) {
 		if (n && i == y_dim - 1 && n < x_dim * y_dim) {
 			n_last_row = n - x_dim * (y_dim - 1);
-			w = Math.ceil(total_w/n_last_row);
+			w = Math.ceil(width/n_last_row);
 		}
 		for(let j = 0; j < x_dim; j++) {
-			ctx.fillStyle = colors[randInt(0,colors.length-1)];
-			x = Math.floor(j * w);
-			y = Math.floor(i * h);
-			ctx.fillRect(x,height + y,w,h);
+			do {
+				rand = randInt(0,colors.length-1);
+			}
+			while ( selected.includes(rand));
+
+			selected.push(rand);
+
+			x = Math.floor(j * w) + offsetX;
+			y = Math.floor(i * h) + offsetY;
+			if ( c ) {
+				ctx.fillStyle = colors[rand];
+				ctx.fillRect(x,y,w,h);
+			}
+
 			ctx.fillStyle = '#333333';
-			buttons.push([x,height + y,x + w,height + y + h]);
-			ctx.fillText(buttons.length, x + w / 2,height + y + h/2);
+			buttons.push([x,y,x + w,y + h]);
+			ctx.fillText(buttons.length, x + w / 2,y + h/2);
 		}
 	}
 	canvas.addEventListener('click', buttonEval);
@@ -243,27 +285,28 @@ function buttonCreate(x_dim,y_dim,height) {
 
 function init() {
 	titelmaus = new Image;
-	if ( window.innerHeight < window.innerWidth  ) {
-		ctx.canvas.width = window.innerHeight;
-		ctx.canvas.height = window.innerHeight;
-	} else {
-		ctx.canvas.width = window.innerWidth;
-		ctx.canvas.height = window.innerWidth;
-	}
 	titelmaus.onload = function() {
-		ctx.drawImage(titelmaus, 0,0, canvas.width, canvas.height);
+		if (canvas.width < canvas.height) {
+			dim = canvas.width;
+		}
+		else {
+			dim = canvas.height;
+		}
+		ctx.fillStyle = colors[randInt(0, colors.length-1)];
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.drawImage(titelmaus, canvas.width/2 - dim / 2,canvas.height/2 - dim /2, dim, dim);
 		if ( greeter.width < canvas.height * 2) {
-			greeter_y_dim = canvas.height * 0.3;
-			greeter_x_dim = canvas.height * 0.3 * greeter.width / greeter.height;
+			greeter_y_dim = dim * 0.3;
+			greeter_x_dim = dim * 0.3 * greeter.width / greeter.height;
 		} else {
-			greeter_x_dim = canvas.width * 0.5;
-			greeter_y_dim = canvas.height * 0.5 * greeter.height / greeter.width;
+			greeter_x_dim = dim * 0.5;
+			greeter_y_dim = dim * 0.5 * greeter.height / greeter.width;
 		}
 		ctx.fillStyle = '#EEEEEE';
 		ctx.globalAlpha=0.4;
-		ctx.fillRect(canvas.width * 0.48 - greeter_x_dim / 2, canvas.height * 0.6 - greeter_y_dim / 2, greeter_x_dim, greeter_y_dim);
+		ctx.fillRect((canvas.width / 2 - dim / 2) + dim * 0.48 - greeter_x_dim / 2, (canvas.height / 2 - dim / 2) + dim * 0.6 - greeter_y_dim / 2, greeter_x_dim, greeter_y_dim);
 		ctx.globalAlpha=0.7;
-		ctx.drawImage(greeter, canvas.width * 0.48 - greeter_x_dim / 2, canvas.height * 0.6 - greeter_y_dim / 2, greeter_x_dim, greeter_y_dim);
+		ctx.drawImage(greeter, (canvas.width / 2 - dim / 2) + dim * 0.48 - greeter_x_dim / 2, (canvas.height / 2 - dim / 2) + dim * 0.6 - greeter_y_dim / 2, greeter_x_dim, greeter_y_dim);
 		canvas.addEventListener('click', setup);
 	};
 
