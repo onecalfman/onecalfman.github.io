@@ -110,7 +110,7 @@ async function check(l) {
 
 function restart() {
 	canvas.removeEventListener('click', restart);
-	if ( s ) { t *= s }
+	if ( s ) { t *= 1 - s/100 }
 	ctx.fillStyle = '#ffffff';
 	ctx.fillRect(0,0,canvas.width,canvas.height)
 	num = randInt(0,src.length - 1);
@@ -147,35 +147,35 @@ finger = [
 	['10','assets/finger/Linke_Hand_5_Zahl_10.png']
 ]
 
-zehner = [
-	['1','assets/zehner/ZF01-1-0.png'],
-	['2','assets/zehner/ZF02-1-1.png'],
-	['2','assets/zehner/ZF02-2-0.png'],
-	['3','assets/zehner/ZF03-2-1.png'],
-	['3','assets/zehner/ZF03-3-0.png'],
-	['4','assets/zehner/ZF04-2-2.png'],
-	['4','assets/zehner/ZF04-3-1.png'],
-	['4','assets/zehner/ZF04-4-0.png'],
-	['5','assets/zehner/ZF05-3-2.png'],
-	['5','assets/zehner/ZF05-4-1.png'],
-	['5','assets/zehner/ZF05-5-0.png'],
-	['6','assets/zehner/ZF06-3-3.png'],
-	['6','assets/zehner/ZF06-4-2.png'],
-	['6','assets/zehner/ZF06-5-1.png'],
-	['7','assets/zehner/ZF07-4-3.png'],
-	['7','assets/zehner/ZF07-5-2.png'],
-	['8','assets/zehner/ZF08-4-4.png'],
-	['8','assets/zehner/ZF08-5-3.png'],
-	['9','assets/zehner/ZF09-5-4.png'],
-	['10','assets/zehner/ZF10-5-5.png']
+punkte = [
+	['1','assets/punkte/ZF01-1-0.png'],
+	['2','assets/punkte/ZF02-1-1.png'],
+	['2','assets/punkte/ZF02-2-0.png'],
+	['3','assets/punkte/ZF03-2-1.png'],
+	['3','assets/punkte/ZF03-3-0.png'],
+	['4','assets/punkte/ZF04-2-2.png'],
+	['4','assets/punkte/ZF04-3-1.png'],
+	['4','assets/punkte/ZF04-4-0.png'],
+	['5','assets/punkte/ZF05-3-2.png'],
+	['5','assets/punkte/ZF05-4-1.png'],
+	['5','assets/punkte/ZF05-5-0.png'],
+	['6','assets/punkte/ZF06-3-3.png'],
+	['6','assets/punkte/ZF06-4-2.png'],
+	['6','assets/punkte/ZF06-5-1.png'],
+	['7','assets/punkte/ZF07-4-3.png'],
+	['7','assets/punkte/ZF07-5-2.png'],
+	['8','assets/punkte/ZF08-4-4.png'],
+	['8','assets/punkte/ZF08-5-3.png'],
+	['9','assets/punkte/ZF09-5-4.png'],
+	['10','assets/punkte/ZF10-5-5.png']
 ]
 
 if ( set == 'augen') { 
 	src = augen; 
 } else if ( set == 'finger') { 
 	src = finger; 
-} else if ( set == 'zehner' ) {
-	src = zehner;
+} else if ( set == 'punkte' ) {
+	src = punkte;
 }
 n = uniq(src)
 
@@ -224,8 +224,6 @@ async function show() {
 		}
 		button_h = 400;
 	}
-	console.log(button_w);
-	console.log(button_h);
 	buttonCreate(Math.ceil(uniq(src)/y_dim),y_dim,button_h, button_w);
 }
 
@@ -292,12 +290,7 @@ function buttonCreate(x_dim,y_dim,height,width) {
 function init() {
 	titelmaus = new Image;
 	titelmaus.onload = function() {
-		if (canvas.width < canvas.height) {
-			dim = canvas.width;
-		}
-		else {
-			dim = canvas.height;
-		}
+		dim = Math.min.apply( Math, [canvas.width, canvas.height] );
 		ctx.fillStyle = colors[randInt(0, colors.length-1)];
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 		ctx.drawImage(titelmaus, canvas.width/2 - dim / 2,canvas.height/2 - dim /2, dim, dim);
