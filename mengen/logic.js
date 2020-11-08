@@ -18,7 +18,7 @@ var WRONG = 0;
 var n;
 var buttons = [];
 var fontSize = 60;
-var c = false;
+var c = true;
 
 var right = new Image;
 var wrong = new Image;
@@ -30,7 +30,7 @@ if ( par.get('set'))    { set = par.get('set');}
 if ( par.get('t'))      { t = par.get('t');}
 if ( par.get('s'))	{ s = par.get('s');}
 if ( par.get('r'))	{ runden = par.get('r');}
-if ( par.get('c'))	{ c = true;}
+if ( par.get('c'))	{ c = false;}
 
 function randInt(min, max)	{
 	return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
@@ -213,14 +213,20 @@ async function show() {
 	ctx.fillRect(0,0,canvas.width,canvas.height)
 	if ( canvas.width < 600 ) { 
 		button_w = canvas.width;
-		button_h = canvas.height;
+		button_h = canvas.height / 2;
 		if ( n >= 9) { y_dim = 4 }
 	}
 	else { 
-		button_w = 600; 
-		button_h = 130;
+		if (n > 6) {
+			button_w = 800;
+		} else {
+			button_w = 600; 
+		}
+		button_h = 400;
 	}
-	buttonCreate(Math.ceil(uniq(src)/y_dim),y_dim,button_w, button_w);
+	console.log(button_w);
+	console.log(button_h);
+	buttonCreate(Math.ceil(uniq(src)/y_dim),y_dim,button_h, button_w);
 }
 
 function setup() {
@@ -242,14 +248,14 @@ function buttonEval(event) {
 
 function buttonCreate(x_dim,y_dim,height,width) {
 	var selected =  [];
-	height = window.innerHeight - height;
 
 	w = Math.ceil(width/x_dim);
 	h = Math.ceil(height/y_dim);
 	offsetX = (window.innerWidth - width) / 2;
-	offsetY = (window.innerHeight - height);
+	height = window.innerHeight - height;
+	offsetY = height;
 
-	fontsize = w / 2;
+	fontsize = Math.min.apply( Math, [h,w] ) * 0.7;
 	ctx.font = fontsize + 'px Roboto';
 	ctx.fillStyle = '#333333';
 	ctx.textAlign = 'center';
@@ -258,7 +264,7 @@ function buttonCreate(x_dim,y_dim,height,width) {
 	for(let i = 0; i < y_dim; i++) {
 		if (n && i == y_dim - 1 && n < x_dim * y_dim) {
 			n_last_row = n - x_dim * (y_dim - 1);
-			w = Math.ceil(width/n_last_row);
+			w = Math.round(width/n_last_row);
 		}
 		for(let j = 0; j < x_dim; j++) {
 			do {
@@ -268,11 +274,11 @@ function buttonCreate(x_dim,y_dim,height,width) {
 
 			selected.push(rand);
 
-			x = Math.floor(j * w) + offsetX;
-			y = Math.floor(i * h) + offsetY;
+			x = Math.ceil(j * w) + offsetX;
+			y = Math.ceil(i * h) + offsetY;
 			if ( c ) {
 				ctx.fillStyle = colors[rand];
-				ctx.fillRect(x,y,w,h);
+				ctx.fillRect(x - 1,y - 1,w + 2,h + 2);
 			}
 
 			ctx.fillStyle = '#333333';
