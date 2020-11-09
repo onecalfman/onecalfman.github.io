@@ -1,0 +1,36 @@
+\documentclass[a4paper]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{multicol}
+\usepackage{CrimsonPro}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{multicol}
+\title{URL-Parameter}
+
+\begin{document}
+
+\maketitle
+
+\begin{multicols}{2}
+Ein URL Parameter gibt Informationen an die aufgerufene Internetseite weiter. Sie stehen nach der Adresse -- eingeleitet durch ein ?.
+Ein Wert wird dann mit dem Namen des Wertes (Key), einem '=' und der zugehörigen Zahl, nach dem Muster key=zahl angegeben. Die Spiele sind so konzipiert, dass alle Werte einen Standard besitzen (als Default angegeben). Wenn kein Wert über die URL eingegeben wird, verwendet das Programm den Defaultwert.
+Die Range ist ein Angabe in Welchem der Wert liegen muss bzw. in welchem Bereich, das Spiel immer noch Spielbar ist. Bei $\in \mathbb{N} $ muss es eine Ganzzahl sein, bei $\in \mathbb{Q} $ kann es eine Kommazahl sein. Falls Wörter (strings) oder bestimmte Zahlen verlanget werden ist dies in den Docs der einzelnen Spiele angegeben.
+\end{multicols}
+
+\subsection*{Drei Beispiele:}
+\texttt{\href{onecalfman.github.io/einmaleins?reihe=5}{onecalfman.github.io/einmaleins?reihe=5}} \\
+öffnet das Spiel mit der 5er Reihe voreingestellt.
+Weiter Optionen werden über ein \& angehängt. \\\\
+
+\texttt{\href{onecalfman.github.io/einmaleins?reihe=8\&dauer=60\&max=5}{onecalfman.github.io/einmaleins?reihe=8\&dauer=60\&max=5}} \\
+öffnet das Spiel mit der 8er Reihe, einer Spieldauer von 60 Sekunden und maximal 5 Zahnrädern die Gleichzeitig zu sehen sind. Die möglichen keys sind unten gelistet. \\\\
+
+\texttt{\href{onecalfman.github.io/mengen?set=finger\&t=500\&s=5\&p=1\&r=10}{onecalfman.github.io/mengen?set=finger\&t=500\&s=5\&p=1\&r=10}} \\
+öffnet das Mengenspiel mit einer Anzeigezeit von 500 ms, einer Verkürzung von 5\% pro Runde dem Endergebnis als Prozent angegeben und 10 Runden pro Durchgang.
+
+\end{document}
+
+

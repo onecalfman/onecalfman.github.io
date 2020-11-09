@@ -2,7 +2,7 @@
 
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage[T1]{fontenc}
-\usepackage{mathptmx}
+\usepackage{CrimsonPro}
 \usepackage{multicol}
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
@@ -14,44 +14,11 @@
 	 bottom=2mm,
 	 }
 \usepackage{hyperref}
-\title{EINMALEINS}
+\title{Einmaleins}
 
 \begin{document}
 
 \maketitle
-
-\begin{multicols}{2}
-
-\section{Quelltext}
-
-Das Programm kann direkt über die Variablen am Anfang angepasst werden. Jede Variable ist kurz kommentiert.
-Zum Beispiel:
-
-\begin{verbatim}
-//==================================
-// Einmaleinsreihe
-var REIHE = 5;            
-// Spieldauer
-var GAME_DURATION = 60;
-// Schriftfarbe (Hexadecimal # Rot Grün Blau)
-const FONT_COLOR = '#ddd'
-//==================================
-\end{verbatim} 
-
-	Wenn man die Zahlen ändert, ändert sich die Zahl für alle Nutzer der Seite. Die Werte stellen die Standardwerte dar. Wenn nach Sektion 2 Parameter über die URL angegeben werden, ändern sich die Werte nur für eine Sitzung. Werte mit \texttt{const} am Anfang können nur im Quelltext direkt geändert werden. Alle Werte die verändert werden dürfen stehen zwischen zwei Markierungen aus Gleichzeichen s.o.. Alle anderen Werte dürfen \textbf{NICHT} geändert werden.
-
-\section{URL-Parameter}
-
-Ein URL Parameter gibt Informationen an die aufgerufene Internetseite weiter. Sie stehen nach der Adresse -- eingeleitet durch ein 
-?. Ein Wert wird dann mit dem Namen des Wertes (Key) einem '=' und der zugehörigen Zahl, nach dem Muster key=zahl angegeben. Das Spiel ist so konzipiert, dass alle Werte einen Standard besitzen (unten als Default angegeben). Wenn kein Wert über die URL eingegeben wird, verwendet das Programm den Defaultwert. Range ist ein Angabe in Welchem der Wert liegen muss bzw. in welchem Bereich, das Spiel immer noch Spielbar ist. Bei $\in \mathbb{N} $ muss es eine Ganzzahl sein, bei $\in \mathbb{Q} $ kann es eine Kommazahl sein.\\
-Zum Beispiel: \\
-\texttt{\href{onecalfman.github.io/einmaleins?reihe=5}{onecalfman.github.io/einmaleins?reihe=5}} \\
-öffnet das Spiel mit der 5er Reihe voreingestellt.
-Weiter Optionen werden über ein \& angehängt. \\
-\texttt{\href{onecalfman.github.io/einmaleins?reihe=8\&dauer=60\&max=5}{onecalfman.github.io/einmaleins?reihe=8\&dauer=60\&max=5}} \\
-öffnet das Spiel mit der 8er Reihe, einer Spieldauer von 60 Sekunden und maximal 5 Zahnrädern die Gleichzeitig zu sehen sind. Die möglichen keys sind unten gelistet.
-
-\end{multicols}
 
 \begin{multicols}{2}
 
