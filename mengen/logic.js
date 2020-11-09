@@ -20,6 +20,7 @@ var buttons = [];
 var fontSize = 60;
 var c = true;
 var last = [100,100];
+var p = false;
 
 var right = new Image;
 var wrong = new Image;
@@ -32,6 +33,7 @@ if ( par.get('t'))      { t = par.get('t');}
 if ( par.get('s'))	{ s = par.get('s');}
 if ( par.get('r'))	{ runden = par.get('r');}
 if ( par.get('c'))	{ c = false;}
+if ( par.get('p'))	{ p = true;}
 
 function randInt(min, max)	{
 	return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
@@ -59,9 +61,12 @@ async function end() {
 		case 'finger': category = 'Finger'; break; 
 		case 'punkte': category = 'Punkte'; break; 
 	}
-	message = Math.round(RIGHT / (RIGHT + WRONG) * 100) + '% richtig';
-	message = RIGHT + ' von ' + (RIGHT + WRONG) + ' richtig';
-		fontsize = 1.7 * canvas.width / message.length
+	if ( p ) { 
+		message = Math.round(RIGHT / (RIGHT + WRONG) * 100) + '% richtig';
+	} else {
+		message = RIGHT + ' von ' + (RIGHT + WRONG) + ' richtig';
+	}
+	fontsize = 1.7 * canvas.width / message.length
 	ctx.font = (1.5 * fontsize) + 'px Roboto';
 	ctx.fillStyle = '#333333';
 	ctx.textAlign = 'center';
