@@ -12,13 +12,14 @@ var ready = false;
 var s;
 var x_dim = 2
 var y_dim = 2
-var runden = 10;
+var runden = 20;
 var RIGHT = 0;
 var WRONG = 0;
 var n;
 var buttons = [];
 var fontSize = 60;
 var c = true;
+var last = [100,100];
 
 var right = new Image;
 var wrong = new Image;
@@ -52,13 +53,21 @@ async function end() {
 	ctx.fillStyle = colors[randInt(0,colors.length)]
 	ctx.fillRect(0,0,canvas.width,canvas.height)
 
+	var category
+	switch(set) {
+		case 'augen': category = 'W\u{00FC}rfel'; break; 
+		case 'finger': category = 'Finger'; break; 
+		case 'punkte': category = 'Punkte'; break; 
+	}
 	message = Math.round(RIGHT / (RIGHT + WRONG) * 100) + '% richtig';
 	message = RIGHT + ' von ' + (RIGHT + WRONG) + ' richtig';
 		fontsize = 1.7 * canvas.width / message.length
-	ctx.font = fontsize + 'px Roboto';
+	ctx.font = (1.5 * fontsize) + 'px Roboto';
 	ctx.fillStyle = '#333333';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
+	ctx.fillText(category,canvas.width / 2 ,canvas.height / 4);
+	ctx.font = fontsize + 'px Roboto';
 	ctx.fillText(message,canvas.width / 2 ,canvas.height / 2);
 	RIGHT = 0;
 	WRONG = 0;
@@ -113,7 +122,12 @@ function restart() {
 	if ( s ) { t *= 1 - s/100 }
 	ctx.fillStyle = '#ffffff';
 	ctx.fillRect(0,0,canvas.width,canvas.height)
-	num = randInt(0,src.length - 1);
+	do  {
+		num = randInt(0,src.length - 1);
+	}
+	while (last[0] == num && last[1] == num);
+	last.unshift(num);
+	last.pop();
 	img.onload = function() {show()};
 	img.src = src[num][1];
 }
