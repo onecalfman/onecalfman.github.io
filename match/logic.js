@@ -1,401 +1,255 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const PAIRS = 'anlaute.csv';
-var FONT = "Grundschrift";
-var FONT_SIZE = 60;
-var IMG_SCALE = 0.8;
-var SCALE = 0.8;
-var charge = 5;
-const CARD_SIZE = 265;
-const BORDER = 5;
-const CARDS_N = 10;
-const epsilon = 5;
-const buttonsX = canvas.width;
-const buttonsY = canvas.height  / 4;
-var colors = [ 
+const div = document.getElementById('div');
+ctx.canvas.height = window.innerHeight;
+ctx.canvas.width = window.innerWidth;
+
+var num;
+var set = 'augen';
+var img = new Image;
+var t = 700;
+var ready = false;
+var s;
+var x_dim = 2
+var y_dim = 2
+var runden = 20;
+var RIGHT = 0;
+var WRONG = 0;
+var n;
+var buttons = [];
+var fontSize = 60;
+var c = true;
+var last = [100,100];
+var p = false;
+
+var right = new Image;
+var wrong = new Image;
+var restart_img = new Image;
+
+
+const par = new URLSearchParams(window.location.search);
+if ( par.get('set'))    { set = par.get('set');}
+if ( par.get('t'))      { t = par.get('t');}
+if ( par.get('s'))	{ s = par.get('s');}
+if ( par.get('r'))	{ runden = par.get('r');}
+if ( par.get('c'))	{ c = false;}
+if ( par.get('p'))	{ p = true;}
+
+function randInt(min, max)	{
+	return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
+	}
+
+function sleep(milliseconds) {
+ return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
+function uniq(arr) {
+counts = [];
+for (let i = 0; i < arr.length; i++) {
+    counts[arr[i][0]] = 1 + (counts[arr[i][0]] || 0);
+}
+return counts.length - 1;
+}
+
+async function end() {
+	ctx.fillStyle = colors[randInt(0,colors.length)]
+	ctx.fillRect(0,0,canvas.width,canvas.height)
+
+	var category
+	switch(set) {
+		case 'augen': category = 'W\u{00FC}rfel'; break; 
+		case 'finger': category = 'Finger'; break; 
+		case 'punkte': category = 'Punkte'; break; 
+	}
+	if ( p ) { 
+		message = Math.round(RIGHT / (RIGHT + WRONG) * 100) + '% richtig';
+	} else {
+		message = RIGHT + ' von ' + (RIGHT + WRONG) + ' richtig';
+	}
+	fontsize = 1.7 * canvas.width / message.length
+	ctx.font = (1.5 * fontsize) + 'px Roboto';
+	ctx.fillStyle = '#333333';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.fillText(category,canvas.width / 2 ,canvas.height / 4);
+	ctx.font = fontsize + 'px Roboto';
+	ctx.fillText(message,canvas.width / 2 ,canvas.height / 2);
+	RIGHT = 0;
+	WRONG = 0;
+	buttons = [];
+	await sleep(2000);
+	ctx.globalAlpha = 0.4;
+	ctx.drawImage(restart_img,canvas.width /2 - restart_img.width / 2, canvas.height * 0.75 - restart_img.height / 2);
+	ctx.globalAlpha = 1;
+	canvas.addEventListener('click', restart);
+}
+
+async function check(l) {
+	ready = false;
+	if (src[num][0] == l) {
+		ctx.fillStyle = '#393';
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.globalAlpha = 0.4;
+		ctx.drawImage(right,canvas.width / 2 - right.width / 2,canvas.height / 2 - right.height / 2);
+		await sleep(t);
+		ctx.globalAlpha = 1;
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.globalAlpha = 0.4;
+		ctx.drawImage(restart_img, canvas.width / 2 - restart_img.width / 2,canvas.height / 2 - restart_img.height / 2);
+		RIGHT++;
+	}
+	else { 
+		ctx.fillStyle = '#933';
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.globalAlpha = 0.4;
+		ctx.drawImage(wrong,canvas.width / 2 - wrong.width / 2,canvas.height / 2 - wrong.height / 2);
+		await sleep(t);
+		ctx.fillStyle = '#933';
+		ctx.globalAlpha = 1;
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.globalAlpha = 0.4;
+		ctx.drawImage(restart_img, canvas.width / 2 - restart_img.width / 2,canvas.height / 2 - restart_img.height / 2);
+		WRONG++;
+	}
+	
+	ctx.globalAlpha = 1;
+	if (RIGHT + WRONG >= runden) {
+		end()
+	}
+	else {
+		buttons = [];
+		canvas.addEventListener('click', restart);
+	}
+}
+
+function restart() {
+	canvas.removeEventListener('click', restart);
+	if ( s ) { t *= 1 - s/100 }
+	ctx.fillStyle = '#ffffff';
+	ctx.fillRect(0,0,canvas.width,canvas.height)
+	do  {
+		num = randInt(0,src.length - 1);
+	}
+	while (last[0] == num && last[1] == num);
+	last.unshift(num);
+	last.pop();
+	img.onload = function() {show()};
+	img.src = src[num][1];
+}
+
+colors = [ 
 	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
 	'#F69856', '#F4A96D', '#90A8CC', '#93AACF',
 	'#B67BB4', '#ABA9CE', '#F086A2', '#F1785B',
 	'#9AD078', '#6DBFA9', '#F3B23C',
 ];
 
-const sin = [0,0.106795,0.212370,0.315515,0.415052,0.50984,0.59879,0.68090,0.75522,0.82090,0.87720,0.92345,0.95915,0.98388,0.9973,0.99941,0.99004,0.96935,0.93757,0.8950,0.84233,0.77995,0.7086,0.62925,0.54265,0.449845,0.35189,0.249915,0.14507,0]
-const alphabet = "abcdefghijklmnopqrstuvwxyz"
-var set = alphabet[randInt(0,alphabet.length - 1)];
-const label = [set.toUpperCase(), set, set.toUpperCase() + ' ' + set]
-const buttonColors = [randPred(), randPred(), randPred()]
+augen = [
+	['1','assets/wuerfel/Wuerfelbilder_Blau_1.png'], 
+	['2','assets/wuerfel/Wuerfelbilder_Blau_2.png'], 
+	['3','assets/wuerfel/Wuerfelbilder_Blau_3.png'], 
+	['4','assets/wuerfel/Wuerfelbilder_Blau_4.png'], 
+	['5','assets/wuerfel/Wuerfelbilder_Blau_5.png'], 
+	['6','assets/wuerfel/Wuerfelbilder_Blau_6.png'] 
+]
 
-const speaker_img = new Image();
-speaker_img.scr = '/anlaute/assets/speaker.png';
+finger = [
+	['1','assets/finger/1-Finger_aussen_links.png'],
+	['2','assets/finger/2-Finger aussen links.png'],
+	['3','assets/finger/3-Finger_aussen_links.png'],
+	['4','assets/finger/4-Finger_aussen_links.png'],
+	['5','assets/finger/5-Finger_aussen_links.png'],
+	['6','assets/finger/Linke_Hand_5_Zahl_6.png'],
+	['7','assets/finger/Linke_Hand_5_Zahl_7.png'],
+	['8','assets/finger/Linke_Hand_5_Zahl_8.png'],
+	['9','assets/finger/Linke_Hand_5_Zahl_9.png'],
+	['10','assets/finger/Linke_Hand_5_Zahl_10.png']
+]
 
-var speaker = new Image();
-speaker.src = 'assets/speaker.png';
-var restart_img = new Image();
-restart_img.src = 'assets/restart.png';
+punkte = [
+	['1','assets/punkte/ZF01-1-0.png'],
+	['2','assets/punkte/ZF02-1-1.png'],
+	['2','assets/punkte/ZF02-2-0.png'],
+	['3','assets/punkte/ZF03-2-1.png'],
+	['3','assets/punkte/ZF03-3-0.png'],
+	['4','assets/punkte/ZF04-2-2.png'],
+	['4','assets/punkte/ZF04-3-1.png'],
+	['4','assets/punkte/ZF04-4-0.png'],
+	['5','assets/punkte/ZF05-3-2.png'],
+	['5','assets/punkte/ZF05-4-1.png'],
+	['5','assets/punkte/ZF05-5-0.png'],
+	['6','assets/punkte/ZF06-3-3.png'],
+	['6','assets/punkte/ZF06-4-2.png'],
+	['6','assets/punkte/ZF06-5-1.png'],
+	['7','assets/punkte/ZF07-4-3.png'],
+	['7','assets/punkte/ZF07-5-2.png'],
+	['8','assets/punkte/ZF08-4-4.png'],
+	['8','assets/punkte/ZF08-5-3.png'],
+	['9','assets/punkte/ZF09-5-4.png'],
+	['10','assets/punkte/ZF10-5-5.png']
+]
 
-var buttons = [];
-var rejectTimer = 0;
+if ( set == 'augen') { 
+	src = augen; 
+} else if ( set == 'finger') { 
+	src = finger; 
+} else if ( set == 'punkte' ) {
+	src = punkte;
+}
+n = uniq(src)
 
-const px = 'px ';
-ctx.font = FONT_SIZE + px + FONT;
-ctx.textBaseline = "hanging";
-
-var cards = [];
-var csv = []
-
-var time_counter = 0;
-
-
-const par = new URLSearchParams(window.location.search);
-	
-if ( par.get('c')) 		{ charge = par.get('c');}
-
-var mousedown = false;
-var movestart = [0,0]
-var finished = false;
-for (let i = 0; i <= CARDS_N; i++) { csv.push([]); }
-
-function open(filePath) {
-  var result = null;
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("GET", filePath, false);
-  xmlhttp.send();
-  if (xmlhttp.status==200) {
-    result = xmlhttp.responseText;
-  }
-  return result;
+function greet() {
+	greeter = new Image;
+	greeter.onload = function() { init(); }
+	greeter.src = src[randInt(0,src.length - 1)][1];
 }
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
 
-function randInt(min, max)	{
-	return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
+async function show() {
+	size = Math.min.apply( Math, [canvas.width, canvas.height, 600] );
+	if ( canvas.width > canvas.height ) {
+		y = size;
+		x = y * img.width / img.height;
+		if ( x > canvas.width ) {
+			y = y * canvas.width / x;
+			x = x * canvas.width / x 
+		}
+	} else {
+		x = size;
+		y = x * img.height / img.width;
+		if ( y > canvas.width ) {
+			x = x * canvas.width / y;
+			y = y * canvas.width / y 
+		}
 	}
-	
-function randColor()
-{
-	var letters = '0123456789abcde';
-	var color = '#';
-	for (let i = 0; i < 6; i++) {
-		color += letters[randInt(0,15)];
-	}
-return color;
-}
 
-function randPred()
-{
-	n = randInt(0,colors.length -1);
-	color = colors[n];
-	colors.splice(n,1);
-	return color;
-}
-
-function endcard ()
-{
-	ctx.fillStyle = randPred();
-	ctx.fillStyle = '#000000';
-	ctx.fillRect(canvas.width / 2 - CARD_SIZE, canvas.height / 2 - CARD_SIZE, CARD_SIZE * 2, CARD_SIZE * 2);
-	console.log('end');
-}
-
-function recolor() {
-	colors = [ 
-		'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
-		'#F69856', '#F4A96D', '#90A8CC', '#93AACF',
-		'#B67BB4', '#ABA9CE', '#F086A2', '#F1785B',
-		'#9AD078', '#6DBFA9', '#F3B23C',
-	];
-}
-
-function restart ()
-{
-	cards = [];
-	time_counter = 0;
-	csv = []
-	recolor();
-	var mousedown = false;
-	var movestart = [0,0]
-	for (let i = 0; i <= CARDS_N; i++) { csv.push([]); }
-	draw();
-	init();
-}
-
-function draw()
-{
-	ctx.clearRect(0,0, canvas.width, canvas.height);
-	ctx.fillStyle = '#ddd';
-	ctx.fillRect(0,0,canvas.width, canvas.height);
-	buttonCreate(3, 3, 1, canvas.width, canvas.height / 4);
-	cards.forEach(function(card) {card.draw()});
-}
-
-
-function resize()
-{
-	old_w = canvas.width;
-	old_h = canvas.height;
-
-	ctx.canvas.width = window.innerWidth;
-	ctx.canvas.height = window.innerHeight;
-
-	for ( let i = 0; i < cards.length; i++ )
-	{
-		cards[i].x = canvas.width * cards[i].x / old_w;
-		cards[i].y = canvas.height * cards[i].y / old_h;
-	}
-	draw();
-}
-
-function angle(p1, p2) {
-	return Math.atan2((p2.y + p2.h) - (p1.y + p1.h), (p2.x + p2.w) - (p1.x + p1.w)).toFixed(4);
-}
-
-function electric(p1, p2) {
-	return ( epsilon * p1.charge * p2.charge) / (Math.pow((p1.x + p1.w / 2) - (p2.x + p2.w / 2),2) + Math.pow((p1.y + p1.h / 2) - (p2.y + p2.h / 2),2)); 
-}
-
-function reject(card, button, time, duration, i) {
-	var accx = 0;
-	var accx = 0;
-	f = electric(card,button).toFixed(2);
-	accx += - f * Math.cos(angle(card,button)).toFixed(2);
-	accy += - f * Math.sin(angle(card,button)).toFixed(2) * 2; 
-
-	if ( Math.abs(accx) > 10 ) accx = 10 * Math.sign(accx);
-	if ( Math.abs(accy) > 10 ) accy = 10 * Math.sign(accy);
-
-	if ( card.x < canvas.width * 0.04 || card.x + card.w > canvas.width * 0.96) { accx = 0; } 
-	if ( card.y < canvas.height * 0.04) { accy = 0; }
-	
-	card.x += accx;
-	card.y += accy;
-	move();
-	draw();
-	ctx.globalAlpha = sin[(Math.round(30 * (Date.now() - time)/duration))-1]
-	ctx.fillStyle = '#993333';
-	ctx.fillRect(buttons[i][0],buttons[i][1],buttons[i][2] - buttons[i][0], buttons[i][3] - buttons[i][1]);
 	ctx.globalAlpha = 1;
-	if ( Date.now() - time > duration ) { clearInterval(rejectTimer); draw(); }
+	ctx.fillStyle = '#cccccc';
+	ctx.fillRect(0,0,canvas.width,canvas.height)
+	ctx.drawImage(img, canvas.width / 2 - x / 2, canvas.height / 2 - y / 2, x, y);
+	await sleep(t);
+	ready = true;
+	ctx.fillStyle = '#cccccc';
+	ctx.fillRect(0,0,canvas.width,canvas.height)
+	if ( canvas.width < 600 ) { 
+		button_w = canvas.width;
+		button_h = canvas.height / 2;
+		if ( n >= 9) { y_dim = 4 }
+	}
+	else { 
+		if (n > 6) {
+			button_w = 800;
+		} else {
+			button_w = 600; 
+		}
+		button_h = 400;
+	}
+	buttonCreate(Math.ceil(uniq(src)/y_dim),y_dim,button_h, button_w);
 }
 
-function move(time, duration) {
-	for(let i = 0; i < cards.length; i++) {
-		accx = 0;
-		accy = 0;
-		for(let j = 0; j < cards.length; j++) {
-			if ( i != j ) {
-			f = electric(cards[i],cards[j]).toFixed(2);
-			fx = Math.cos(angle(cards[i],cards[j])).toFixed(2);
-			fy = Math.sin(angle(cards[i],cards[j])).toFixed(2);
-			accx += - f * fx;
-			accy += - f * fy;
-			if ( Math.abs(accx) > 10 ) accx = 10 * Math.sign(accx);
-			if ( Math.abs(accy) > 10 ) accy = 10 * Math.sign(accy);
-
-			if ( cards[i].x < canvas.width * 0.04 || cards[i].x + cards[i].w > canvas.width * 0.96) { accx = 0; } 
-			if ( cards[i].y < canvas.height * 0.04 || cards[i].y + cards[i].h > (canvas.height - buttonsY) * 0.8) { accy = 0; }
-	
-			cards[i].x += accx;
-			cards[i].y += accy;
-			}
-		}
-	}
-	time_counter++;
-	if ( Date.now() - time > duration ) { clearInterval(timer); }
-	draw();
-}
-
-function match()
-{
-	card = cards[cards.length - 1];
-	for ( let i = 0; i < buttons.length; i++) {
-		lx = buttons[i][0] <= card.x + card.w/2;
-		rx = buttons[i][2] >= card.x + card.w / 2;
-		ly = buttons[i][1] <= card.y + card.h/2;
-		ry = buttons[i][3] >= card.y + card.h / 2;
-
-		if (lx && rx && ly && ry) { 
-			if ( card.txt[0].includes(label[i]) ) {
-				cards.pop();
-				if ( ! cards.length ) { cards.push(new Endcard); }
-			}
-			else if ( i == 2 && (! card.txt[0].includes(label[0])) && (! card.txt[0].includes(label[1]))) {
-				cards.pop();
-				if ( ! cards.length ) { cards.push(new Endcard); }
-			}
-			else {
-				clearInterval(rejectTimer);
-				button = new Card('button', 5, 5, 2);
-				button.x = buttons[i][0] + buttons[i][2] / 2;
-				button.y = canvas.height;
-				button.charge = 2000;
-				rejectTimer = setInterval(reject, 5, card, button, Date.now(), 1000, i);
-			}
-			draw();
-			return;
-		}
-	}
-	if ( card.x === movestart[0] && card.y === movestart[1] ) {
-		if ( card instanceof Endcard) { 
-			console.log('ending');
-			restart(); 
-			return;
-		}
-		if ( card.snd[0] ) { card.play(); }
-	}
-}
-
-function layer(x,y)
-{ 
-	mousedown = true;
-	for ( let i = cards.length - 1; i >= 0; i-- )
-	{
-		if ( cards[i].x <= x && x <= cards[i].x + cards[i].w ) {
-			if ( cards[i].y <= y && y <= cards[i].y + cards[i].h ) 
-			{ 
-				cards.push(cards[i]);
-				movestart = [cards[i].x,cards[i].y]
-				cards.splice(i, 1);
-				canvas.onmousemove = function(event) { drag(event.clientX, event.clientY); };
-				return;
-			
-			}
-		}
-	}
-	mousedown = false;
-}
-
-function drag(x,y)
-{ 
-	if (mousedown)
-	{
-		card = cards[cards.length - 1]
-		card.x = x - card.w / 2;
-		card.y = y - card.h / 2;
-		if ( card.x < 0 ) { card.x = 0; }
-		if ( canvas.width - card.w < card.x ) { card.x = canvas.width - card.w; }
-		if ( card.y < 0 ) { card.y = 0; }
-		if ( canvas.height - card.h < card.y ) { card.y = canvas.height - card.h; }
-		draw();
-	}
-}
-
-
-class Endcard {
-	constructor() {
-		this.group = 'uniqe';
-		this.w = CARD_SIZE * 1.5;
-		this.h = CARD_SIZE * 1.5;
-		this.x = canvas.width / 2 - this.w / 2;
-		this.y = canvas.height / 2 - this.h / 2;
-		//this.x = canvas.width - this.w; 
-		//this.y = canvas.height - this.h;
-		this.color = randPred();
-		this.img = restart_img;
-	}
-
-	draw() { 
-		ctx.fillStyle = this.color;
-		ctx.fillRect(this.x, this.y, this.w, this.h);
-		ctx.globalAlpha = 0.3
-		ctx.drawImage(restart_img, this.x, this.y, this.w, this.h);
-		ctx.globalAlpha = 1;
-	}
-}
-
-class Card {
-	constructor(group,w,h,c) {
-	this.group = group;
-	this.w = w;
-	this.h = h;
-	//this.x = randInt(0, canvas.width - this.w);
-	//this.y = randInt(0, canvas.height - this.h);
-	this.x = randInt(canvas.width * 0.4 - this.w/2 , canvas.width * 0.6 - this.w);
-	this.y = randInt(canvas.height * 0.4 - this.h/2 , canvas.height * 0.6 - this.h);
-	this.img = [];
-	this.snd = [];
-	this.txt = [];
-	this.color;
-	this.charge = charge * Math.log(this.w * this.h);
-	}
-
-	add(n)
-	{
-
-		for ( let i = 0; i < cards[n].img.length; i++ ) {
-			this.img.push(cards[n].img[i]);
-			console.log('img');
-			if ( this.w < CARD_SIZE * SCALE ) {
-				this.w = CARD_SIZE * SCALE;
-			}
-			this.h = CARD_SIZE * SCALE;
-		}
-		for ( let i = 0; i < cards[n].snd.length; i++ ) {
-			this.snd.push(cards[n].snd[i]);
-			this.color = cards[n].color;
-		}
-		if ( ! this.txt[0] ) { this.txt = cards[n].txt; }
-		else {
-			for ( let i = 0; i < cards[n].txt.length; i++ ) {
-				if ( cards[n].txt[0][0] === cards[n].txt[0][0].toUpperCase()) {
-					this.txt[0] = cards[n].txt[i] + " " + this.txt[0];
-				} else {
-					this.txt[0] = this.txt[0] + " " + cards[n].txt[0];
-				}
-				if ( this.w < ctx.measureText(this.txt[0]).width * 1.4) { 
-					this.w = ctx.measureText(this.txt[0]).width * 1.4
-				}
-				this.txt.push(cards[n].txt[i]);
-				this.txt.pop();
-			}
-		}
-		
-		if ( this.img[0] ) {
-			if ( this.w < CARD_SIZE * SCALE ) { this.w = CARD_SIZE * SCALE; }
-			if (this.h < CARD_SIZE * SCALE ) { this.h = CARD_SIZE* SCALE; }
-		}
-
-		if ( ! this.color ) { this.color = '#bbbbbb'; };
-		
-		cards.splice(n,1);
-
-		if ( cards.length === CARDS_N ) 
-		{ 
-			cards.push(new Endcard());
-		}
-	}
-
-	draw()
-	{
-		if ( this.color ) {
-			ctx.globalAlpha = 0.6;
-			if ( this.snd[0] ) { ctx.globalAlpha = 1; }
-			ctx.fillStyle = this.color;
-			ctx.fillRect(this.x, this.y, this.w, this.h);
-			ctx.globalAlpha = 1;
-		}
-
-		var imgl = this.img.length;
-		for ( let i = 0; i < imgl; i++) {
-			if ( imgl === 1 ) { 
-				var offsetX = this.w / 2 - this.img[0].width * IMG_SCALE / 2;
-				var offsetY = this.h / 2 - this.img[0].height * IMG_SCALE / 2;
-			} else {
-				var offsetX = i * this.w / 2 + 0.07 * this.w;
-				var offsetY = i * (this.h - FONT_SIZE * 1.2) / 2 + 0.07 * this.w;
-			}
-			ctx.drawImage(this.img[i], this.x + offsetX, this.y + offsetY, (this.img[i].width / imgl) * IMG_SCALE , (this.img[i].height / imgl) * IMG_SCALE );
-		}
-
-	}
-
-	play() { this.snd[0].play(); }
+function setup() {
+	canvas.removeEventListener('click', setup);
+	restart();
 }
 
 function buttonEval(event) {
@@ -410,7 +264,7 @@ function buttonEval(event) {
 	}
 }
 
-function buttonCreate(n,x_dim,y_dim,width,height) {
+function buttonCreate(x_dim,y_dim,height,width) {
 	var selected =  [];
 
 	w = Math.ceil(width/x_dim);
@@ -419,8 +273,8 @@ function buttonCreate(n,x_dim,y_dim,width,height) {
 	height = window.innerHeight - height;
 	offsetY = height;
 
-	fontsize = Math.min.apply( Math, [h,w] ) * 0.5;
-	ctx.font = fontsize + 'px ' + FONT;
+	fontsize = Math.min.apply( Math, [h,w] ) * 0.7;
+	ctx.font = fontsize + 'px Roboto';
 	ctx.fillStyle = '#333333';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
@@ -440,64 +294,43 @@ function buttonCreate(n,x_dim,y_dim,width,height) {
 
 			x = Math.ceil(j * w) + offsetX;
 			y = Math.ceil(i * h) + offsetY;
-			if ( true ) {
-				ctx.fillStyle = buttonColors[i+j];
+			if ( c ) {
+				ctx.fillStyle = colors[rand];
 				ctx.fillRect(x - 1,y - 1,w + 2,h + 2);
 			}
 
 			ctx.fillStyle = '#333333';
-			buttons[i+j] = ([x,y,x + w,y + h]);
-			ctx.fillText(label[i+j], x + w / 2,y + h/2);
+			buttons.push([x,y,x + w,y + h]);
+			ctx.fillText(buttons.length, x + w / 2,y + h/2);
 		}
 	}
+	canvas.addEventListener('click', buttonEval);
 }
 
-
-
-function init()
-{
-	ctx.canvas.width = window.innerWidth;
-	ctx.canvas.height = window.innerHeight;
-	lines = open(PAIRS).split('\n')
-	
-	ctx.font = FONT_SIZE * SCALE + px + FONT;
-	ctx.textBaseline = "hanging";
-
-	//buttonCreate(3, 3, 1, canvas.width / 2 , canvas.height / 2);
-
-	for(let i = 0; i < CARDS_N; i++)
-	{
-		n = randInt(0,lines.length - 1);
-		cells = lines[n].split(',');
-		for(let j = 0; j < cells.length; j++) {
-			cells[j].trim();
+function init() {
+	titelmaus = new Image;
+	titelmaus.onload = function() {
+		dim = Math.min.apply( Math, [canvas.width, canvas.height] );
+		ctx.fillStyle = colors[randInt(0, colors.length-1)];
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.drawImage(titelmaus, canvas.width/2 - dim / 2,canvas.height/2 - dim /2, dim, dim);
+		if ( greeter.width < canvas.height * 2) {
+			greeter_y_dim = dim * 0.3;
+			greeter_x_dim = dim * 0.3 * greeter.width / greeter.height;
+		} else {
+			greeter_x_dim = dim * 0.5;
+			greeter_y_dim = dim * 0.5 * greeter.height / greeter.width;
 		}
-		csv[i][0] = cells[0];
-		csv[i][2] = cells[2];
-		csv[i][1] = new Image();
-		csv[i][1].onload = function() { 
-			cards.unshift(new Card(i, csv[i][1].width, csv[i][1].height, 100)); 
-			cards[0].img[0] = csv[i][1];
-			//csv[i][2] = new Audio(cells[2]);
-			cards[0].snd[0] = new Audio(csv[i][2]);
-			cards[0].txt[0] = csv[i][0];
-			draw();
-		}
-		csv[i][1].src = cells[1];
-		lines.splice(n,1);
+		ctx.fillStyle = '#EEEEEE';
+		ctx.globalAlpha=0.4;
+		ctx.fillRect((canvas.width / 2 - dim / 2) + dim * 0.48 - greeter_x_dim / 2, (canvas.height / 2 - dim / 2) + dim * 0.6 - greeter_y_dim / 2, greeter_x_dim, greeter_y_dim);
+		ctx.globalAlpha=0.7;
+		ctx.drawImage(greeter, (canvas.width / 2 - dim / 2) + dim * 0.48 - greeter_x_dim / 2, (canvas.height / 2 - dim / 2) + dim * 0.6 - greeter_y_dim / 2, greeter_x_dim, greeter_y_dim);
+		canvas.addEventListener('click', setup);
+	};
 
-	}
-
-
-	timer = setInterval(move, 5, Date.now(), 1000);
-
-	canvas.onmousedown = function(event) { layer(event.clientX,event.clientY); };
-	canvas.onmouseup = function(event) { mousedown = false; match(); };
-	canvas.addEventListener("touchstart", function(event) { layer(event.changedTouches[0].pageX, event.changedTouches[0].pageY)});
-	canvas.addEventListener("touchmove",  function(event) { drag(event.changedTouches[0].pageX, event.changedTouches[0].pageY)});
-    	canvas.addEventListener("touchend",  function(event) {mousedown = false; match();});
-
-	window.addEventListener("resize", function(event) {resize();}, true);
-	draw();
+	titelmaus.src = 'assets/Titelmaus.png'
+	right.src = 'assets/right.png';
+	wrong.src = 'assets/wrong.png';
+	restart_img.src = 'assets/restart.png';
 }
-
