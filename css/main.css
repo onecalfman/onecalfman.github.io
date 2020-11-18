@@ -14,7 +14,7 @@ padding: 10px;
 
 h1 {
 font-family: Grundschrift, arial, verdana, sans serif;
-font-size: 1.6em;
+font-size: 2em;
 line-height: 2em;
 }
 
@@ -84,7 +84,7 @@ margin: 20px 0px 20px 0px;
 }
 
 body {
-background-color: #fff;
+background-color: #ccc;
 color: #181818;
 
 }
@@ -94,5 +94,13 @@ padding: 12px 12px 12px 12px;
 text-align: center;
 display: block;
 font-size: 3em;
+line-height: 1em;
+}
+
+.link {
+padding: 12px 12px 12px 12px;
+text-align: center;
+display: block;
+font-size: 2em;
 line-height: 1em;
 }
