@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?&family=Roboto:wght@500&display=swap');
 * {margin: 0px; padding: 0px;}
 
 img {
@@ -10,33 +10,33 @@ padding: 3px;
 }
 
 h1 {
-font-family: Lora, verdana, sans serif;
+font-family: Roboto, verdana, sans serif;
 font-size: 2em;
 line-height: 2em;
 }
 
 h2 {
-font-family: Lora, verdana, sans serif;
+font-family: Roboto, verdana, sans serif;
 width: 200;
-padding: 40px 40px 0px 0px;
+padding: 10px 3px 10px 3px;
 font-size: 1.4em;
 line-height: 1.8em;
 }
 
 h3 {
-font-family: Lora, verdana, sans serif;
+font-family: Roboto, verdana, sans serif;
 font-size: 1.2em;
 line-height: 1.5em;
 }
 
 h4 {
-font-family: Lora, verdana, sans serif;
+font-family: Roboto, verdana, sans serif;
 font-size: 1.1em;
 line-height: 1.4em;
 }
 
 a, p, ul, ol, li {
-font-family: Lora, verdana, sans serif;
+font-family: Roboto, verdana, sans serif;
 font-size: 1.5em;
 line-height: 1.4em;
 margin-bottom: 6px;
@@ -51,7 +51,7 @@ color: #000000;
 }
 
 q {
-font-family: arial, Lora, verdana, sans serif; 
+font-family: arial, Roboto, verdana, sans serif; 
 font-style: italic; 
 font-variant: small-caps;  
 font-size: 1.1em; 
@@ -72,7 +72,7 @@ padding-left: 15px;
 }
 
 tr, td {
-font-family: Lora, verdana, sans serif;  
+font-family: Roboto, verdana, sans serif;  
 font-size: 0.95em; 
 line-height: 1.2em;
 padding: 3px 5px 3px 5px;
