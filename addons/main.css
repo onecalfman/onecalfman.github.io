@@ -9,33 +9,34 @@ padding: 3px;
 }
 
 h1 {
-font-family: Grundschrift, arial, verdana, sans serif;
+font-family: verdana, sans serif;
 font-size: 2em;
 line-height: 2em;
 }
 
 h2 {
-font-family: Grundschrift, arial, verdana, sans serif;
+font-family: verdana, sans serif;
 width: 200;
+padding: 40px 40px 0px 0px;
 font-size: 1.4em;
 line-height: 1.8em;
 }
 
 h3 {
-font-family: Grundschrift, arial, verdana, sans serif;
+font-family: verdana, sans serif;
 font-size: 1.2em;
 line-height: 1.5em;
 }
 
 h4 {
-font-family: Grundschrift, arial, verdana, sans serif;
+font-family: verdana, sans serif;
 font-size: 1.1em;
 line-height: 1.4em;
 }
 
 a, p, ul, ol, li {
-font-family: Grundschrift, arial, verdana, sans serif;
-font-size: 1.0em;
+font-family: verdana, sans serif;
+font-size: 1.5em;
 line-height: 1.4em;
 margin-bottom: 6px;
 }
