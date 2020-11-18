@@ -1,6 +1,6 @@
 @font-face {
   font-family: Grundschrift;
-  src: url('fonts/grundschrift.ttf');
+  src: url('/fonts/grundschrift.ttf');
 }
 * {margin: 0px; padding: 0px;}
 
