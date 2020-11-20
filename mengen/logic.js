@@ -57,9 +57,14 @@ async function end() {
 
 	var category
 	switch(set) {
-		case 'augen': category = 'W\u{00FC}rfel'; break; 
-		case 'finger': category = 'Finger'; break; 
-		case 'punkte': category = 'Punkte'; break; 
+		case 'augen': category = 'W\u{00FC}rfel';
+			break; 
+		case 'finger': category = 'Finger';
+			break; 
+		case 'punkte': category = 'Punkte';
+			break; 
+		case 'striche': category = 'Striche';
+			break; 
 	}
 	if ( p ) { 
 		message = Math.round(RIGHT / (RIGHT + WRONG) * 100) + '% richtig';
@@ -189,13 +194,32 @@ punkte = [
 	['10','assets/punkte/ZF10-5-5.png']
 ]
 
-if ( set == 'augen') { 
-	src = augen; 
-} else if ( set == 'finger') { 
-	src = finger; 
-} else if ( set == 'punkte' ) {
-	src = punkte;
+striche = [
+	['1','assets/striche/Strich_01.png'],
+	['2','assets/striche/Strich_02.png'],
+	['3','assets/striche/Strich_03.png'],
+	['4','assets/striche/Strich_04.png'],
+	['5','assets/striche/Strich_05.png'],
+	['6','assets/striche/Strich_06.png'],
+	['7','assets/striche/Strich_07.png'],
+	['8','assets/striche/Strich_08.png'],
+	['9','assets/striche/Strich_09.png'],
+	['10','assets/striche/Strich_10.png']
+]
+
+if ( set ) { 
+	switch(set) {
+		case 'augen': src = augen; break; 
+		case 'finger': src = finger; break; 
+		case 'punkte': src = punkte; break; 
+		case 'striche': src = striche; break; 
+		default: 
+			src = augen;
+			console.log('Set ' + set + ' existiert nicht');
+			console.log('M\u{00F6}gliche Optionen sind: augen, finger, punkte, striche');
+	}
 }
+
 n = uniq(src)
 
 function greet() {
