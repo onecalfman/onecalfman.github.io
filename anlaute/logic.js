@@ -1,12 +1,10 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-//const PAIRS = 'pairs.csv';
-const PAIRS = 'anlaute.csv';
 var FONT = "Grundschrift";
 var FONT_SIZE = 60;
 var IMG_SCALE = 0.8;
 var SCALE = 0.8;
-var charge = 1;
+var charge = 2;
 const CARD_SIZE = 265;
 const BORDER = 5;
 const CARDS_N = 5;
@@ -25,7 +23,8 @@ ctx.font = FONT_SIZE + px + FONT;
 ctx.textBaseline = "hanging";
 
 var cards = [];
-var csv = []
+var csv = [];
+var lines = [];
 
 var time_counter = 0;
 
@@ -36,25 +35,71 @@ colors = [
 	'#9AD078', '#6DBFA9', '#F3B23C',
 ];
 
+level = [
+	[
+		['A','a','assets/A_Affe.PNG','assets/A_Ameise.PNG','assets/snd/Ameise-Affe.mp3'],
+		['E','e','assets/E_Elefant.PNG','assets/E_Ente.PNG','assets/snd/Elefant-Ente.mp3'],
+		['I','i','assets/I_Igel.PNG','assets/I_Indiander.PNG','assets/snd/Igel-Indianer.mp3'],
+		['O','o','assets/O_Oma.PNG','assets/O_Ordner_.PNG','assets/snd/Oma-Ordner.mp3'],
+		['U','u','assets/U_Ufo.PNG','assets/U_Unfall.PNG','assets/snd/Ufo-Unfall.mp3'],
+		['M','m','assets/M_Maus.PNG','assets/snd/Maus.mp3'],
+		['L','l','assets/L_Loewe.PNG','assets/snd/Loewe.mp3'],
+		['S','s','assets/S_Sonne.PNG','assets/snd/Sonne.mp3'],
+	],
+	[
+		['W','w','assets/W_Wolke.PNG','assets/snd/Wolke.mp3'],
+		['R','r','assets/R_Rakete.PNG','assets/snd/Rakete.mp3'],
+		['F','f','assets/F_Feder.PNG','assets/snd/Feder.mp3'],
+		['N','n','assets/N_Nadel.PNG','assets/snd/Nadel.mp3'],
+		['T','t','assets/T_Tasse.PNG','assets/snd/Tasse.mp3'],
+		['Au','au','assets/Au_Auto.PNG','assets/snd/Auto.mp3'],
+		['Ei','ei','assets/Ei_Eis.PNG','assets/snd/Eis.mp3'],
+	],
+	[
+		
+		['H','h','assets/H_Hose.PNG','assets/snd/Hose.mp3'],
+		['D','d','assets/D_Dino.PNG','assets/snd/Dino.mp3'],
+		['Sch','sch','assets/Sch_Schaf.PNG','assets/snd/Schaf.mp3'],
+		['K','k','assets/K_Kerze.PNG','assets/snd/Kerze.mp3'],
+		['Z','z','assets/Z_Zaun.PNG','assets/snd/Zaun.mp3'],
+		['P','p','assets/P_Pirat.PNG','assets/snd/Pirat.mp3'],
+		['G','g','assets/G_Gabel.PNG','assets/snd/Gabel.mp3'],
+		['J','j','assets/J_Jojo.PNG','assets/snd/Jo-Jo.mp3'],
+		['Eu','eu','assets/Eu_Euro.PNG','assets/snd/Euro.mp3'],
+	],
+	[
+		['Ä','ä','assets/Ae_Aepfel.PNG','assets/snd/Aepfel.mp3'],
+		['B','b','assets/B_Banane.PNG','assets/snd/Banane.mp3'],
+		['C','c','assets/C_Computer.PNG','assets/snd/Computer.mp3'],
+		['Ch','ch','assets/Ch_Buch.PNG','assets/Ch_Milch.PNG','assets/snd/Buch-Milch.mp3'],
+		['Ö','ö','assets/Oe_Oel.PNG','assets/snd/Oel.mp3'],
+		['Pf','pf','assets/Pf_Pfeil.PNG','assets/snd/Pfeil.mp3'],
+		['Qu','qu','assets/Qu_Qualle.PNG','assets/snd/Qualle.mp3'],
+		['Sp','sp','assets/Sp_Spinne.PNG','assets/snd/Spinne.mp3'],
+		['St','st','assets/St_Stempel.PNG','assets/snd/Stempel.mp3'],
+		['Ü','ü','assets/Ue_Ueberraschungsei.PNG','assets/snd/Ueberraschungsei.mp3'],
+		['V','v','assets/V_Vase.PNG','assets/V_Vogel.PNG','assets/snd/Vogel-Vase.mp3'],
+		['X','x','assets/X_Xylophon.PNG','assets/snd/Xylophon.mp3'],
+		['Y','y','assets/Y_Yak.PNG','assets/snd/Yack.mp3'],
+	]
+
+]
+
 const par = new URLSearchParams(window.location.search);
 	
-if ( par.get('c')) 		{ charge = par.get('c');}
+if ( par.get('c')) { charge = par.get('c');}
+if ( par.get('l')) { lvl = Math.floor(par.get('l'))
+	for( let i = 0; i < lvl; i++) {
+		lines = lines.concat(level[i]);
+		console.log(level[i])
+	}
+}
+else { lines = lines.concat(level[0],level[1],level[2],level[3]); }
 
 var mousedown = false;
 var movestart = [0,0]
 var finished = false;
 for (let i = 0; i <= CARDS_N; i++) { csv.push([]); }
-
-function open(filePath) {
-  var result = null;
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("GET", filePath, false);
-  xmlhttp.send();
-  if (xmlhttp.status==200) {
-    result = xmlhttp.responseText;
-  }
-  return result;
-}
 
 function sleep(milliseconds) {
   const date = Date.now();
@@ -369,15 +414,10 @@ class Card {
 	play() { this.snd[0].play(); }
 }
 
-
-
-
 function init()
 {
 	ctx.canvas.width = window.innerWidth;
 	ctx.canvas.height = window.innerHeight;
-	lines = open(PAIRS).split('\n')
-	
 	ctx.font = FONT_SIZE * SCALE + px + FONT;
 	ctx.textBaseline = "hanging";
 
@@ -385,7 +425,7 @@ function init()
 	{
 		n = randInt(0,lines.length - 1);
 		c = randInt(0,colors.length - 1);
-		cells = lines[n].split(',');
+		cells = lines[n];
 		for( let j = 0; j < cells.length; j++)
 		{
 			cell = cells[j].trim();
