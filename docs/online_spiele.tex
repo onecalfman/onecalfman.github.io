@@ -10,8 +10,8 @@
 	 a4paper,
 	 left=20mm,
 	 right=20mm,
-	 top=20mm,
-	 bottom=20mm,
+	 top=25mm,
+	 bottom=30mm,
 	 }
 \usepackage{hyperref}
 \title{Online Spiele}
@@ -96,12 +96,29 @@ Die Range ist ein Angabe in Welchem der Wert liegen muss bzw. in welchem Bereich
 	\end{multicols}
 
 \section{Anlaute}
-
-	\paragraph{c} Legst fest wie sehr sich die Karten am Anfang abstoßen.
+\begin{multicols}{2}
+	\paragraph{l} Legt das Level fest
 	\begin{itemize}
-		\item Default: 1
-		\item Möglich: 1 - 4 $\in \mathbb{Q}$
+		\item Default: 4
+		\item Möglich: 1 - 4 $\in \mathbb{N}$
+			\begin{itemize}
+				\item Level 1: A, E, I, O, U, M, L, S
+				\item Level 2: Level 1 + W, R, F, N, T, Au, Ei
+				\item Level 3: Level 2 + H, D, Sch, K, Z, P, G, J, EU
+				\item Level 4: alle Anlaute
+			\end{itemize}
 	\end{itemize}
+
+	\paragraph{c} Legt fest wie sehr sich die Karten am Anfang abstoßen.
+	\begin{itemize}
+		\item Default: 2
+		\item Möglich: 1 - 4 $\in \mathbb{Q}$
+		\item[]
+		\item[]
+		\item[]
+	\end{itemize}
+\end{multicols}
+
 
 \section{Mengen}
 \begin{multicols}{2}
