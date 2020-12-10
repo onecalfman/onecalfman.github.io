@@ -1,4 +1,6 @@
-colors = [ 
+speaker = new Image();
+
+var colors = [ 
 	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
 	'#F69856', '#F4A96D', '#90A8CC', '#93AACF',
 	'#B67BB4', '#ABA9CE', '#F086A2', '#F1785B',
@@ -47,22 +49,24 @@ function log(message)
 
 function Match() {
 }
-Match.point = function(eventPointX, eventPointY, matchPointX, matchPointY, matchPointW, matchPointH)
+Match.point = function(pointX, pointY, boxX, boxY, boxW, BoxH)
 {
-	if (matchPointX < eventPointX && matchPointX < matchPointX + matchPointW && matchPointY < eventPointY && eventPointY < matchPointY + matchPointH) {
+	if ( boxX - boxW / 2 < pointX && pointX < boxX + boxW / 2 && boxY - boxH / 2 < pointY && pointY < boxY + boxH / 2 ) {
 		return true;
+	}
+	else {
+		return false
 	}
 }
 
-Match.overlap = function(card1, card2)
+Match.overlap = function(p1, p2)
 {
-	lx = card1.x < card2.x && card2.x < card1.x + card1.w;
-	rx = card2.x < card1.x && card1.x < card2.x + card2.w;
-	ly = card1.y < card2.y && card2.y < card1.y + card1.w;
-	ry = card2.y < card1.y && card1.y < card2.y + card2.h;
-	if ((lx && (ly || ry )) || (rx && (ly || ry ))) { 
-		return true;
-	}
+	lx = p1.x - p1.w / 2 < p2.x + p2.w / 2; // right overlap
+	rx = p2.x - p2.w / 2 < p1.x + p1.w / 2; // left overlap
+	ay = p1.y - p1.h / 2 < p2.y + p2.h / 2; // above overlap
+	by = p2.y - p2.h / 2 < p1.y + p1.h / 2; // below overlap
+	if ( lx && rx && ay && by ) { return true; }
+	else { return false; }
 }
 
 function PlaceImg() {
@@ -70,15 +74,12 @@ function PlaceImg() {
 
 PlaceImg.center = function() {
 	img = arguments[0];
-	log(arguments);
 	switch(arguments.length) {
 		case 1:
-			log(1);
 			ctx.drawImage(img,canvas.width / 2 - img.width / 2, canvas.height / 2 - img.height / 2);
 			break;
 		case 2:
 			max = PlaceImg.max(img, arguments[1]);
-			log(2);
 			ctx.drawImage(img,canvas.width / 2 - max[0] / 2, canvas.height / 2 - max[1] / 2, max[0], max[1]);
 			break;
 		case 3: 
@@ -135,7 +136,6 @@ function PlaceText(){
 
 PlaceText.center = function(){
 	txt = arguments[0];
-	log(arguments);
 	ctx.font = '100px Roboto';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = "middle";
@@ -146,7 +146,6 @@ PlaceText.center = function(){
 			break;
 		case 2:
 			max = PlaceImg.max(img, arguments[1]);
-			log(2);
 			ctx.fillText(img,canvas.width / 2 - max[0] / 2, canvas.height / 2 - max[1] / 2, max[0], max[1]);
 			break;
 	}
@@ -162,32 +161,57 @@ PlaceText.fontheight = function(text) {
 	return measure.fontBoundingBoxAscent + measure.fontBoundingBoxDescent;
 }
 
-function Physics() {
-}
 
-Physics.epsilon = 0;
-Physics.G = 0.1;
-Physics.c = 10;
-
-Physics.sigmoid = function(x) {
+Math.sigmoid = function(x) {
 	return 1/(1+Math.pow(Math.E,-x));
 }
 
-Physics.sigmoid_derivative = function(x) {
-	return Physics.sigmoid(x) * ( 1- Physics.sigmoid(x));
+Math.sigmoid_derivative = function(x) {
+	return Math.sigmoid(x) * ( 1 - Math.sigmoid(x));
 }
+
+Math.distance = function(p1,p2)
+{
+	return Math.sqrt(Math.pow(p1.x - p2.x,2) + Math.pow(p1.y - p2.y,2));
+}
+
+Math.angle = function (p1, p2) {
+	return Math.atan2(p2.y - p1.y,p2.x - p1.x);
+}
+
+Math.distanceVector = function(p1,p2)
+{
+	return {x: p2.x - p1.x, y: p2.y - p1.y}
+}
+
+Math.norm = function(p1,p2) {
+	length = Math.distance(p1,p2)
+	return {
+		x: (p2.x - p1.x)/length,
+		y: (p2.y - p1.y)/length
+	}
+}
+
+
+function Physics() {
+}
+
+Physics.epsilon = 1;
+Physics.G = 1;
+Physics.c = 10;
+
 
 Physics.coulomb = function(p1, p2)
 {
-	magnitude = (Physics.epsilon * p1.charge * p2.charge) / (Math.pow((p1.x + p1.w / 2) - (p2.x + p2.w / 2),2) + Math.pow((p1.y + p1.h / 2) - (p2.y + p2.h / 2),2)); 
-	angle = Physics.angle(p1,p2);
+	magnitude = (Physics.epsilon * p1.charge * p2.charge) / (Math.pow(p1.x - p2.x,2) + Math.pow(p1.y - p2.y,2)); 
+	angle = Math.angle(p1,p2);
 	return {x: - Math.cos(angle) * magnitude, y: - Math.sin(angle) * magnitude }; 
 }
 
 Physics.gravity = function(p1,p2)
 {
-	magnitude = (Physics.G * p1.mass * p2.mass) / (Math.pow((p1.x + p1.w / 2) - (p2.x + p2.w / 2),2) + Math.pow((p1.y + p1.h / 2) - (p2.y + p2.h / 2),2))
-	angle = Physics.angle(p1,p2);
+	magnitude = (Physics.G * p1.mass * p2.mass) / (Math.pow(p1.x - p2.x,2) + Math.pow(p1.y - p2.y,2))
+	angle = Math.angle(p1,p2);
 	return {x: Math.cos(angle) * magnitude, y: Math.sin(angle) * magnitude }; 
 }
 
@@ -196,35 +220,47 @@ Physics.newton = function(p)
 	return p.mass * p.a;
 }
 
-Physics.distance = function(p1,p2)
+Physics.move = function(particles)
 {
-	return Math.sqrt(Math.pow((p1.x + p1.w / 2) - (p2.x + p2.w / 2),2) + Math.pow((p1.y + p1.h / 2) - (p2.y + p2.h / 2),2));
+	particles.forEach(function(particle) {
+		particle.forces(particles)
+		log(particle.group + " " + particle.force.x + " " + particle.force.y)
+		particle.move(particles)
+		particle.draw()
+		particle.debug()
+	})
 }
 
-Physics.angle = function (p1, p2) {
-	return Math.atan2((p2.y + p2.h) - (p1.y + p1.h), (p2.x + p2.w) - (p1.x + p1.w)).toFixed(4);
-}
 
 class Particle {
 	constructor() {
-		this.w = randInt(10,200);
+		this.w = randInt(5,100);
 		this.h = this.w;
-		this.x = randInt(0, canvas.width - this.w);
-		this.y = randInt(0, canvas.height - this.h);
-		this.charge = Physics.epsilon * Math.log(this.w * this.h);
-		this.mass = Physics.G * this.w;
+		this.x = randInt(this.w / 2, canvas.width - this.w / 2);
+		this.y = randInt(this.h / 2, canvas.height - this.h / 2);
+		//this.charge = Physics.epsilon * Math.log(this.w * this.h);
+		//this.mass = Physics.G * this.w;
+		this.charge = 0;
+		this.mass = 0;
 		this.friction = 0;
-		this.velocity = {x: randInt(-1000,1000)/5000, y: randInt(-1000,1000)/5000};
-		this.acceleration = {x: 0, y : 0}
-		this.color = randPred();
-		this.force = {x:0, y:0};
+		//this.velocity = {x: randInt(-1000,1000)/5000, y: randInt(-1000,1000)/5000};
+		this.velocity = {x: 0, y: 0};
+		this.acceleration = {x: 0, y : 0};
+		this.force = {x: 0, y: 0};
+		this.boundary;
+	}
+
+	satelliteVelocity(body) {
+		let v = Math.sqrt(Physics.G * body.mass/Math.distance(this,body));
+		let alpha = Math.angle(this,body);
+		return {x: - v * Math.sin(alpha), y: v * Math.cos(alpha)};
 	}
 
 	forces(particles) {
+		var coulomb = 0;
+		var gravity = 0;
 		for( let i = 0; i < particles.length; i++) {
 			if ( particles[i] !== this && Math.abs(particles[i].x - this.x) > 1 && Math.abs(particles[i].y - this.y) > 1) {
-				var coulomb = 0;
-				var gravity = 0;
 				coulomb = Physics.coulomb(this, particles[i])
 				gravity = Physics.gravity(this, particles[i])
 			} else { coulomb = {x:0, y:0}; gravity = {x:0, y:0};}
@@ -235,58 +271,135 @@ class Particle {
 		this.velocity.y += this.force.y/this.mass;
 	}
 	move() {
-		this.x += Math.sign(this.velocity.x) * Math.min(Math.abs(this.velocity.x), Physics.c);
-		this.y += Math.sign(this.velocity.y) * Math.min(Math.abs(this.velocity.y), Physics.c);
+		x = Math.sign(this.velocity.x) * Math.min(Math.abs(this.velocity.x), Physics.c);
+		y = Math.sign(this.velocity.y) * Math.min(Math.abs(this.velocity.y), Physics.c);
+		if ( this.boundary ) {
+			if ( this.x + x < this.boundary.x || this.boundary.x + this.boundary.w < this.x + x ) {
+				x = 0;
+			}
+			if ( this.y + y < this.boundary.y || this.boundary.y + this.boundary.h < this.y + y ) {
+				y = 0;
+			}
+		}
+		this.x += x;
+		this.y += y;
 	}
 	draw() {
 		ctx.font = '30px Arial';
 		ctx.fillStyle = this.color;
-		//ctx.fillRect(this.x, this.y, this.w, this.h)
+		 //ctx.fillRect(this.x, this.y, this.w, this.h)
 		ctx.beginPath();
-		ctx.arc(this.x + this.w/2, this.y +this.h/2, this.w/2, 0, Math.PI * 2, true);
+		ctx.arc(this.x, this.y, this.w/2, 0, Math.PI * 2, true);
 		ctx.fill();
 	}
 	debug() {
+		ctx.font = "20px Arial"
 		ctx.fillStyle = '#000000';
 		//ctx.fillText(this.group, this.x + this.w/2, this.y + this.h/2)
 		ctx.beginPath();
-		ctx.moveTo(this.x + this.w/2, this.y + this.h/2);
-		ctx.lineTo( this.x + this.w/2 + this.velocity.x * 100, this.y  +this.h / 2 + this.velocity.y * 100);
+		ctx.moveTo(this.x, this.y);
+		ctx.lineTo(this.x + this.velocity.x * 100, this.y + this.velocity.y * 100);
 		ctx.stroke();
-		ctx.fillText((this.force.x* 1000).toFixed(3) + ' ' + (this.force.y* 1000).toFixed(3), this.x + this.w/2, this.y  +this.h / 2);
+		ctx.fillText((this.force.x* 1000).toFixed(3) + ' ' + (this.force.y* 1000).toFixed(3), this.x, this.y);
 	}
 }
 
-class Satellite extends Particle {
-	constructor(body) {
+class Blackhole extends Particle {
+	constructor() {
 		super();
-		this.x = randInt(canvas.width / 7, canvas.width * 6/7 - this.w);
-		this.y = randInt(canvas.height / 7, canvas.height * 6/7 - this.w);
-		this.velocity = this.initialVelocity(body);
-		log(this.velocity);
+		this.mass = this.mass * 100;
 	}
 
-	initialVelocity(body) {
-		let v = Math.sqrt(Physics.G * body.mass/Physics.distance(this,body));
-		let alpha = Physics.angle(this,body);
-		console.log(alpha);
-		return {x: - v * Math.sin(alpha), y: v * Math.cos(alpha)};
+	draw() {}
+}
+
+class Card extends Particle {
+	constructor(group, w, h) {
+		super();
+		this.group = group;
+		this.w = w;
+		this.h = h;
+		this.img = [];
+		this.txt = [];
+		this.snd = [];
+		this.color;
 	}
-	draw() {
-		ctx.font = '30px Arial';
-		ctx.fillStyle = this.color;
-		//ctx.fillRect(this.x, this.y, this.w, this.h)
-		ctx.beginPath();
-		ctx.arc(this.x + this.w/2, this.y +this.h/2, this.w/2, 0, Math.PI * 2, true);
-		ctx.fill();
+
+	add(card)
+	{
+
+		for ( let i = 0; i < card.img.length; i++ ) {
+			this.img.push(card.img[i]);
+			if ( this.w < CARD_SIZE * SCALE ) {
+				this.w = CARD_SIZE * SCALE;
+			}
+			this.h = CARD_SIZE * SCALE;
+		}
+		if ( ! this.txt[0] ) { this.txt = card.txt; }
+		else {
+			for ( let i = 0; i < card.txt.length; i++ ) {
+				if ( card.txt[0][0] == card.txt[0][0].toUpperCase()) {
+					this.txt[0] = card.txt[i] + " " + this.txt[0];
+				} else {
+					this.txt[0] = this.txt[0] + " " + card.txt[0];
+				}
+				if ( this.w < ctx.measureText(this.txt[0]).width * 1.4) { 
+					this.w = ctx.measureText(this.txt[0]).width * 1.4
+				}
+				this.txt.push(card.txt[i]);
+				this.txt.pop();
+			}
+		}
+		
+		if ( this.img[0] ) {
+			if ( this.w < CARD_SIZE * SCALE ) { this.w = CARD_SIZE * SCALE; }
+			if (this.h < CARD_SIZE * SCALE ) { this.h = CARD_SIZE* SCALE; }
+		}
+
+		if ( ! this.color ) { this.color = '#bbbbbb'; };
+		
+		cards.splice(n,1);
 	}
-	debug() {
-		ctx.fillStyle = '#000000';
-		//ctx.fillText(this.group, this.x + this.w/2, this.y + this.h/2)
-		ctx.beginPath();
-		ctx.moveTo(this.x + this.w/2, this.y + this.h/2);
-		ctx.lineTo( this.x + this.w/2 + this.velocity.x * 100, this.y  +this.h / 2 + this.velocity.y * 100);
-		ctx.stroke();
-		ctx.fillText((this.force.x* 1000).toFixed(3) + ' ' + (this.force.y* 1000).toFixed(3), this.x + this.w/2, this.y  +this.h / 2);
+
+	draw()
+	{
+		if ( this.color ) {
+			ctx.globalAlpha = 0.6;
+			if ( this.snd[0] ) { ctx.globalAlpha = 1; }
+			ctx.fillStyle = this.color;
+			ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+			ctx.globalAlpha = 1;
+		}
+
+		var imgl = this.img.length;
+		for ( let i = 0; i < imgl; i++) {
+			PlaceImg.center(this.img[i], this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+		}
+
+		if (this.snd[0] ) {
+			ctx.globalAlpha = 0.3;
+			//ctx.drawImage(speaker, this.x, this.y, this.w, this.h);
+			if ( this.txt[0] || this.img[0] ) {
+				ctx.drawImage(speaker, this.x - this.w / 2 + this.w * 0.7, this.y - this.h / 2 , this.w * 0.3, this.h * 0.3);
+			} else {
+				ctx.drawImage(speaker, this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+			}
+			ctx.globalAlpha = 1;
+		}
+		var txtl = this.txt.length;
+		for ( let i = 0; i < txtl; i++) {
+			ctx.globalAlpha = 0.6;
+			ctx.fillStyle = '#bbbbbb';
+			ctx.fillRect(this.x, this.y + this.h - FONT_SIZE, this.w, FONT_SIZE);
+			ctx.globalAlpha = 1;
+			ctx.fillStyle = '#000000';
+			ctx.textBaseline = "bottom";
+			ctx.font = FONT_SIZE + px + FONT;
+			ctx.textAlign = 'center';
+			ctx.fillText(this.txt[i], this.x + this.w / 2 , this.y + this.h + FONT_SIZE * 0.1);
+		}
+
 	}
+
+	play() { this.snd[0].play(); }
 }
