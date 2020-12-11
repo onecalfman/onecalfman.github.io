@@ -1,15 +1,19 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+const bgColor = '#ddd';
 var FONT = "Grundschrift";
 var FONT_SIZE = 60;
+var CARDS = [];
 var IMG_SCALE = 0.8;
 var SCALE = 0.8;
 var charge = 5;
 const CARD_SIZE = 265;
 const BORDER = 5;
-const CARDS_N = 10;
+var CARDS_N = 10;
 const epsilon = 5;
 var words;
+var circle;
+Physics.G *= -1
 const buttonsX = canvas.width;
 const buttonsY = canvas.height  / 4;
 var colors = [ 
@@ -31,8 +35,6 @@ var buttons = [];
 var rejectTimer = 0;
 var acceptTimer = [];
 
-Physics.G = 0;
-
 const px = 'px ';
 ctx.font = FONT_SIZE + px + FONT;
 ctx.textBaseline = "hanging";
@@ -47,6 +49,7 @@ const par = new URLSearchParams(window.location.search);
 	
 if ( par.get('c')) 		{ charge = par.get('c');}
 if ( par.get('s')) 		{ set = par.get('s');}
+if ( par.get('n')) 		{ CARDS_N = par.get('n');}
 set = 'm'
 
 const label = [set.toUpperCase(), set.toLowerCase(), set.toUpperCase() + ' ' + set.toLowerCase()]
@@ -114,14 +117,48 @@ function recolor() {
 }
 
 function end() {
+	canvas.removeEventListener("touchmove",  drag);
+	canvas.removeEventListener("touchstart",  layer);
+	canvas.removeEventListener("touchend",  match);
+	canvas.addEventListener("touchstart",  function(event) { log('tap init'); tap(event.changedTouches[0].pageX, event.changedTouches[0].pageY)});
+	canvas.onmousedown = function(event) { tap(event.clientX,event.clientY); };
+	Physics.G *= -1;
+	CARDS.push(cards[0]);
+	cards = CARDS;
+	for(let i = 0; i < cards.length; i++) {
+		clearInterval(acceptTimer[i]);
+		center = new Blackhole();
+		center.x = canvas.width / 2;
+		center.y = canvas.height / 2;
+		center.mass = 5000;
+		cards[i].x = randInt(this.w / 2, canvas.width - this.w/2)
+		cards[i].y = randInt(this.h / 2, canvas.height - this.h/2)
+		cards[i].velocity = cards[i].satelliteVelocity(center);
+		cards[i].boundary = false;
+		cards[i].mass = 1;
+	}
+	cards.push(center);
+	circle = setInterval(satellite, 40, cards);
+}
 
+function satellite(particles) {
+	ctx.fillStyle = '#ddd';
+	ctx.fillRect(0,0,canvas.width, canvas.height);
+	Physics.move(particles);
+	cards[0].draw();
 }
 
 function restart ()
 {
+	clearInterval(circle);
+	Physics.G *= -1;
+	cards.pop();
 	cards = [];
+	CARDS = [];
 	time_counter = 0;
 	images = []
+	rejectTimer = 0;
+	acceptTimer = [];
 	recolor();
 	var mousedown = false;
 	var movestart = [0,0]
@@ -137,7 +174,6 @@ function draw()
 	buttonCreate(3, 3, 1, canvas.width, canvas.height / 4);
 	cards.forEach(function(card) {
 		card.draw();
-		card.debug();
 	});
 }
 
@@ -188,8 +224,8 @@ function reject(card, button, time, duration, i) {
 }
 
 function move(time, duration) {
-	draw();
 	Physics.move(cards);
+	draw();
 	time_counter++;
 	if ( Date.now() - time > duration ) {
 		clearInterval(timer);
@@ -201,22 +237,40 @@ function move(time, duration) {
 	}
 }
 
+function tap(x,y) {
+	log('tap')
+	for(let i = cards.length - 1; i > 0; i--) {
+		if(Match.point(x,y,cards[i].x, cards[i].y, cards[i].w, cards[i].h)) {
+			if ( cards[i] instanceof Endcard) { 
+				restart(); 
+				return;
+			}
+			if ( cards[i].snd[0] ) { 
+				cards[i].play(); 
+				return;
+			}
+		}
+	}
+}
+
 function match()
 {
 	card = cards[cards.length - 1];
 	for ( let i = 0; i < buttons.length; i++) {
-		lx = buttons[i][0] <= card.x + card.w/2;
-		rx = buttons[i][2] >= card.x + card.w / 2;
-		ly = buttons[i][1] <= card.y + card.h/2;
-		ry = buttons[i][3] >= card.y + card.h / 2;
+		lx = buttons[i][0] <= card.x;
+		rx = buttons[i][2] >= card.x;
+		ly = buttons[i][1] <= card.y;
+		ry = buttons[i][3] >= card.y;
 
 		if (lx && rx && ly && ry) { 
 			if ( card.group.includes(label[i]) ) {
 				j = acceptTimer.length;
-				acceptTimer.push(setInterval(accept, 5, card, Date.now(), 600, i, j));
+				acceptTimer.push(setInterval(accept, 50, card, Date.now(), 600, i, j));
 				cards.pop();
 				if ( ! cards.length ) { 
-					cards.push(new Endcard); 
+					cards.push(new Endcard()); 
+					cards[0].x = canvas.width / 2;
+					cards[0].y = canvas.height / 2;
 					end();
 				}
 			}
@@ -226,6 +280,9 @@ function match()
 				cards.pop();
 				if ( ! cards.length ) { 
 					cards.push(new Endcard); 
+					cards[0].x = canvas.width / 2;
+					cards[0].y = canvas.height / 2;
+					draw();
 					end();
 				}
 			}
@@ -235,7 +292,7 @@ function match()
 				button.x = buttons[i][0] + buttons[i][2] / 2;
 				button.y = canvas.height * 1.6;
 				button.charge = 6000;
-				rejectTimer = setInterval(reject, 5, card, button, Date.now(), 600, i);
+				rejectTimer = setInterval(reject, 50, card, button, Date.now(), 600, i);
 			}
 			draw();
 			return;
@@ -285,26 +342,24 @@ function drag(x,y)
 	}
 }
 
-class Endcard {
+class Endcard extends Card {
 	constructor() {
-		this.group = 'uniqe';
-		this.w = CARD_SIZE * 0.7;
-		this.h = CARD_SIZE * 0.7;
-		this.x = canvas.width / 2 - this.w / 2;
-		this.y = canvas.height / 2 - this.h / 2;
-		//this.x = canvas.width - this.w; 
-		//this.y = canvas.height - this.h;
+		super('uniqe', CARD_SIZE * 0.7, CARD_SIZE * 0.7);
+		this.x = canvas.width / 2;
+		this.y = canvas.height / 2;
 		this.color = randPred();
 		this.img = restart_img;
+		log(this.x)
+		log(this.y)
 	}
 
 	draw() { 
 		ctx.fillStyle = this.color;
 		ctx.beginPath();
-		ctx.arc(this.x + this.w/2, this.y + this.h/2, this.w/2, 0, Math.PI * 2);
+		ctx.arc(this.x, this.y , this.w/2, 0, Math.PI * 2);
 		ctx.fill();
 		ctx.globalAlpha = 0.3
-		ctx.drawImage(restart_img, this.x, this.y, this.w, this.h);
+		ctx.drawImage(restart_img, this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
 		ctx.globalAlpha = 1;
 	}
 }
@@ -366,9 +421,9 @@ function createCard(txt, img, snd) {
 	card.y = randInt(canvas.height * 0.4, canvas.height * 0.6);
 	card.img[0] = img;
 	card.snd[0] = new Audio(snd);
-	card.mass = Math.log(this.w * this.h);
-	card.charge = 5 * Math.log(card.w * card.h);
-	card.boundary = { x : card.w / 2, y : card.h / 2, w : canvas.width - card.w / 2, h : buttons[0][1] - card.h }
+	card.friction = 0.4;
+	card.mass = Math.sqrt(this.w * this.h);
+	card.boundary = { x : card.w / 1.5, y : card.h / 1.5, w : canvas.width - card.w * 1.2, h : buttons[0][1] - card.h * 1.3 }
 	return card;
 }
 
@@ -395,13 +450,14 @@ function init()
 		images[i] = new Image();
 		images[i].onload = function() { 
 			cards.push(createCard(cells[0], images[i], cells[2]));
+			CARDS.push(createCard(cells[0], images[i], cells[2]));
 			draw();
 		}
 		images[i].src = cells[1];
 		lines.splice(n,1);
 	}
 
-	timer = setInterval(move, 5, Date.now(), 1000);
+	timer = setInterval(move, 30, Date.now(), 1500);
 
 	canvas.onmousedown = function(event) { layer(event.clientX,event.clientY); };
 	canvas.onmouseup = function(event) { mousedown = false; match(); };
