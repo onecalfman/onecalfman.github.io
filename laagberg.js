@@ -49,7 +49,7 @@ function log(message)
 
 function Match() {
 }
-Match.point = function(pointX, pointY, boxX, boxY, boxW, BoxH)
+Match.point = function(pointX, pointY, boxX, boxY, boxW, boxH)
 {
 	if ( boxX - boxW / 2 < pointX && pointX < boxX + boxW / 2 && boxY - boxH / 2 < pointY && pointY < boxY + boxH / 2 ) {
 		return true;
@@ -222,13 +222,18 @@ Physics.newton = function(p)
 
 Physics.move = function(particles)
 {
-	particles.forEach(function(particle) {
-		particle.forces(particles)
-		log(particle.group + " " + particle.force.x + " " + particle.force.y)
-		particle.move(particles)
-		particle.draw()
-		particle.debug()
-	})
+	for(let i = 0; i < particles.length; i++) {
+		for(let j = i+1; j < particles.length; j++) {
+			let force = Physics.gravity(particles[i],particles[j]);
+			particles[i].velocity.x += force.x / particles[i].mass;
+			particles[i].velocity.y += force.y / particles[i].mass;
+			particles[j].velocity.x -= force.x / particles[j].mass;
+			particles[j].velocity.y -= force.y / particles[j].mass;
+		}
+	particles[i].x += particles[i].velocity.x;
+	particles[i].y += particles[i].velocity.y;
+	particles[i].draw();
+	}
 }
 
 
@@ -241,7 +246,7 @@ class Particle {
 		//this.charge = Physics.epsilon * Math.log(this.w * this.h);
 		//this.mass = Physics.G * this.w;
 		this.charge = 0;
-		this.mass = 0;
+		this.mass = Math.sqrt(this.w * this.h);
 		this.friction = 0;
 		//this.velocity = {x: randInt(-1000,1000)/5000, y: randInt(-1000,1000)/5000};
 		this.velocity = {x: 0, y: 0};
@@ -251,28 +256,31 @@ class Particle {
 	}
 
 	satelliteVelocity(body) {
-		let v = Math.sqrt(Physics.G * body.mass/Math.distance(this,body));
+		let v = Math.sqrt(Math.abs(Physics.G) * body.mass/Math.distance(this,body));
 		let alpha = Math.angle(this,body);
 		return {x: - v * Math.sin(alpha), y: v * Math.cos(alpha)};
 	}
 
 	forces(particles) {
-		var coulomb = 0;
-		var gravity = 0;
+		let force = {x:0,y:0};
+		let coulomb = {x:0,y:0};
+		let gravity = {x:0,y:0};
 		for( let i = 0; i < particles.length; i++) {
 			if ( particles[i] !== this && Math.abs(particles[i].x - this.x) > 1 && Math.abs(particles[i].y - this.y) > 1) {
 				coulomb = Physics.coulomb(this, particles[i])
 				gravity = Physics.gravity(this, particles[i])
-			} else { coulomb = {x:0, y:0}; gravity = {x:0, y:0};}
+				force.x += coulomb.x + gravity.x;
+				force.y += coulomb.y + gravity.y;
+			} 
 		}
-		this.force.x = coulomb.x + gravity.x + this.acceleration.x;
-		this.force.y = coulomb.y + gravity.y + this.acceleration.y;
-		this.velocity.x += this.force.x/this.mass;
-		this.velocity.y += this.force.y/this.mass;
+		this.force.x = force.x + this.acceleration.x;
+		this.force.y = force.y + this.acceleration.y;
+		this.velocity.x += (1 - this.friction) * this.force.x/this.mass;
+		this.velocity.y += (1 - this.friction) * this.force.y/this.mass;
 	}
 	move() {
-		x = Math.sign(this.velocity.x) * Math.min(Math.abs(this.velocity.x), Physics.c);
-		y = Math.sign(this.velocity.y) * Math.min(Math.abs(this.velocity.y), Physics.c);
+		let x = Math.sign(this.velocity.x) * Math.min(Math.abs(this.velocity.x), Physics.c);
+		let y = Math.sign(this.velocity.y) * Math.min(Math.abs(this.velocity.y), Physics.c);
 		if ( this.boundary ) {
 			if ( this.x + x < this.boundary.x || this.boundary.x + this.boundary.w < this.x + x ) {
 				x = 0;
