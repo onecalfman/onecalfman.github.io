@@ -54,8 +54,15 @@ Match.point = function(pointX, pointY, boxX, boxY, boxW, boxH)
 	if ( boxX - boxW / 2 < pointX && pointX < boxX + boxW / 2 && boxY - boxH / 2 < pointY && pointY < boxY + boxH / 2 ) {
 		return true;
 	}
-	else {
-		return false
+	else { return false }
+}
+
+Match.card = function(x,y,card) {
+	if ( card.x - card.w / 2 < x && x < card.x + card.w / 2 && card.y - card.h / 2 < y && y < card.y + card.h / 2 ) {
+		return true;
+	} 
+	else { 
+		return false; 
 	}
 }
 

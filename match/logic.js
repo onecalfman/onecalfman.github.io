@@ -34,6 +34,7 @@ restart_img.src = 'assets/restart.png';
 var buttons = [];
 var rejectTimer = 0;
 var acceptTimer = [];
+var drawTimer;
 
 const px = 'px ';
 ctx.font = FONT_SIZE + px + FONT;
@@ -117,11 +118,10 @@ function recolor() {
 }
 
 function end() {
-	canvas.removeEventListener("touchmove",  drag);
-	canvas.removeEventListener("touchstart",  layer);
-	canvas.removeEventListener("touchend",  match);
-	canvas.addEventListener("touchstart",  function(event) { log('tap init'); tap(event.changedTouches[0].pageX, event.changedTouches[0].pageY)});
-	canvas.onmousedown = function(event) { tap(event.clientX,event.clientY); };
+	canvas.removeEventListener("pointerdown",  layer);
+	canvas.removeEventListener("pointermove",  drag);
+	canvas.removeEventListener("pointerup",  match);
+	canvas.addEventListener("pointerdown", tap);
 	Physics.G *= -1;
 	CARDS.push(cards[0]);
 	cards = CARDS;
@@ -130,7 +130,7 @@ function end() {
 		center = new Blackhole();
 		center.x = canvas.width / 2;
 		center.y = canvas.height / 2;
-		center.mass = 5000;
+		center.mass = 50000;
 		cards[i].x = randInt(this.w / 2, canvas.width - this.w/2)
 		cards[i].y = randInt(this.h / 2, canvas.height - this.h/2)
 		cards[i].velocity = cards[i].satelliteVelocity(center);
@@ -162,6 +162,7 @@ function restart ()
 	recolor();
 	var mousedown = false;
 	var movestart = [0,0]
+	canvas.removeEventListener("pointerdown", tap);
 	draw();
 	init();
 }
@@ -237,9 +238,10 @@ function move(time, duration) {
 	}
 }
 
-function tap(x,y) {
-	log('tap')
-	for(let i = cards.length - 1; i > 0; i--) {
+function tap(event) {
+	x = event.x;
+	y = event.y;
+	for(let i = cards.length - 1; i >= 0; i--) {
 		if(Match.point(x,y,cards[i].x, cards[i].y, cards[i].w, cards[i].h)) {
 			if ( cards[i] instanceof Endcard) { 
 				restart(); 
@@ -255,6 +257,8 @@ function tap(x,y) {
 
 function match()
 {
+	clearInterval(drawTimer);
+	canvas.removeEventListener("pointermove",  drag);
 	card = cards[cards.length - 1];
 	for ( let i = 0; i < buttons.length; i++) {
 		lx = buttons[i][0] <= card.x;
@@ -298,38 +302,38 @@ function match()
 			return;
 		}
 	}
-	if ( card.x === movestart[0] && card.y === movestart[1] ) {
+	if ( card.x == movestart[0] && card.y == movestart[1] ) {
 		if ( card instanceof Endcard) { 
 			restart(); 
 			return;
 		}
 		if ( card.snd[0] ) { card.play(); }
 	}
+	draw();
 }
 
-function layer(x,y)
+function layer(event)
 { 
-	mousedown = true;
+	let x = event.x;
+	let y = event.y;
+	drawTimer = setInterval(draw, 20);
 	for ( let i = cards.length - 1; i >= 0; i-- )
 	{
-		if ( cards[i].x - cards[i].w / 2 <= x && x <= cards[i].x + cards[i].w / 2 ) {
-			if ( cards[i].y - cards[i].h / 2 <= y && y <= cards[i].y + cards[i].h / 2 ) 
-			{ 
-				cards.push(cards[i]);
-				movestart = [cards[i].x,cards[i].y]
-				cards.splice(i, 1);
-				canvas.onmousemove = function(event) { drag(event.clientX, event.clientY); };
-				return;
-			
-			}
+		if (Match.card(x,y,cards[i]) ) { 
+			cards.push(cards[i]);
+			movestart = [cards[i].x,cards[i].y]
+			cards.splice(i, 1);
+			canvas.addEventListener("pointermove",  drag);
+			return;
 		}
 	}
-	mousedown = false;
 }
 
-function drag(x,y)
+function drag(event)
 { 
-	if (mousedown)
+	let x = event.x;
+	let y = event.y;
+	if (true)
 	{
 		card = cards[cards.length - 1]
 		card.x = x;
@@ -338,7 +342,7 @@ function drag(x,y)
 		if ( canvas.width - card.w / 2 < card.x ) { card.x = canvas.width - card.w / 2 ; }
 		if ( card.y - card.h / 2 < 0 ) { card.y = card.h / 2; }
 		if ( canvas.height - card.h / 2 < card.y ) { card.y = canvas.height - card.h / 2; }
-		draw();
+		//draw();
 	}
 }
 
@@ -349,8 +353,6 @@ class Endcard extends Card {
 		this.y = canvas.height / 2;
 		this.color = randPred();
 		this.img = restart_img;
-		log(this.x)
-		log(this.y)
 	}
 
 	draw() { 
@@ -459,13 +461,9 @@ function init()
 
 	timer = setInterval(move, 30, Date.now(), 1500);
 
-	canvas.onmousedown = function(event) { layer(event.clientX,event.clientY); };
-	canvas.onmouseup = function(event) { mousedown = false; match(); };
-	canvas.addEventListener("touchstart", function(event) { layer(event.changedTouches[0].pageX, event.changedTouches[0].pageY)});
-	canvas.addEventListener("touchmove",  function(event) { drag(event.changedTouches[0].pageX, event.changedTouches[0].pageY)});
-    	canvas.addEventListener("touchend",  function(event) {mousedown = false; match();});
+	canvas.addEventListener("pointerdown", layer);
+    	canvas.addEventListener("pointerup",  match);
 
-	window.addEventListener("resize", function(event) {resize();}, true);
-	draw();
+	window.addEventListener("resize", resize);
 }
 
