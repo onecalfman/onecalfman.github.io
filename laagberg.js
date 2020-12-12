@@ -42,6 +42,15 @@ for (let i = 0; i < arr.length; i++) {
 return counts.length - 1;
 }
 
+function isTouchDevice() {  
+  try {  
+    document.createEvent("TouchEvent");  
+    return true;  
+  } catch (e) {  
+    return false;  
+  }  
+}
+
 function log(message) 
 {
       console.log(message)
@@ -227,19 +236,37 @@ Physics.newton = function(p)
 	return p.mass * p.a;
 }
 
-Physics.move = function(particles)
+Physics.move = function(p)
 {
-	for(let i = 0; i < particles.length; i++) {
-		for(let j = i+1; j < particles.length; j++) {
-			let force = Physics.gravity(particles[i],particles[j]);
-			particles[i].velocity.x += force.x / particles[i].mass;
-			particles[i].velocity.y += force.y / particles[i].mass;
-			particles[j].velocity.x -= force.x / particles[j].mass;
-			particles[j].velocity.y -= force.y / particles[j].mass;
+	for(let i = 0; i < p.length; i++) {
+		for(let j = i+1; j < p.length; j++) {
+			let force = Physics.gravity(p[i],p[j]);
+			p[i].velocity.x += force.x / p[i].mass;
+			p[i].velocity.y += force.y / p[i].mass;
+			p[j].velocity.x -= force.x / p[j].mass;
+			p[j].velocity.y -= force.y / p[j].mass;
 		}
-	particles[i].x += particles[i].velocity.x;
-	particles[i].y += particles[i].velocity.y;
-	particles[i].draw();
+	if(p[i].boundary) {
+		if(p[i].x - p[i].w / 2 < p[i].boundary.x) {
+			log('-x')
+			p[i].velocity.x = 0;
+		} 
+		else if ( p[i].x + p[1].w / 2 > p[i].boundary.x + p[i].boundary.w) {
+			log('+x')
+			p[i].velocity.x = 0;
+		}
+		if(p[i].y - p[i].h / 2 < p[i].boundary.y) {
+			log('-y')
+			p[i].velocity.y = 0;
+		}
+		else if ( p[i].y + p[i].w / 2 > p[i].boundary.y + p[i].boundary.h) {
+			log('+y')
+			p[i].velocity.y = 0;
+		}
+	}
+	p[i].x += p[i].velocity.x;
+	p[i].y += p[i].velocity.y;
+	p[i].draw();
 	}
 }
 
@@ -282,8 +309,8 @@ class Particle {
 		}
 		this.force.x = force.x + this.acceleration.x;
 		this.force.y = force.y + this.acceleration.y;
-		this.velocity.x += (1 - this.friction) * this.force.x/this.mass;
-		this.velocity.y += (1 - this.friction) * this.force.y/this.mass;
+		this.velocity.x += this.force.x/this.mass;
+		this.velocity.y += this.force.y/this.mass;
 	}
 	move() {
 		let x = Math.sign(this.velocity.x) * Math.min(Math.abs(this.velocity.x), Physics.c);
@@ -299,6 +326,26 @@ class Particle {
 		this.x += x;
 		this.y += y;
 	}
+
+	boundaries() {
+		if ( this.x + this. w / 2 < this.boundary.x ) {
+			this.velocity = { x : 0, y : 0 };
+			this.x = this.w / 2;
+		}
+		else if ( this.x + this.w / 2 > this.boundary.x + this.boundary.w ) {
+			this.velocity = { x : 0, y : 0 };
+			this.x = this.boundary.x + this.boundary.w - this.w / 2;
+		}
+		else if ( this.y + this. h / 2 < this.boundary.y ) {
+			this.velocity = { x : 0, y : 0 };
+			this.y = this.h / 2;
+		}
+		else if ( this.y - this.h / 2 > this.boundary.y + this.boundary.h ) {
+			this.velocity = { x : 0, y : 0 };
+			this.y = this.boundary.y + this.boundary.h + this.h / 2;
+		}
+	}
+
 	draw() {
 		ctx.font = '30px Arial';
 		ctx.fillStyle = this.color;

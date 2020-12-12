@@ -13,7 +13,6 @@ var CARDS_N = 10;
 const epsilon = 5;
 var words;
 var circle;
-Physics.G *= -1
 const buttonsX = canvas.width;
 const buttonsY = canvas.height  / 4;
 var colors = [ 
@@ -58,17 +57,6 @@ const label = [set.toUpperCase(), set.toLowerCase(), set.toUpperCase() + ' ' + s
 var mousedown = false;
 var movestart = [0,0]
 var finished = false;
-
-function open(filePath) {
-  var result = null;
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("GET", filePath, false);
-  xmlhttp.send();
-  if (xmlhttp.status==200) {
-    result = xmlhttp.responseText;
-  }
-  return result;
-}
 
 function sleep(milliseconds) {
   const date = Date.now();
@@ -122,7 +110,7 @@ function end() {
 	canvas.removeEventListener("pointermove",  drag);
 	canvas.removeEventListener("pointerup",  match);
 	canvas.addEventListener("pointerdown", tap);
-	Physics.G *= -1;
+	Physics.G = 1;
 	CARDS.push(cards[0]);
 	cards = CARDS;
 	for(let i = 0; i < cards.length; i++) {
@@ -208,8 +196,7 @@ function accept(card, time, duration, i , j) {
 }
 
 function reject(card, button, time, duration, i) {
-	card.forces([button]);
-	card.move();
+	Physics.move([card,button]);
 	draw();
 	ctx.globalAlpha = sin[(Math.round(30 * (Date.now() - time)/duration))-1]
 	ctx.fillStyle = '#993333';
@@ -295,7 +282,7 @@ function match()
 				button = new Card('button', 5, 5, 2);
 				button.x = buttons[i][0] + buttons[i][2] / 2;
 				button.y = canvas.height * 1.6;
-				button.charge = 6000;
+				button.mass = 600000;
 				rejectTimer = setInterval(reject, 50, card, button, Date.now(), 600, i);
 			}
 			draw();
@@ -342,7 +329,6 @@ function drag(event)
 		if ( canvas.width - card.w / 2 < card.x ) { card.x = canvas.width - card.w / 2 ; }
 		if ( card.y - card.h / 2 < 0 ) { card.y = card.h / 2; }
 		if ( canvas.height - card.h / 2 < card.y ) { card.y = canvas.height - card.h / 2; }
-		//draw();
 	}
 }
 
@@ -418,14 +404,14 @@ function buttonCreate(n,x_dim,y_dim,width,height) {
 }
 
 function createCard(txt, img, snd) {
-	card = new Card(txt, img.width, img.height, 100); 
+	let size = Math.min(canvas.width / 4, canvas.height / 4, 200);
+	card = new Card(txt, size, size, 100); 
 	card.x = randInt(canvas.width * 0.4, canvas.width * 0.6);
 	card.y = randInt(canvas.height * 0.4, canvas.height * 0.6);
 	card.img[0] = img;
 	card.snd[0] = new Audio(snd);
-	card.friction = 0.4;
 	card.mass = Math.sqrt(this.w * this.h);
-	card.boundary = { x : card.w / 1.5, y : card.h / 1.5, w : canvas.width - card.w * 1.2, h : buttons[0][1] - card.h * 1.3 }
+	card.boundary = { x : canvas.width * 0.05, y : canvas.height * 0.05, w : canvas.width * 0.95, h : buttons[0][1] * 0.9 }
 	return card;
 }
 
@@ -437,6 +423,7 @@ function init()
 	ctx.canvas.height = window.innerHeight;
 	ctx.font = FONT_SIZE * SCALE + px + FONT;
 	ctx.textBaseline = "hanging";
+	if ( isTouchDevice() ) { Physics.G = -6 } else { Physics.G = -2 }
 
 	set = 'm';
 	words = getWords(set);
@@ -460,6 +447,8 @@ function init()
 	}
 
 	timer = setInterval(move, 30, Date.now(), 1500);
+
+	cards.forEach(function(card) { card.boundary.h = canvas.height; });
 
 	canvas.addEventListener("pointerdown", layer);
     	canvas.addEventListener("pointerup",  match);
