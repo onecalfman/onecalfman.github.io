@@ -157,7 +157,7 @@ function restart ()
 
 function draw()
 {
-	ctx.clearRect(0,0, canvas.width, canvas.height);
+	//ctx.clearRect(0,0, canvas.width, canvas.height);
 	ctx.fillStyle = '#ddd';
 	ctx.fillRect(0,0,canvas.width, canvas.height);
 	buttonCreate(3, 3, 1, canvas.width, canvas.height / 4);
@@ -431,6 +431,7 @@ function init()
 		images[i].onload = function() { 
 			cards.push(createCard(cells[0], images[i], cells[2]));
 			CARDS.push(createCard(cells[0], images[i], cells[2]));
+			draw();
 		}
 		images[i].src = cells[1];
 		lines.splice(n,1);
@@ -443,6 +444,8 @@ function init()
 			card.boundary.h = canvas.height; 
 			card.velocity = { x : 0, y : 0 };
 		});
+		canvas.addEventListener("pointerdown", layer);
+    		canvas.addEventListener("pointerup",  match);
 		draw();
 	}, 1500)
 
