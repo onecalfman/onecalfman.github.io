@@ -231,10 +231,10 @@ function tap(event) {
 
 function match()
 {
-	bgColor = '#53c';
+	bgColor = '#ddd';
 	clearInterval(drawTimer);
-	canvas.removeEventListener("mousemove",  drag);
-	canvas.removeEventListener("touchmove",  initDrag);
+	canvas.removeEventListener("mousemove",  drag, false);
+	canvas.removeEventListener("touchmove",  initDrag, false);
 	card = cards[cards.length - 1];
 	for ( let i = 0; i < buttons.length; i++) {
 		lx = buttons[i][0] <= card.x;
@@ -410,10 +410,10 @@ function createCard(txt, img, snd) {
 	card.img[0] = img;
 	card.snd[0] = new Audio(snd);
 	card.mass = Math.sqrt(this.w * this.h);
+	card.draw = function() { PlaceImg.center(this.img[0], this.x - this.w / 2, this.y - this.h / 2, this.w, this.h) };
 	card.boundary = { x : canvas.width * 0.05, y : canvas.height * 0.05, w : canvas.width * 0.95, h : buttons[0][1] * 0.9 }
 	return card;
 }
-
 
 function init()
 {
@@ -453,7 +453,7 @@ function init()
 	setTimeout(function() { 
 		clearInterval(timer);
 		clearInterval(drawer);
-		bgColor = '#53c';
+		bgColor = '#ddd';
 		cards.forEach(function(card) {
 			card.boundary.h = canvas.height; 
 			card.velocity = { x : 0, y : 0 };
