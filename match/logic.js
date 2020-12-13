@@ -231,6 +231,7 @@ function tap(event) {
 
 function match()
 {
+	bgColor = '#53c';
 	clearInterval(drawTimer);
 	canvas.removeEventListener("mousemove",  drag);
 	canvas.removeEventListener("touchmove",  initDrag);
