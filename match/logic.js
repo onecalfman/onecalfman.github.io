@@ -55,7 +55,6 @@ const par = new URLSearchParams(window.location.search);
 if ( par.get('c')) 		{ charge = par.get('c');}
 if ( par.get('s')) 		{ set = par.get('s');}
 if ( par.get('n')) 		{ CARDS_N = par.get('n');}
-set = 'm'
 
 const label = [set.toUpperCase(), set.toLowerCase(), set.toUpperCase() + ' ' + set.toLowerCase()]
 
@@ -477,7 +476,6 @@ function init()
 	ctx.globalAlpha = 1;
 	if ( isTouchDevice() ) { Physics.G = -4 } else { Physics.G = -2 }
 
-	set = 'm';
 	words = getWords(set);
 	for(let i = 0; i < words.length; i++) {
 		word = assets[words[i]]
@@ -485,9 +483,10 @@ function init()
 	}
 
 	draw();
+	CARDS_N = Math.min(lines.length, CARDS_N)
 	for(let i = 0; i < CARDS_N; i++)
 	{
-		n = randInt(0,lines.length - 1);
+		n = randInt(0,lines.length);
 		let cells = lines[n];
 		images[i] = new Image();
 		images[i].onload = function() { 
