@@ -1,4 +1,5 @@
 speaker = new Image();
+var isSafari = navigator.vendor.includes('Apple')
 
 var colors = [ 
 	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
@@ -248,25 +249,21 @@ Physics.move = function(p)
 		}
 	if(p[i].boundary) {
 		if(p[i].x - p[i].w / 2 < p[i].boundary.x) {
-			log('-x')
 			p[i].velocity.x = 0;
 		} 
 		else if ( p[i].x + p[1].w / 2 > p[i].boundary.x + p[i].boundary.w) {
-			log('+x')
 			p[i].velocity.x = 0;
 		}
 		if(p[i].y - p[i].h / 2 < p[i].boundary.y) {
-			log('-y')
 			p[i].velocity.y = 0;
 		}
 		else if ( p[i].y + p[i].w / 2 > p[i].boundary.y + p[i].boundary.h) {
-			log('+y')
 			p[i].velocity.y = 0;
 		}
 	}
 	p[i].x += p[i].velocity.x;
 	p[i].y += p[i].velocity.y;
-	p[i].draw();
+	//p[i].draw();
 	}
 }
 

@@ -109,7 +109,14 @@ function end() {
 	canvas.removeEventListener("pointerdown",  layer);
 	canvas.removeEventListener("pointermove",  drag);
 	canvas.removeEventListener("pointerup",  match);
-	canvas.addEventListener("pointerdown", tap);
+	canvas.removeEventListener("touchstart",  layer);
+	canvas.removeEventListener("touchmove",  drag);
+	canvas.removeEventListener("touchend",  match);
+	if(isSafari) {
+		canvas.addEventListener("touchstart", initTap);
+	} else {
+		canvas.addEventListener("pointerdown", tap);
+	}
 	Physics.G = 1;
 	CARDS.push(cards[0]);
 	cards = CARDS;
@@ -126,19 +133,14 @@ function end() {
 		cards[i].mass = 1;
 	}
 	cards.push(center);
-	circle = setInterval(satellite, 40, cards);
-}
-
-function satellite(particles) {
-	ctx.fillStyle = '#ddd';
-	ctx.fillRect(0,0,canvas.width, canvas.height);
-	Physics.move(particles);
-	cards[0].draw();
+	circle = setInterval(Physics.move, 40, cards);
+	mover = setInterval(draw, 40);
 }
 
 function restart ()
 {
 	clearInterval(circle);
+	clearInterval(mover);
 	Physics.G *= -1;
 	cards.pop();
 	cards = [];
@@ -151,13 +153,14 @@ function restart ()
 	var mousedown = false;
 	var movestart = [0,0]
 	canvas.removeEventListener("pointerdown", tap);
+	canvas.removeEventListener("touchstart", initTap);
 	draw();
 	init();
 }
 
 function draw()
 {
-	//ctx.clearRect(0,0, canvas.width, canvas.height);
+	ctx.clearRect(0,0, canvas.width, canvas.height);
 	ctx.fillStyle = '#ddd';
 	ctx.fillRect(0,0,canvas.width, canvas.height);
 	buttonCreate(3, 3, 1, canvas.width, canvas.height / 4);
@@ -211,9 +214,9 @@ function reject(card, button, time, duration, i) {
 	}
 }
 
-function move(cards) {
-	Physics.move(cards);
-	draw();
+function initTap(event) {
+	log('init layer')
+	tap({ x: event.touches[0].clientX, y : event.touches[0].clientY });
 }
 
 function tap(event) {
@@ -235,6 +238,7 @@ function tap(event) {
 
 function match()
 {
+	log('match')
 	clearInterval(drawTimer);
 	canvas.removeEventListener("pointermove",  drag);
 	card = cards[cards.length - 1];
@@ -290,8 +294,14 @@ function match()
 	draw();
 }
 
+function initLayer(event) {
+	layer({ x: event.touches[0].clientX, y : event.touches[0].clientY });
+	log('init layer')
+}
+
 function layer(event)
 { 
+	log('layer')
 	let x = event.x;
 	let y = event.y;
 	drawTimer = setInterval(draw, 20);
@@ -301,14 +311,24 @@ function layer(event)
 			cards.push(cards[i]);
 			movestart = [cards[i].x,cards[i].y]
 			cards.splice(i, 1);
-			canvas.addEventListener("pointermove",  drag);
+			if ( isSafari ) {
+				canvas.addEventListener("touchmove",  initDrag);
+				canvas.addEventListener("mousemove",  drag);
+			} else {
+				canvas.addEventListener("pointermove",  drag);
+			}
 			return;
 		}
 	}
 }
 
+function initLayer(event) {
+	drag({ x: event.touches[0].clientX, y : event.touches[0].clientY });
+	log('init layer')
+}
 function drag(event)
 { 
+	log('drag')
 	let x = event.x;
 	let y = event.y;
 	if (true)
@@ -414,6 +434,7 @@ function init()
 	ctx.canvas.height = window.innerHeight;
 	ctx.font = FONT_SIZE * SCALE + px + FONT;
 	ctx.textBaseline = "hanging";
+	ctx.globalAlpha = 1;
 	if ( isTouchDevice() ) { Physics.G = -6 } else { Physics.G = -2 }
 
 	set = 'm';
@@ -431,24 +452,35 @@ function init()
 		images[i].onload = function() { 
 			cards.push(createCard(cells[0], images[i], cells[2]));
 			CARDS.push(createCard(cells[0], images[i], cells[2]));
-			draw();
 		}
 		images[i].src = cells[1];
 		lines.splice(n,1);
 	}
 
-	timer = setInterval(move, 30, cards);
+	var timer = setInterval(Physics.move, 30, cards);
+	var drawer = setInterval(draw, 10);
+
 	setTimeout(function() { 
 		clearInterval(timer);
+		clearInterval(drawer);
 		cards.forEach(function(card) {
 			card.boundary.h = canvas.height; 
 			card.velocity = { x : 0, y : 0 };
 		});
+		draw();
+	}, 2000)
+
+	//isSafari = true;
+	if (isSafari) {
+		canvas.addEventListener("touchstart", initLayer);
+		canvas.addEventListener("touchend", match);
+		canvas.addEventListener("mousedown", layer);
+		canvas.addEventListener("mouseup", match);
+		log('safari')
+	} else {
 		canvas.addEventListener("pointerdown", layer);
     		canvas.addEventListener("pointerup",  match);
-		draw();
-	}, 1500)
-
+	}
 
 	window.addEventListener("resize", resize);
 }
