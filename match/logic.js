@@ -31,9 +31,14 @@ var restart_img = new Image();
 restart_img.src = 'assets/restart.png';
 
 var buttons = [];
-var rejectTimer = 0;
-var acceptTimer = [];
-var drawTimer;
+
+var timer = {
+	draw : 0,
+	accept : 0,
+	reject : 0,
+	physics : 0,
+	mover : 0,
+}
 
 const px = 'px ';
 ctx.font = FONT_SIZE + px + FONT;
@@ -113,7 +118,13 @@ function loadingScreen(c,n) {
 }
 
 function end() {
-	canvas.removeEventListener("touchstart",  layer);
+	for(let i = 0; i < timer.draw * 2; i++ ) {
+		clearInterval(i);
+	}
+	canvas.removeEventListener("mousedown",  layer);
+	canvas.removeEventListener("mousemove",  drag);
+	canvas.removeEventListener("mouseup",  match);
+	canvas.removeEventListener("touchstart",  initLayer);
 	canvas.removeEventListener("touchmove",  drag);
 	canvas.removeEventListener("touchend",  match);
 	canvas.addEventListener("touchstart", initTap);
@@ -122,7 +133,6 @@ function end() {
 	CARDS.push(cards[0]);
 	cards = CARDS;
 	for(let i = 0; i < cards.length; i++) {
-		clearInterval(acceptTimer[i]);
 		center = new Blackhole();
 		center.x = canvas.width / 2;
 		center.y = canvas.height / 2;
@@ -134,8 +144,8 @@ function end() {
 		cards[i].mass = 1;
 	}
 	cards.push(center);
-	circle = setInterval(Physics.move, 40, cards);
-	mover = setInterval(
+	timer.physics = setInterval(Physics.move, 40, cards);
+	timer.mover = setInterval(
 		function() {
 			ctx.fillStyle = bgColor;
 			ctx.fillRect(0,0,canvas.width, canvas.height);
@@ -145,20 +155,25 @@ function end() {
 		}, 40);
 }
 
-function restart ()
+function restart()
 {
-	clearInterval(circle);
-	clearInterval(mover);
+	clearInterval(timer.draw);
+	clearInterval(timer.accept);
+	clearInterval(timer.reject);
+	clearInterval(timer.physics);
+	clearInterval(timer.mover);
+	timer = {
+		draw 	: 0,
+		accept 	: 0,
+		reject 	: 0,
+		physics	: 0,
+		mover 	: 0,
+}
 	Physics.G *= -1;
-	cards.pop();
 	cards = [];
 	CARDS = [];
-	time_counter = 0;
 	images = []
-	rejectTimer = 0;
-	acceptTimer = [];
 	recolor();
-	var mousedown = false;
 	var movestart = [0,0]
 	canvas.removeEventListener("mousedown", tap);
 	canvas.removeEventListener("touchstart", initTap);
@@ -201,7 +216,7 @@ function accept(card, time, duration, i , j) {
 	ctx.fillRect(buttons[i][0],buttons[i][1],buttons[i][2] - buttons[i][0], buttons[i][3] - buttons[i][1]);
 	ctx.globalAlpha = 1;
 	if ( Date.now() - time > duration ) { 
-		clearInterval(acceptTimer[j]);
+		clearInterval(timer.accept)
 		draw();
 	}
 }
@@ -214,10 +229,12 @@ function reject(card, button, time, duration, i) {
 	ctx.fillRect(buttons[i][0],buttons[i][1],buttons[i][2] - buttons[i][0], buttons[i][3] - buttons[i][1]);
 	ctx.globalAlpha = 1;
 	if ( Date.now() - time > duration ) {
-		clearInterval(rejectTimer);
-		cards.forEach(function(card) {
-			card.velocity = { x : 0, y : 0 };
-		})
+		clearInterval(timer.reject);
+		card.velocity.x = 0;
+		card.velocity.y = 0;
+		//cards.forEach(function(card) {
+			//card.velocity = { x : 0, y : 0 };
+		//})
 		draw();
 	}
 }
@@ -245,7 +262,11 @@ function tap(event) {
 
 function match()
 {
-	clearInterval(drawTimer);
+	clearInterval(timer.draw);
+	clearInterval(timer.physics);
+	for(let i = 0; i < timer.draw * 2; i++) {
+		clearInterval(i)
+	}
 	canvas.removeEventListener("mousemove",  drag, false);
 	canvas.removeEventListener("touchmove",  initDrag, false);
 	card = cards[cards.length - 1];
@@ -257,8 +278,8 @@ function match()
 
 		if (lx && rx && ly && ry) { 
 			if ( card.group.includes(label[i]) ) {
-				j = acceptTimer.length;
-				acceptTimer.push(setInterval(accept, 50, card, Date.now(), 600, i, j));
+				clearInterval(timer.accept);
+				timer.accept = setInterval(accept, 50, card, Date.now(), 600, i);
 				cards.pop();
 				if ( ! cards.length ) { 
 					cards.push(new Endcard()); 
@@ -268,8 +289,8 @@ function match()
 				}
 			}
 			else if ( i == 2 && (! card.group.includes(label[0])) && (! card.group.includes(label[1]))) {
-				j = acceptTimer.length;
-				acceptTimer.push(setInterval(accept, 5, card, Date.now(), 600, i, j));
+				clearInterval(timer.accept);
+				timer.accept = setInterval(accept, 5, card, Date.now(), 600, i);
 				cards.pop();
 				if ( ! cards.length ) { 
 					cards.push(new Endcard); 
@@ -280,12 +301,12 @@ function match()
 				}
 			}
 			else {
-				clearInterval(rejectTimer);
+				clearInterval(timer.reject);
 				button = new Card('button', 5, 5, 2);
 				button.x = buttons[i][0] + buttons[i][2] / 2;
 				button.y = canvas.height * 1.6;
 				button.mass = 600000;
-				rejectTimer = setInterval(reject, 50, card, button, Date.now(), 600, i);
+				timer.reject = setInterval(reject, 50, card, button, Date.now(), 600, i);
 			}
 			draw();
 			return;
@@ -309,7 +330,7 @@ function layer(event)
 { 
 	let x = event.x;
 	let y = event.y;
-	drawTimer = setInterval(draw, 20);
+	timer.draw = setInterval(draw, 20);
 	for ( let i = cards.length - 1; i >= 0; i-- )
 	{
 		if (Match.card(x,y,cards[i]) ) { 
@@ -427,19 +448,18 @@ function createCard(txt, img, snd) {
 }
 
 function ready() {
-
-	var timer = setInterval(Physics.move, 30, cards);
-	var drawer = setInterval(draw, 10);
+	timer.physics = setInterval(Physics.move, 30, cards);
+	timer.draw = setInterval(draw, 10);
 
 	setTimeout(function() { 
-		clearInterval(timer);
-		clearInterval(drawer);
+		clearInterval(timer.physics);
+		clearInterval(timer.draw);
 		cards.forEach(function(card) {
 			card.boundary.h = canvas.height; 
 			card.velocity = { x : 0, y : 0 };
 		});
 		draw();
-	}, 2000)
+	}, 1500)
 
 	canvas.addEventListener("touchstart", initLayer, false);
 	canvas.addEventListener("touchend", match, false);
@@ -464,9 +484,9 @@ function init()
 		lines.push(word)
 	}
 
+	draw();
 	for(let i = 0; i < CARDS_N; i++)
 	{
-		draw();
 		n = randInt(0,lines.length - 1);
 		let cells = lines[n];
 		images[i] = new Image();
@@ -476,7 +496,7 @@ function init()
 			if ( cards.length == CARDS_N ) {
 				ready();
 			} else {
-				loadingScreen(cards.length, n);
+				//loadingScreen(cards.length, n);
 			}
 		}
 		images[i].src = cells[1];
