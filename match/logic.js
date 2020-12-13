@@ -105,6 +105,13 @@ function recolor() {
 	];
 }
 
+function loadingScreen(c,n) {
+	ctx.fillStyle = bgColor;
+	ctx.fillRect(0,0, canvas.width, canvas.height);
+	ctx.fillStyle = randPred();
+	ctx.fillRect(0 , buttons[0][1], canvas.width * c/n, canvas.height);
+}
+
 function end() {
 	canvas.removeEventListener("touchstart",  layer);
 	canvas.removeEventListener("touchmove",  drag);
@@ -128,7 +135,14 @@ function end() {
 	}
 	cards.push(center);
 	circle = setInterval(Physics.move, 40, cards);
-	mover = setInterval(draw, 40);
+	mover = setInterval(
+		function() {
+			ctx.fillStyle = bgColor;
+			ctx.fillRect(0,0,canvas.width, canvas.height);
+			cards.forEach(function(card) { 
+				card.draw(); 
+			}) 
+		}, 40);
 }
 
 function restart ()
@@ -231,7 +245,6 @@ function tap(event) {
 
 function match()
 {
-	bgColor = '#ddd';
 	clearInterval(drawTimer);
 	canvas.removeEventListener("mousemove",  drag, false);
 	canvas.removeEventListener("touchmove",  initDrag, false);
@@ -289,15 +302,13 @@ function match()
 }
 
 function initLayer(event) {
-	event = { x: event.touches[0].clientX, y : event.touches[0].clientY } 
-	layer(event);
+	layer({ x: event.touches[0].clientX, y : event.touches[0].clientY });
 }
 
 function layer(event)
 { 
 	let x = event.x;
 	let y = event.y;
-	bgColor = '#c54';
 	drawTimer = setInterval(draw, 20);
 	for ( let i = cards.length - 1; i >= 0; i-- )
 	{
@@ -415,37 +426,7 @@ function createCard(txt, img, snd) {
 	return card;
 }
 
-function init()
-{
-	var lines = [];
-	ctx.canvas.width = window.innerWidth;
-	ctx.canvas.height = window.innerHeight;
-	ctx.font = FONT_SIZE * SCALE + px + FONT;
-	ctx.textBaseline = "hanging";
-	ctx.globalAlpha = 1;
-	if ( isTouchDevice() ) { Physics.G = -6 } else { Physics.G = -2 }
-
-	set = 'm';
-	words = getWords(set);
-	for(let i = 0; i < words.length; i++) {
-		word = assets[words[i]]
-		lines.push(word)
-	}
-
-	for(let i = 0; i < CARDS_N; i++)
-	{
-		n = randInt(0,lines.length - 1);
-		let cells = lines[n];
-		images[i] = new Image();
-		images[i].onload = function() { 
-			cards.push(createCard(cells[0], images[i], cells[2]));
-			CARDS.push(createCard(cells[0], images[i], cells[2]));
-		}
-		images[i].src = cells[1];
-		lines.splice(n,1);
-	}
-
-	bgColor = '#534';
+function ready() {
 
 	var timer = setInterval(Physics.move, 30, cards);
 	var drawer = setInterval(draw, 10);
@@ -453,7 +434,6 @@ function init()
 	setTimeout(function() { 
 		clearInterval(timer);
 		clearInterval(drawer);
-		bgColor = '#ddd';
 		cards.forEach(function(card) {
 			card.boundary.h = canvas.height; 
 			card.velocity = { x : 0, y : 0 };
@@ -465,6 +445,43 @@ function init()
 	canvas.addEventListener("touchend", match, false);
 	canvas.addEventListener("mousedown", layer, false);
 	canvas.addEventListener("mouseup", match, false);
+}
+
+function init()
+{
+	var lines = [];
+	ctx.canvas.width = window.innerWidth;
+	ctx.canvas.height = window.innerHeight;
+	ctx.font = FONT_SIZE * SCALE + px + FONT;
+	ctx.textBaseline = "hanging";
+	ctx.globalAlpha = 1;
+	if ( isTouchDevice() ) { Physics.G = -4 } else { Physics.G = -2 }
+
+	set = 'm';
+	words = getWords(set);
+	for(let i = 0; i < words.length; i++) {
+		word = assets[words[i]]
+		lines.push(word)
+	}
+
+	for(let i = 0; i < CARDS_N; i++)
+	{
+		draw();
+		n = randInt(0,lines.length - 1);
+		let cells = lines[n];
+		images[i] = new Image();
+		images[i].onload = function() { 
+			cards.push(createCard(cells[0], images[i], cells[2]));
+			CARDS.push(createCard(cells[0], images[i], cells[2]));
+			if ( cards.length == CARDS_N ) {
+				ready();
+			} else {
+				loadingScreen(cards.length, n);
+			}
+		}
+		images[i].src = cells[1];
+		lines.splice(n,1);
+	}
 
 	window.addEventListener("resize", resize);
 }
