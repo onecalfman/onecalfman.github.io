@@ -460,10 +460,10 @@ function init()
 		draw();
 	}, 2000)
 
-	canvas.addEventListener("touchstart", initLayer);
-	canvas.addEventListener("touchend", match);
-	canvas.addEventListener("mousedown", layer);
-	canvas.addEventListener("mouseup", match);
+	canvas.addEventListener("touchstart", initLayer, false);
+	canvas.addEventListener("touchend", match, false);
+	canvas.addEventListener("mousedown", layer, false);
+	canvas.addEventListener("mouseup", match, false);
 
 	window.addEventListener("resize", resize);
 }
