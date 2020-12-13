@@ -211,18 +211,9 @@ function reject(card, button, time, duration, i) {
 	}
 }
 
-function move(time, duration) {
+function move(cards) {
 	Physics.move(cards);
 	draw();
-	time_counter++;
-	if ( Date.now() - time > duration ) {
-		clearInterval(timer);
-		cards.forEach(function(card) {
-			card.boundary = { x : 0, y : 0, w : canvas.width, h : canvas.height };
-			card.velocity = { x : 0, y : 0 };
-			draw();
-		})
-	}
 }
 
 function tap(event) {
@@ -440,18 +431,21 @@ function init()
 		images[i].onload = function() { 
 			cards.push(createCard(cells[0], images[i], cells[2]));
 			CARDS.push(createCard(cells[0], images[i], cells[2]));
-			draw();
 		}
 		images[i].src = cells[1];
 		lines.splice(n,1);
 	}
 
-	timer = setInterval(move, 30, Date.now(), 1500);
+	timer = setInterval(move, 30, cards);
+	setTimeout(function() { 
+		clearInterval(timer);
+		cards.forEach(function(card) {
+			card.boundary.h = canvas.height; 
+			card.velocity = { x : 0, y : 0 };
+		});
+		draw();
+	}, 1500)
 
-	cards.forEach(function(card) { card.boundary.h = canvas.height; });
-
-	canvas.addEventListener("pointerdown", layer);
-    	canvas.addEventListener("pointerup",  match);
 
 	window.addEventListener("resize", resize);
 }
