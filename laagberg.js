@@ -1,6 +1,8 @@
 speaker = new Image();
 var isSafari = navigator.vendor.includes('Apple')
 
+var cardSize = 200;
+
 var colors = [ 
 	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
 	'#F69856', '#F4A96D', '#90A8CC', '#93AACF',
@@ -209,6 +211,60 @@ Math.norm = function(p1,p2) {
 	}
 }
 
+function Move() {
+}
+
+Move.prepare = function() {
+	canvas.addEventListener("touchstart", Move.initLayer, false);
+	canvas.addEventListener("touchend", Move.match, false);
+	canvas.addEventListener("mousedown", Move.layer, false);
+	canvas.addEventListener("mouseup", Move.match, false);
+}
+
+Move.initLayer = function(event) {
+	layer({ x: event.touches[0].clientX, y : event.touches[0].clientY });
+}
+
+Move.layer = function(event)
+{ 
+	//timer.draw = setInterval(draw, 20);
+	for ( let i = cards.length - 1; i >= 0; i-- )
+	{
+		if (Match.card(event.x,event.y,cards[i]) ) { 
+			cards.push(cards[i]);
+			movestart = [cards[i].x,cards[i].y]
+			cards.splice(i, 1);
+			canvas.addEventListener("touchmove",  Move.initDrag);
+			canvas.addEventListener("mousemove",  Move.drag);
+			return;
+		}
+	}
+}
+
+Move.initDrag = function(event) {
+	Move.drag({ x: event.touches[0].clientX, y : event.touches[0].clientY });
+}
+
+Move.drag = function(event)
+{ 
+	card = cards[cards.length - 1]
+	card.x = event.x;
+	card.y = event.y;
+	if ( card.cluster ) {
+		Cluster.position(card)
+	}
+	if ( card.x - card.w / 2 < 0 ) { card.x = card.w / 2; }
+	if ( canvas.width - card.w / 2 < card.x ) { card.x = canvas.width - card.w / 2 ; }
+	if ( card.y - card.h / 2 < 0 ) { card.y = card.h / 2; }
+	if ( canvas.height - card.h / 2 < card.y ) { card.y = canvas.height - card.h / 2; }
+}
+
+Move.match = function()
+{
+	canvas.removeEventListener("mousemove",  Move.drag, false);
+	canvas.removeEventListener("touchmove",  Move.initDrag, false);
+}
+
 
 function Physics() {
 }
@@ -263,7 +319,7 @@ Physics.move = function(p)
 	}
 	p[i].x += p[i].velocity.x;
 	p[i].y += p[i].velocity.y;
-	//p[i].draw();
+	p[i].draw();
 	}
 }
 
@@ -461,4 +517,98 @@ class Card extends Particle {
 	}
 
 	play() { this.snd[0].play(); }
+}
+
+//class Cluster {
+//	constructor (group) {
+//		this.group = group;
+//		this.card = [];
+//		this.pos = [];
+//		this.x;
+//		this.y;
+//		this.w = cardSize;
+//		this.h = cardSize;
+//	}
+//
+//	add(card) {
+//		if ( ! typeof(card.col) == 'number' ) {
+//			card.col = this.card.length;
+//		}
+//		card.w = this.w;;
+//		card.h = this.h;
+//		card.cluster = this.group;
+//		if ( ! this.x ) {
+//			this.x = card.x - card.w / 2; 
+//			this.y = card.y - card.h / 2; 
+//		}
+//		let x  = 0;
+//		if ( typeof(card.col) == 'number' ) {
+//			x = card.col * this.w;
+//		} else {
+//			x = this.pos.length * this.w;
+//		}
+//		let cardsInSameCol = 0;
+//		for(let i = 0; i < this.card.length; i++) {
+//			if(this.card[i].col == card.col) {
+//				cardsInSameCol++;
+//			}
+//		}
+//		let y = (cardsInSameCol - 1) * this.w;
+//		this.pos.push({x : x, y : y });
+//		card.pos = {x : x, y : y };
+//		this.card.push(card);
+//	}
+//
+//	draw() {
+//		for(let i = 0; i < this.cards.lenght; i++ ) {
+//			this.card.x = this.x + this.pos[i].x;
+//			this.card.y = this.x + this.pos[i].y;
+//		}
+//	}
+//}
+
+Cluster = function() {
+}
+
+Cluster.add = function(card, id) {
+	card.cluster = id;
+	if ( ! typeof(card.col) == 'number' ) {
+		card.col = 0;
+		for(let i = 0; i < cards.length; i++) {
+			if ( cards[i].cluster == card.cluster ) {
+				card.col++;
+				log(card.col)
+			}
+		}
+		card.col--;
+	}
+
+	log(card.col)
+	let x  = card.col * cardSize;
+	log(x)
+
+	let cardsInSameCol = 0;
+	for(let i = 0; i < cards.length; i++) {
+		if(cards[i].col == card.col) {
+			cardsInSameCol++;
+		}
+	}
+	let y = (cardsInSameCol - 1) * this.w;
+	card.pos = {x : x, y : y };
+	log(card)
+	Cluster.position(card);
+}
+
+Cluster.position = function(card) {
+	for(let i = 0; i < cards.length; i++ ) {
+		if ( cards[i].cluster && cards[i].cluster == card.cluster ) {
+			log(cards[i])
+			log(card.x)
+			log(card.pos.x)
+			log(cards[i].x)
+			log(cards[i].pos.x)
+			cards[i].x = card.x - card.pos.x + cards[i].pos.x;
+			cards[i].y = card.y - card.pos.y + cards[i].pos.y;
+		}
+	}
 }
