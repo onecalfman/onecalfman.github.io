@@ -6,13 +6,12 @@ var FONT_SIZE = 50;
 var CARDS = [];
 
 var time = 60;
-var guiHeight;
-var lines = 7;
-var rows = 7;
+var guiHeight = canvas.height / 6;
+var lines = 4;
+var rows = 6;
 var lineWidth;
 var rowHeight;
 
-var maxBoardSize = 600;
 var alpha = 1;
 var countdown = '';
 var goal = 10;
@@ -20,6 +19,8 @@ var goal = 10;
 var drawInterval;
 var timeInterval;
 var collisionInterval;
+var randCardsInterval;
+var endDrawInterval;
 
 var colors = [ 
 	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
@@ -36,6 +37,7 @@ ctx.font = FONT_SIZE + px + FONT;
 ctx.textBaseline = "hanging";
 
 var cards = [];
+var endCards = [];
 var selection = [];
 const par = new URLSearchParams(window.location.search);
 	
@@ -43,19 +45,31 @@ if ( par.get('d')) 		{ lines = par.get('d'); rows = lines;}
 if ( par.get('l')) 		{ lines = par.get('l');}
 if ( par.get('r')) 		{ rows = par.get('d');}
 if ( par.get('t')) 		{ time = par.get('t');}
-if ( par.get('g')) 		{ time = par.get('g');}
+if ( par.get('g')) 		{ goal = par.get('g');}
 
 
-function end() {
+function end(n) {
 	cards = [];
+	endCards = [];
 	clearInterval(drawInterval);
 	clearInterval(timeInterval);
-	clearInterval(collisionInterval);
 	ctx.clearRect(0,0,canvas.width, canvas.height);
 	ctx.fillStyle = bgColor;
 	ctx.fillRect(0,0,canvas.width, canvas.height);
-	randCardsTimer = setInterval(randCards, 250);
-	endDrawTimer = setInterval(endDraw, 30);
+
+	canvas.removeEventListener("touchend", select, false);
+	canvas.removeEventListener("mousedown", select, false);
+
+	setTimeout(() => {
+		canvas.addEventListener("touchstart", restart, false);
+		canvas.addEventListener("mousedown", restart, false);
+	}, 2000);
+
+	pairs = lines * rows / 2
+	message = Math.floor(pairs - n/2) + ' von ' + pairs;
+
+	randCardsInterval = setInterval(randCards, 250);
+	endDrawInterval = setInterval(endDraw, 30, message);
 }
 
 function randCards() {
@@ -70,10 +84,27 @@ function randCards() {
 		ctx.fillStyle = this.textColor;
 		ctx.fillText(this.group, this.x, this.y);
 	}
-	cards.push(card);
+	endCards.push(card);
+}
+
+function restart() {
+	endCards = [];
+	selection = [];
+	canvas.removeEventListener("touchstart", restart, false);
+	canvas.removeEventListener("mousedown", restart, false);
+	clearInterval(randCardsInterval);
+	clearInterval(endDrawInterval);
+	if ( par.get('t')) {
+		time = par.get('t');
+	}
+	else {
+		time = 60;
+	}
+	init();
 }
 
 function initSelect(event) {
+	log(event)
 	select({ x: event.touches[0].clientX, y : event.touches[0].clientY });
 }
 
@@ -106,7 +137,7 @@ function checkSelection() {
 			delete cards[selection[i]]
 		}
 		if(new Set(cards).size == 1) {
-			end();
+			end(0);
 		}
 		selection = [];
 	}
@@ -121,12 +152,15 @@ function checkSelection() {
 	}
 }
 
-function endDraw() {
+function endDraw(message) {
+	ctx.globalAlpha = 0.4;
 	ctx.font = FONT_SIZE + 'px ' + FONT;
 	ctx.fillStyle = bgColor;
 	ctx.fillRect(0,0,canvas.width, canvas.height);
 	rise();
-	for(i in cards) { cards[i].draw(); }
+	for(i in endCards) { endCards[i].draw(); }
+	ctx.globalAlpha = 1;
+	ctx.fillText(message, canvas.width / 2, canvas.height / 2);
 }
 
 function draw() {
@@ -149,7 +183,7 @@ function draw() {
 function timer() {
 	time--;
 	if(time == 0) {
-		end();
+		end(new Set(cards).size - 1);
 	}
 }
 
@@ -165,9 +199,9 @@ function checkCollision() {
 }
 
 function rise() {
-	for(i in cards) {
-		cards[i].velocity.y -= Physics.g * 0.1 ;
-		cards[i].y += cards[i].velocity.y;
+	for(i in endCards) {
+		endCards[i].velocity.y -= Physics.g * 0.1 ;
+		endCards[i].y += endCards[i].velocity.y;
 	}
 }
 
@@ -247,7 +281,7 @@ function init() {
 		countdown = 'LOS!';
 		alpha = 1;
 		timeInterval = setInterval(timer, 1000);
-		canvas.addEventListener("touchstart", initSelect, false);
+		canvas.addEventListener("touchend", select, false);
 		canvas.addEventListener("mousedown", select, false);
 	}, 5000);
 	setTimeout( () => {countdown = '' }, 5500);
