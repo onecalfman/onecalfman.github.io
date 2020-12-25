@@ -271,6 +271,7 @@ function Physics() {
 
 Physics.epsilon = 1;
 Physics.G = 1;
+Physics.g = 1;
 Physics.c = 10;
 
 
