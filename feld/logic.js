@@ -15,6 +15,11 @@ var rowHeight;
 var maxBoardSize = 600;
 var alpha = 1;
 var countdown = '';
+var goal = 10;
+
+var drawInterval;
+var timeInterval;
+var collisionInterval;
 
 var colors = [ 
 	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
@@ -37,7 +42,36 @@ const par = new URLSearchParams(window.location.search);
 if ( par.get('d')) 		{ lines = par.get('d'); rows = lines;}
 if ( par.get('l')) 		{ lines = par.get('l');}
 if ( par.get('r')) 		{ rows = par.get('d');}
-if ( par.get('t')) 		{ rows = par.get('t');}
+if ( par.get('t')) 		{ time = par.get('t');}
+if ( par.get('g')) 		{ time = par.get('g');}
+
+
+function end() {
+	cards = [];
+	clearInterval(drawInterval);
+	clearInterval(timeInterval);
+	clearInterval(collisionInterval);
+	ctx.clearRect(0,0,canvas.width, canvas.height);
+	ctx.fillStyle = bgColor;
+	ctx.fillRect(0,0,canvas.width, canvas.height);
+	randCardsTimer = setInterval(randCards, 250);
+	endDrawTimer = setInterval(endDraw, 30);
+}
+
+function randCards() {
+	card = new Card(randInt(1,9), lineWidth, lineHeight);
+	card.color = randPred();
+	card.x = randInt(lineWidth / 2 ,canvas.width - lineWidth / 2);
+	card.y = canvas.height + lineHeight;
+	card.textColor = '#333';
+	card.draw = function() {
+		ctx.fillStyle = this.color;
+		ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w , this.h);
+		ctx.fillStyle = this.textColor;
+		ctx.fillText(this.group, this.x, this.y);
+	}
+	cards.push(card);
+}
 
 function initSelect(event) {
 	select({ x: event.touches[0].clientX, y : event.touches[0].clientY });
@@ -45,12 +79,18 @@ function initSelect(event) {
 
 function select(event) {
 	for( i in cards ) {
-		if(! cards[i].selected && Match.card(event.x, event.y, cards[i])) {
+		if(Match.card(event.x, event.y, cards[i])) {
+			if ( cards[i].selected ) {
+				cards[i].selected = false;
+				cards[i].color = cards[i].textColor;
+				cards[i].textColor = '#444';
+				selection = [];
+				return;
+			}
 			selection.push(i);
 			cards[i].selected = true;
 			cards[i].textColor = cards[i].color;
 			cards[i].color = '#444';
-			log(selection);
 			checkSelection()
 		}
 	}
@@ -61,14 +101,16 @@ function checkSelection() {
 	for (i in selection) {
 		sum += cards[selection[i]].group;
 	}
-	if ( sum == 10 ) {
+	if ( sum == goal ) {
 		for( i in selection ) {
-			log(selection[i]);
 			delete cards[selection[i]]
+		}
+		if(new Set(cards).size == 1) {
+			end();
 		}
 		selection = [];
 	}
-	else if ( sum > 10 ) {
+	else if ( selection.length == 2 ) {
 		for(i in selection) {
 			index = selection[i];
 			cards[index].color = cards[index].textColor;
@@ -77,6 +119,14 @@ function checkSelection() {
 		}
 		selection = [];
 	}
+}
+
+function endDraw() {
+	ctx.font = FONT_SIZE + 'px ' + FONT;
+	ctx.fillStyle = bgColor;
+	ctx.fillRect(0,0,canvas.width, canvas.height);
+	rise();
+	for(i in cards) { cards[i].draw(); }
 }
 
 function draw() {
@@ -88,6 +138,7 @@ function draw() {
 	for(i in cards) {
 		cards[i].draw(); 
 	}
+	ctx.fillStyle = '#333';
 	ctx.globalAlpha = 1;
 	ctx.font = guiHeight * 0.8 + 'px ' + FONT;
 	ctx.fillText(time, canvas.width / 2, canvas.height / 12);
@@ -97,6 +148,9 @@ function draw() {
 
 function timer() {
 	time--;
+	if(time == 0) {
+		end();
+	}
 }
 
 function checkCollision() {
@@ -107,6 +161,13 @@ function checkCollision() {
 				cards[j].y = -10;
 			}
 		}
+	}
+}
+
+function rise() {
+	for(i in cards) {
+		cards[i].velocity.y -= Physics.g * 0.1 ;
+		cards[i].y += cards[i].velocity.y;
 	}
 }
 
@@ -138,9 +199,10 @@ function fall() {
 function createCards() {
 	lineWidth = Math.round(canvas.width / lines);
 	lineHeight = Math.round((canvas.height - guiHeight) / rows);
+	FONT_SIZE = lineHeight * 0.6;
 	for(let i = 0; i < lines; i++ ) {
 		for(let j = 0; j < rows; j++) {
-			card = new Card(randInt(1,10), lineWidth, lineHeight);
+			card = new Card(randInt(1,9), lineWidth, lineHeight);
 			card.color = randPred();
 			card.x = i * lineWidth + lineWidth / 2;
 			card.y = randInt(-4000, -10);
@@ -154,9 +216,17 @@ function createCards() {
 			cards.push(card);
 		}
 	}
+	makeSolvable();
 }
 
-async function init() {
+function makeSolvable() {
+	index = randUnique(0,cards.length -1, cards.length);
+	for(let i = 0; i < cards.length; i += 2) {
+		cards[index[i+1]].group = goal - cards[index[i]].group;
+	}
+}
+
+function init() {
 	ctx.canvas.width = window.innerWidth;
 	ctx.canvas.height = window.innerHeight;
 	ctx.fillStyle = bgColor;
@@ -168,7 +238,7 @@ async function init() {
 	guiHeight = canvas.height / 6;
 	createCards();
 	sleep(1);
-	setInterval(draw, 30);
+	drawInterval = setInterval(draw, 30);
 
 	setTimeout( () => { countdown = 3 }, 2000);
 	setTimeout( () => {countdown = 2 }, 3000);
@@ -176,13 +246,10 @@ async function init() {
 	setTimeout( () => {
 		countdown = 'LOS!';
 		alpha = 1;
-		setInterval(timer, 1000);
+		timeInterval = setInterval(timer, 1000);
+		canvas.addEventListener("touchstart", initSelect, false);
+		canvas.addEventListener("mousedown", select, false);
 	}, 5000);
 	setTimeout( () => {countdown = '' }, 5500);
-
-	setTimeout( () => setInterval(checkCollision, 3000), 2000);
-
-
-	canvas.addEventListener("touchstart", initSelect, false);
-	canvas.addEventListener("mousedown", select, false);
+	setTimeout( () => setInterval(collisionInterval = checkCollision, 3000), 2000);
 }
