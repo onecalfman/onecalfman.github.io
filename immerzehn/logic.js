@@ -190,8 +190,8 @@ function checkCollision() {
 	for(i in cards) {
 		for(j in cards) {
 			if ( j == i ) { continue; }
-			if ( Match.card(cards[j].x, cards[j].y, cards[i])) {
-				cards[j].y = -10;
+			if ( Match.card(cards[i].x, cards[i].y, cards[j])) {
+				cards[i].y = -10;
 			}
 		}
 	}
@@ -209,10 +209,10 @@ function fall() {
 		let collision = false;
 		cards[i].velocity.y += Physics.g;
 		for(j in cards) {
-			if(cards[i].y > canvas.height - cards[i].h) {
+			if(cards[i].y + cards[i].h > canvas.height) {
 				collision = true;
 				cards[i].velocity.y = 0;
-				cards[i].y = canvas.height- cards[i].w / 2;
+				cards[i].y = canvas.height - cards[i].h / 2;
 				break;
 			}
 			else if (cards[j].x == cards[i].x && cards[j].y > cards[i].y && cards[j].y - cards[i].y <= cards[i].h) {
@@ -224,7 +224,7 @@ function fall() {
 		}
 
 		if( ! collision ) {
-			cards[i].y += Math.min(cards[i].velocity.y, cards[i].h * 0.5);
+			cards[i].y += Math.min(cards[i].velocity.y, cards[i].h * 0.7);
 		}
 	}
 }
@@ -284,5 +284,5 @@ function init() {
 		canvas.addEventListener("mousedown", select, false);
 	}, 5000);
 	setTimeout( () => {countdown = '' }, 5500);
-	setTimeout( () => setInterval(collisionInterval = checkCollision, 3000), 2000);
+	//setTimeout( () => setInterval(collisionInterval = checkCollision, 3000), 2000);
 }
