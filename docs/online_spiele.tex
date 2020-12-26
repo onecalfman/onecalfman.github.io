@@ -15,10 +15,14 @@
 	 }
 \usepackage{hyperref}
 \title{Online Spiele}
+\author{Jonas Walkling}
+
+\renewcommand{\contentsname}{Spiele}
 
 \begin{document}
 
 \maketitle
+\tableofcontents
 
 \section*{URL-Parameter}
 
@@ -162,6 +166,7 @@ Die Range ist ein Angabe in Welchem der Wert liegen muss bzw. in welchem Bereich
 
 	\end{multicols}
 
+\pagebreak
 \section{Inlaute}
 
 \paragraph{Beispiel:}
@@ -173,14 +178,50 @@ Die Range ist ein Angabe in Welchem der Wert liegen muss bzw. in welchem Bereich
 		\item Default: -
 		\item Möglich: m
 	\end{itemize}
+	\bigskip
 
 	\paragraph{n} Legt die Anzal der Karten fest. Wenn die Anzahl der Karten kleiner ist, als die verfügbaren Wörter, werden n zufällige Wörter ausgewählt.
 	\begin{itemize}
 		\item Default: 10
+		\item Möglich: 3 - Anzahl der Karten für einen Buchstaben $\in \mathbb{N}$
 	\end{itemize}
 \end{multicols}
 
+\section{Immerzehn}
+\texttt{\href{laagbergschule.de/lernspiele/mathe/immerzehn?d=4\&t=40}{laagbergschule.de/lernspiele/mathe/immerzehn?d=4\&t=40}} \\
+
+\begin{multicols}{2}
+
+	\paragraph{d}  Legt die größe des Spielfeldes fest, z.B. d=4 gibt ein 4x4 Feld. Der Wert muss gerade sein, da das Spiel sonst nicht aufgehen kann.
+	\begin{itemize}
+		\item Default: -
+		\item Möglich: 2,4,6,8,10 $\in \mathbb{N}$
+	\end{itemize}
+
+	\paragraph{c} Legt die Anzahl der Spalten fest. Muss mit den Reihen multipliziert eine gerade Zahl ergeben.
+	\begin{itemize}
+		\item Default: 4
+		\item Möglich: 2 - 10 $\in \mathbb{N}$
+	\end{itemize}
+
+	\paragraph{r} Legt die Anzahl der Reihen fest. Muss mit den Spalten multiplizert eine gerade Zahl ergeben.
+	\begin{itemize}
+		\item Default: 6
+		\item Möglich: 2 - 10 $\in \mathbb{N}$
+	\end{itemize}
+
+	\paragraph{t} Legt die zeit pro Runde fest.
+	\begin{itemize}
+		\item Default: 60
+		\item Möglich: 20-120 $\in \mathbb{N}$
+	\end{itemize}
+
+	\paragraph{t} Legt die Zahl fest, die das Ergenis sein soll.
+	\begin{itemize}
+		\item Default: 10
+		\item Möglich: 2-16 $\in \mathbb{N}$
+	\end{itemize}
+\end{multicols}
 
 \end{document}
-
 

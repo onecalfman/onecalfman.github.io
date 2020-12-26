@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2020.12.8)  13 DEC 2020 22:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2020.12.24)  26 DEC 2020 17:03
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -371,7 +371,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \Hy@SectionHShift=\skip57
 )
 LaTeX Font Info:    Trying to load font information for T1+CrimsonPro-OsF on in
-put line 19.
+put line 22.
 
 (/usr/share/texmf-dist/tex/latex/crimsonpro/T1CrimsonPro-OsF.fd
 File: T1CrimsonPro-OsF.fd 2019/10/21 (autoinst) Font definitions for T1/Crimson
@@ -380,9 +380,9 @@ Pro-OsF.
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/m/n' in size <10> not availab
 le
 (Font)              Font shape `T1/CrimsonPro-OsF/regular/n' tried instead on i
-nput line 19.
+nput line 22.
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/regular/n' will be
-(Font)              scaled to size 10.0pt on input line 19.
+(Font)              scaled to size 10.0pt on input line 22.
 
 (/usr/share/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2020-09-24 L3 backend support: PDF output (pdfTeX)
@@ -390,22 +390,22 @@ File: l3backend-pdftex.def 2020-09-24 L3 backend support: PDF output (pdfTeX)
 \l__pdf_internal_box=\box95
 )
 (./online_spiele.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
 \c@mv@tabular=\count288
 \c@mv@boldtabular=\count289
 
@@ -443,7 +443,7 @@ LaTeX Font Info:    ... okay on input line 19.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 19.
+Package hyperref Info: Link coloring OFF on input line 22.
 (/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 
@@ -455,71 +455,71 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count290
 )
-LaTeX Info: Redefining \ref on input line 19.
-LaTeX Info: Redefining \pageref on input line 19.
-LaTeX Info: Redefining \nameref on input line 19.
+LaTeX Info: Redefining \ref on input line 22.
+LaTeX Info: Redefining \pageref on input line 22.
+LaTeX Info: Redefining \nameref on input line 22.
 
 (./online_spiele.out) (./online_spiele.out)
 \@outlinefile=\write3
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/m/n' in size <17.28> not avai
 lable
 (Font)              Font shape `T1/CrimsonPro-OsF/regular/n' tried instead on i
-nput line 22.
+nput line 25.
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/regular/n' will be
-(Font)              scaled to size 17.28pt on input line 22.
+(Font)              scaled to size 17.28pt on input line 25.
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/m/n' in size <12> not availab
 le
 (Font)              Font shape `T1/CrimsonPro-OsF/regular/n' tried instead on i
-nput line 22.
+nput line 25.
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/regular/n' will be
-(Font)              scaled to size 12.0pt on input line 22.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 22.
+(Font)              scaled to size 12.0pt on input line 25.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 25.
 
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 22.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 25.
 
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-
-LaTeX Warning: No \author given.
-
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/m/n' in size <14.4> not avail
 able
 (Font)              Font shape `T1/CrimsonPro-OsF/regular/n' tried instead on i
-nput line 23.
+nput line 25.
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/regular/n' will be
-(Font)              scaled to size 14.4pt on input line 23.
+(Font)              scaled to size 14.4pt on input line 25.
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/b/n' in size <14.4> not avail
 able
 (Font)              Font shape `T1/CrimsonPro-OsF/bold/n' tried instead on inpu
-t line 23.
+t line 25.
 LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/bold/n' will be
-(Font)              scaled to size 14.4pt on input line 23.
+(Font)              scaled to size 14.4pt on input line 25.
+ (./online_spiele.toc
+LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/b/n' in size <10> not availab
+le
+(Font)              Font shape `T1/CrimsonPro-OsF/bold/n' tried instead on inpu
+t line 1.
+LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/bold/n' will be
+(Font)              scaled to size 10.0pt on input line 1.
+)
+\tf@toc=\write4
 
-Underfull \hbox (badness 10000) in paragraph at lines 28--31
+Underfull \hbox (badness 10000) in paragraph at lines 32--35
 []\T1/CrimsonPro-OsF/regular/n/10 Ein URL Pa-ram-e-ter gibt In-for-ma-tio-nen a
 n die
  []
 
 
-Underfull \hbox (badness 5504) in paragraph at lines 28--31
+Underfull \hbox (badness 5504) in paragraph at lines 32--35
 \T1/CrimsonPro-OsF/regular/n/10 aufgerufene In-ter-net-seite weiter. Sie ste-he
 n nach der
  []
 
-LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/b/n' in size <10> not availab
-le
-(Font)              Font shape `T1/CrimsonPro-OsF/bold/n' tried instead on inpu
-t line 38.
-LaTeX Font Info:    Font shape `T1/CrimsonPro-OsF/bold/n' will be
-(Font)              scaled to size 10.0pt on input line 38.
 LaTeX Font Info:    Trying to load font information for TS1+CrimsonPro-OsF on i
-nput line 40.
+nput line 44.
 (/usr/share/texmf-dist/tex/latex/crimsonpro/TS1CrimsonPro-OsF.fd
 File: TS1CrimsonPro-OsF.fd 2019/10/21 (autoinst) Font definitions for TS1/Crims
 onPro-OsF.
@@ -527,40 +527,45 @@ onPro-OsF.
 LaTeX Font Info:    Font shape `TS1/CrimsonPro-OsF/m/n' in size <10> not availa
 ble
 (Font)              Font shape `TS1/CrimsonPro-OsF/regular/n' tried instead on 
-input line 40.
+input line 44.
 LaTeX Font Info:    Font shape `TS1/CrimsonPro-OsF/regular/n' will be
-(Font)              scaled to size 10.0pt on input line 40.
+(Font)              scaled to size 10.0pt on input line 44.
 
-Underfull \hbox (badness 6675) in paragraph at lines 76--78
+Underfull \hbox (badness 6675) in paragraph at lines 80--82
 \T1/CrimsonPro-OsF/regular/n/10 Ein gröÿerer Wert be-deutet eine schnellere Lau
 f- und
  []
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
-68.
+73.
 
 (/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-Underfull \hbox (badness 10000) in paragraph at lines 168--170
+Underfull \hbox (badness 10000) in paragraph at lines 173--175
 
  []
 
-[2] (./online_spiele.aux)
+
+Underfull \hbox (badness 10000) in paragraph at lines 191--192
+
+ []
+
+[3] (./online_spiele.aux)
 Package rerunfilecheck Info: File `online_spiele.out' has not changed.
-(rerunfilecheck)             Checksum: AD5C42B531AEF26B3484920078B66F8F;170.
+(rerunfilecheck)             Checksum: B520D54A6ACECD7118180D87A71F4EE9;214.
  ) 
 Here is how much of TeX's memory you used:
- 7035 strings out of 479383
- 107382 string characters out of 5875830
- 423422 words of memory out of 5000000
- 23980 multiletter control sequences out of 15000+600000
+ 7049 strings out of 479383
+ 107537 string characters out of 5875829
+ 420421 words of memory out of 5000000
+ 23983 multiletter control sequences out of 15000+600000
  492541 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 66i,6n,72p,448b,377s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 66i,6n,72p,448b,501s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/t
 exmf-dist/fonts/enc/dvips/crimsonpro/crp_krtxg6.enc}{/usr/share/texmf-dist/font
 s/enc/dvips/crimsonpro/crp_q22ex3.enc}</usr/share/texmf-dist/fonts/type1/public
@@ -568,10 +573,10 @@ s/enc/dvips/crimsonpro/crp_q22ex3.enc}</usr/share/texmf-dist/fonts/type1/public
 onpro/CrimsonPro-Regular.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm1
 0.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on online_spiele.pdf (2 pages, 84646 bytes).
+Output written on online_spiele.pdf (3 pages, 93191 bytes).
 PDF statistics:
- 87 PDF objects out of 1000 (max. 8388607)
- 77 compressed objects within 1 object stream
- 29 named destinations out of 1000 (max. 500000)
- 33 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 111 PDF objects out of 1000 (max. 8388607)
+ 100 compressed objects within 1 object stream
+ 37 named destinations out of 1000 (max. 500000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 
