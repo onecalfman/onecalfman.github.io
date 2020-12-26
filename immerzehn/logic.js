@@ -284,5 +284,5 @@ function init() {
 		canvas.addEventListener("mousedown", select, false);
 	}, 5000);
 	setTimeout( () => {countdown = '' }, 5500);
-	//setTimeout( () => setInterval(collisionInterval = checkCollision, 3000), 2000);
+	setTimeout( () => setInterval(collisionInterval = checkCollision, 3000), 2000);
 }
