@@ -10,7 +10,7 @@ var buttons = [];
 
 var grid;
 var level;
-var n = 3;
+var n = 2;
 var levelWidth;
 var levelHeight;
 var player;
