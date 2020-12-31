@@ -10,7 +10,7 @@ var buttons = [];
 
 var grid;
 var level;
-var n = 2;
+var n = 3;
 var levelWidth;
 var levelHeight;
 var player;
@@ -21,6 +21,9 @@ var colors = [
 	'#B67BB4', '#ABA9CE', '#F086A2', '#F1785B',
 	'#9AD078', '#6DBFA9', '#F3B23C',
 ];
+
+const par = new URLSearchParams(window.location.search);
+if ( par.get('l')) { n = par.get('l');}
 
 function draw() {
 	ctx.fillStyle = bgColor;
