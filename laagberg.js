@@ -1,5 +1,6 @@
 speaker = new Image();
 var isSafari = navigator.vendor.includes('Apple')
+var isTouchDevice = checkIsTouchDevice();
 
 var colors = [ 
 	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
@@ -52,7 +53,13 @@ function uniq(arr) {
 	return counts.length - 1;
 }
 
-function isTouchDevice() {  
+async function getText(url) {
+	let res = await fetch(url);
+	let text = await res.text();
+	return await text;
+}
+
+function checkIsTouchDevice() {  
   try {  
     document.createEvent("TouchEvent");  
     return true;  
@@ -392,6 +399,7 @@ class Card extends Particle {
 		this.txt = [];
 		this.snd = [];
 		this.color;
+		this.alpha = 0.6;
 	}
 
 	add(card)
@@ -433,7 +441,7 @@ class Card extends Particle {
 	draw()
 	{
 		if ( this.color ) {
-			ctx.globalAlpha = 0.6;
+			ctx.globalAlpha = this.alpha;
 			if ( this.snd[0] ) { ctx.globalAlpha = 1; }
 			ctx.fillStyle = this.color;
 			ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
@@ -471,4 +479,17 @@ class Card extends Particle {
 	}
 
 	play() { this.snd[0].play(); }
+}
+
+class Button extends Card {
+	constructor(x,y,h,w,action) {
+		super('button',h,w)
+		this.x = x;
+		this.y = y;
+		this.movable = false;
+		this.action = action;
+		this.color = randPred();
+	}
+
+	action() {}
 }
