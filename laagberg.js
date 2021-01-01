@@ -105,6 +105,15 @@ Match.overlap = function(p1, p2)
 function PlaceImg() {
 }
 
+PlaceImg.rotate = function(image, x, y, w, h, rad) {
+	ctx.save();
+	ctx.translate(x, y);
+	ctx.rotate(rad);
+	ctx.translate(-x, -y);
+	PlaceImg.center(image, x-w/2, y-h/2, w, h);
+	ctx.restore();
+}
+
 PlaceImg.center = function() {
 	img = arguments[0];
 	switch(arguments.length) {
