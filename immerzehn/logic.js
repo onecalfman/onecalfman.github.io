@@ -5,6 +5,7 @@ var FONT = "Grundschrift";
 var FONT_SIZE = 50;
 
 var time = 60;
+const TIME = time;
 var guiHeight = canvas.height / 6;
 var columns = 4;
 var rows = 6;
@@ -159,7 +160,7 @@ function endDraw(message) {
 	rise();
 	for(i in endCards) { endCards[i].draw(); }
 	ctx.globalAlpha = 1;
-	ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+	//ctx.fillText(message, canvas.width / 2, canvas.height / 2);
 }
 
 function draw() {
@@ -171,10 +172,15 @@ function draw() {
 	for(i in cards) {
 		cards[i].draw(); 
 	}
+	ctx.fillStyle = '#999'
+	ctx.fillRect (0,0, canvas.width * time/TIME, canvas.height/6)
+	
+
 	ctx.fillStyle = '#333';
 	ctx.globalAlpha = 1;
 	ctx.font = guiHeight * 0.8 + 'px ' + FONT;
-	ctx.fillText(time, canvas.width / 2, canvas.height / 12);
+	ctx.fillText('Immer ' + goal, canvas.width / 2, canvas.height / 12);
+	//ctx.fillText(time, canvas.width / 2, canvas.height / 12);
 	ctx.font = '180px ' + FONT;
 	ctx.fillText(countdown, canvas.width / 2, (canvas.height + guiHeight) / 2);
 }
