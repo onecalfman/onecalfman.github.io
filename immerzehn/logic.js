@@ -178,7 +178,7 @@ function draw() {
 
 	ctx.fillStyle = '#333';
 	ctx.globalAlpha = 1;
-	ctx.font = guiHeight * 0.8 + 'px ' + FONT;
+	ctx.font = guiHeight * 0.7 + 'px ' + FONT;
 	ctx.fillText('Immer ' + goal, canvas.width / 2, canvas.height / 12);
 	//ctx.fillText(time, canvas.width / 2, canvas.height / 12);
 	ctx.font = '180px ' + FONT;

@@ -9,7 +9,7 @@ var cards = [];
 var buttons = [];
 
 var grid;
-var level;
+var level = [];
 var n = 3;
 var levelWidth;
 var levelHeight;
@@ -35,9 +35,10 @@ function draw() {
 
 
 function collision(card) {
+	possibleCards = 'xo';
 	for(i in cards) {
 		if(cards[i] === card) { continue; }
-		if(card.x === cards[i].x && card.y === cards[i].y) { return i; }
+		if(card.x === cards[i].x && card.y === cards[i].y && possibleCards.includes(cards[i].group)) { return i; }
 	}
 	return false;
 }
@@ -70,13 +71,12 @@ function button(event) {
 
 function move(event) {
 	document.removeEventListener('keydown', move);
-	let direction = '';
 	let pos = {x: player.x, y: player.y};
 	switch(event.keyCode) {
-		case 37 : player.x -= grid; direction = 'l';	break;
-		case 38 : player.y -= grid; direction = 'u';	break;
-		case 39 : player.x += grid; direction = 'r';	break;
-		case 40 : player.y += grid; direction = 'd';	break;
+		case 37 : player.x -= grid; player.orientation = 'l';	break;
+		case 38 : player.y -= grid; player.orientation = 'u';	break;
+		case 39 : player.x += grid; player.orientation = 'r';	break;
+		case 40 : player.y += grid; player.orientation = 'd';	break;
 	}
 	let i = collision(player);
 	if(i) {
@@ -109,40 +109,71 @@ function move(event) {
 }
 
 function createLevel() {
-	let i = 0;
-	for(let c = 0; c < levelWidth; c++) {
-		for(let r = 0; r < levelHeight; r++) {
-			card = new Card(level[i],grid,grid);
-			switch(level[i]) {
+	for(let r = 0; r < levelHeight; r++) {
+		for(let c = 0; c < level[r].length; c++) {
+			card = new Card(level[r][c],grid,grid);
+			switch(level[r][c]) {
 				case 'x': card.color = '#666'; break;
 				case 'o': card.color = '#996'; break;
 				case 'p': card.color = '#696'; break;
 				case 'g': card.color = '#111'; break;
-				case ' ': i++;       continue; break;
+				case ' ':   continue; 	       break;
 				default : card.color = '#449'; break;
 			}
-			card.x = Math.round(grid / 2 + grid * r);
-			card.y = Math.round(grid / 2 + grid * c);
-			if ( level[i] == 'p') {
-				card.alpha = 1;
+			card.x = Math.round(grid / 2 + grid * c);
+			card.y = Math.round(grid / 2 + grid * r);
+			if ( level[r][c] == 'p') {
 				player = card;	
+				player.alpha = 1;
+				player.color = false;
+				player.orientation = 'u';
+				playerImg = new Image();
+				playerImg.onload = function() { 
+					player.img[0] = playerImg;
+					player.draw = function() {
+						let rad = 0;
+						switch(this.orientation) {
+							case 'u': rad = 0; 		break;
+							case 'r': rad = Math.PI / 2; 	break;
+							case 'd': rad = Math.PI; 	break;
+							case 'l': rad = Math.PI * 1.5;  break;
+						}
+						PlaceImg.rotate(this.img[0], this.x, this.y, this.w, this.h, rad);
+					}
+					draw();
+				};
+				playerImg.src = 'assets/player.png';
 			}
 			cards.push(card);
-			i++;
 		}
 	}
 	draw();
+}
+
+function parseLevel(text) {
+	level.push([]);
+	let row = 0;
+	for(i in text) {
+		if(text[i] == '\n') {
+			row++;
+			level.push([]);
+		}
+		else {
+			level[row].push(text[i]);
+		}
+	}
+	if(text[text.length-1] == '\n') { level.pop(); }
+	return level;
 }
 
 function initLevel(n) {
 	url = 'level/' + n;
 	fetch(url).then(function(response) {
 		response.text().then(function(text) {
-			level = text;
-			levelWidth = level.indexOf('\n');
-			levelHeight = level.length / levelWidth - 1;
+			level = parseLevel(text);
+			levelWidth = Math.max(...level.map(a=>a.length));
+			levelHeight = level.length;
 			grid = Math.round(Math.min(canvas.width/levelWidth, canvas.height/levelHeight));
-			level = level.replaceAll('\n','');
 			if(isTouchDevice) { touchControlls(); }
 			createLevel();
 		});
