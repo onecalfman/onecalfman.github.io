@@ -4,6 +4,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 var bgColor = '#ddd';
 var FONT = "Grundschrift";
+var FONT_SIZE;
 
 var cards = [];
 var buttons = [];
@@ -14,6 +15,14 @@ var n = 3;
 var levelWidth;
 var levelHeight;
 var player;
+
+var playerImg = new Image();
+playerImg.src = 'assets/player.png';
+var cheese = new Image();
+cheese.src = 'assets/cheese.png';
+var wall = [new Image(), new Image()];
+wall[0].src = 'assets/pflanze.png'
+wall[1].src = 'assets/ananaspflanze.png'
 
 var colors = [ 
 	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
@@ -107,43 +116,95 @@ function move(event) {
 	setTimeout(() => { document.addEventListener('keydown', move); }, 50);
 }
 
+//function createLevel() {
+//	for(let r = 0; r < levelHeight; r++) {
+//		for(let c = 0; c < level[r].length; c++) {
+//			card = new Card(level[r][c],grid,grid);
+//			switch(level[r][c]) {
+//				case 'x': card.color = '#666'; break;
+//				case 'o': card.color = '#996'; break;
+//				case 'p': card.color = '#696'; break;
+//				case 'g': card.color = '#111'; break;
+//				case ' ':   continue; 	       break;
+//				default : card.color = '#449'; break;
+//			}
+//			card.x = Math.round(grid / 2 + grid * c);
+//			card.y = Math.round(grid / 2 + grid * r);
+//			if ( level[r][c] == 'p') {
+//				player = card;	
+//				player.alpha = 1;
+//				player.color = false;
+//				player.orientation = 'u';
+//				playerImg = new Image();
+//				playerImg.onload = function() { 
+//					player.img[0] = playerImg;
+//					player.draw = function() {
+//						let rad = 0;
+//						switch(this.orientation) {
+//							case 'u': rad = 0; 		break;
+//							case 'r': rad = Math.PI / 2; 	break;
+//							case 'd': rad = Math.PI; 	break;
+//							case 'l': rad = Math.PI * 1.5;  break;
+//						}
+//						PlaceImg.rotate(this.img[0], this.x, this.y, this.w, this.h, rad);
+//					}
+//					draw();
+//				};
+//				playerImg.src = 'assets/player.png';
+//			}
+//			cards.push(card);
+//		}
+//	}
+//	draw();
+//}
+
+function addCheese(card,c,r) {
+	card.x = Math.round(grid / 2 + grid * c);
+	card.y = Math.round(grid / 2 + grid * r);
+	card.img[0] = cheese;
+	card.txt[0] = randInt(1,9);
+	card.draw = function() {
+		PlaceImg.center(this.img[0], this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+		ctx.fillStyle = '#333';
+		ctx.font = FONT_SIZE + 'px ' + FONT;
+		ctx.textAlign = 'center'
+		ctx.textBaseline = 'middle';
+		ctx.fillText(card.txt[0], this.x, this.y+this.h*0.15);
+	}
+	cards.push(card);
+}
+
 function createLevel() {
 	for(let r = 0; r < levelHeight; r++) {
 		for(let c = 0; c < level[r].length; c++) {
 			card = new Card(level[r][c],grid,grid);
 			switch(level[r][c]) {
-				case 'x': card.color = '#666'; break;
-				case 'o': card.color = '#996'; break;
-				case 'p': card.color = '#696'; break;
+				case 'x': card.img[0] = wall[randInt(0,1)]; break;
+				case 'o': addCheese(card,c,r); continue; break;
+				case 'p': card.img[0] = playerImg; break;
 				case 'g': card.color = '#111'; break;
 				case ' ':   continue; 	       break;
 				default : card.color = '#449'; break;
 			}
 			card.x = Math.round(grid / 2 + grid * c);
 			card.y = Math.round(grid / 2 + grid * r);
+
 			if ( level[r][c] == 'p') {
 				player = card;	
 				player.alpha = 1;
-				player.color = false;
 				player.orientation = 'u';
-				playerImg = new Image();
-				playerImg.onload = function() { 
-					player.img[0] = playerImg;
-					player.draw = function() {
-						let rad = 0;
-						switch(this.orientation) {
-							case 'u': rad = 0; 		break;
-							case 'r': rad = Math.PI / 2; 	break;
-							case 'd': rad = Math.PI; 	break;
-							case 'l': rad = Math.PI * 1.5;  break;
-						}
-						PlaceImg.rotate(this.img[0], this.x, this.y, this.w, this.h, rad);
+				player.draw = function() {
+					let rad = 0;
+					switch(this.orientation) {
+						case 'u': rad = 0; 		break;
+						case 'r': rad = Math.PI / 2; 	break;
+						case 'd': rad = Math.PI; 	break;
+						case 'l': rad = Math.PI * 1.5;  break;
 					}
-					draw();
-				};
-				playerImg.src = 'assets/player.png';
+					PlaceImg.rotate(this.img[0], this.x, this.y, this.w, this.h, rad);
+				}
 			}
-			cards.push(card);
+		cards.push(card);
 		}
 	}
 	draw();
@@ -173,6 +234,7 @@ function initLevel(n) {
 			levelWidth = Math.max(...level.map(a=>a.length));
 			levelHeight = level.length;
 			grid = Math.round(Math.min(canvas.width/levelWidth, canvas.height/levelHeight));
+			FONT_SIZE = grid * 0.8;
 			if(isTouchDevice) { touchControlls(); }
 			createLevel();
 		});
