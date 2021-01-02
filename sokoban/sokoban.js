@@ -44,11 +44,10 @@ function collision(card) {
 }
 
 function touchControlls() {
-
 	areaD = Math.min(canvas.height - levelHeight * grid, canvas.width * 0.8);
-	middleX = canvas.width / 2;
-	middleY = levelHeight * grid + areaD / 2;
 	size = areaD / 4;
+	middleX = canvas.width / 2;
+	middleY = canvas.height - 2 * size;
 
 	left = function() { move({keyCode : 37}) }
 	up = function() { move({keyCode : 38}) }
