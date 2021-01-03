@@ -9,12 +9,13 @@ var FONT_SIZE;
 var cards = [];
 var buttons = [];
 var cheeses = [];
+var targets = [];
 var backgroundCards = [];
 var task;
 
 var grid;
 var level = [];
-var n = 3;
+var n = 1;
 var levelWidth;
 var levelHeight;
 var player;
@@ -48,23 +49,98 @@ function draw() {
 	ctx.fillRect(0,0,canvas.width, canvas.height);
 	for(i in backgroundCards) { backgroundCards[i].draw(); }
 	for(i in cards) { cards[i].draw(); }
+	for(i in targets) { targets[i].draw(); }
 	for(i in buttons) { buttons[i].draw(); }
 	for(i in cheeses) { cheeses[i].draw(); }
 	player.draw();
 }
 
+async function end() {
+	ctx.fillStyle = bgColor;
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+	ctx.fillStyle = '#333';
+	ctx.fillText('Richtig!', this.w / 2, this.h / 2);
+	setTimeout(restart,1000);
+}
 
-function collision(card) {
-	let solid = 'xo';
-	let target = 'g';
-	for(i in cards) {
-		if(cards[i] === card) { continue; }
-		if(card.x === cards[i].x && card.y === cards[i].y) {
-			if (solid.includes(cards[i].group)) { return [1, i]; }
-			else { return [2, i]; }
+function restart() {
+	n++;
+	level = [];
+	cards = [];
+	buttons = [];
+	cheeses = [];
+	targets = [];
+	backgroundCards = [];
+	task;
+	init();
+	log('restart');
+}
+
+function collision(card,pos) {
+	if (card === player) {
+		for(i in cheeses) {
+			if(card.x == cheeses[i].x && card.y == cheeses[i].y) {
+				if(cheeses[i].fixed) {
+					player.x = pos.x;
+					player.y = pos.y;
+					return;
+				}
+				cheesePos = { x: cheeses[i].x, y: cheeses[i].y }
+				cheeses[i].x += player.x - pos.x;
+				cheeses[i].y += player.y - pos.y;
+				collision(cheeses[i],cheesePos);
+			}
+		}
+		for(i in cards) {
+			if(card.x == cards[i].x && card.y == cards[i].y) {
+				player.x = pos.x;
+				player.y = pos.y;
+				return;
+			}
 		}
 	}
-	return false;
+	else {
+		let solid = cards.concat(cheeses);
+		for(i in solid) {
+			if(card != solid[i] && card.x == solid[i].x && card.y == solid[i].y) {
+				player.x -= card.x - pos.x;
+				player.y -= card.y - pos.y;
+				card.x = pos.x;
+				card.y = pos.y;
+				return;
+			}
+		}
+		for(i in targets) {
+			if(card.x == targets[i].x && card.y == targets[i].y) {
+				card.ontarget = i.toString();
+				log(cheeses.map((card) => card.ontarget))
+				if (cheeses.map((card) => card.ontarget).every(a => typeof(a) == 'string')) {
+					cheeses = sortBy(cheeses);
+					if (solutionEval(sortBy(cheeses).map((card) => card.group).toString().replaceAll(',',''))) {
+						end();
+					} else { 
+					restart();
+					}
+				}
+				return;
+			}
+			else {
+				card.ontarget = false;
+			}
+		}
+	}
+	draw();
+}
+
+function sortBy(arr) {
+	arr.sort(function(a, b) {
+  		var keyA = new Date(a.ontarget),
+    		keyB = new Date(b.ontarget);
+  		if (keyA < keyB) return -1;
+  		if (keyA > keyB) return 1;
+  		return 0;
+	});
+	return arr;
 }
 
 function touchControlls() {
@@ -101,60 +177,74 @@ function move(event) {
 		case 39 : player.x += grid; player.orientation = 'r';	break;
 		case 40 : player.y += grid; player.orientation = 'd';	break;
 	}
-	let i = collision(player);
-	if(i[0] == 1) {
-		i = i[1];
-		switch(cards[i].group) {
-			case 'x' : 
-				player.x = pos.x;
-				player.y = pos.y;
-				break;
-			case 'o' :
-				cardPos = { x: cards[i].x, y: cards[i].y }
-				cards[i].x += player.x - pos.x;
-				cards[i].y += player.y - pos.y;
-				let j = collision(cards[i]);
-				if(j[0] == 1) {
-					j = j[1];
-					if ( cards[j].group == 'g' ) {
-						cards[i].color = randPred();
-						cards[i].alpha = 1;
-						break;
-					}
-					cards[i].x = cardPos.x;
-					cards[i].y = cardPos.y;
-					player.x = pos.x;
-					player.y = pos.y;
-				}
-				break;
-		}
-	}
-
+	collision(player, pos);
 	draw();
 	setTimeout(() => { document.addEventListener('keydown', move); }, 50);
 }
 
-function addCheese(card,c,r) {
+function solutionEval(string) {
+	let i = string.split('=');
+	let left = i[0];
+	let right = i[1];
+	if ( left.includes('+') ) {
+		left = left.split('+');
+		if ( Math.ceil(left[0]) + Math.ceil(left[1]) == right ) { return true; }
+	}
+	else if ( right.includes('+')) {
+		right = right.split('+');
+		if ( Math.ceil(right[0]) + Math.ceil(right[1]) == left ) { return true; }
+	}
+	else if ( left.includes('-')) {
+		left = left.split('-');
+		if ( Math.ceil(left[0]) - Math.ceil(left[1]) == right ) { return true; }
+	}
+	else if ( right.includes('-')) {
+		right = right.split('-');
+		if ( Math.ceil(right[0]) - Math.ceil(right[1]) == left ) { return true; }
+	}
+	return false;
+}
+
+function createUnmovableCheese(card,c,r) {
+	card.x = Math.round(grid / 2 + grid * c);
+	card.y = Math.round(grid / 2 + grid * r);
+	card.img[0] = target;
+	card.img[1] = cheese;
+	card.group = task[cheeses.length];
+	card.ontarget = targets.length.toString();
+	card.fixed = true;
+	card.draw = function() {
+		PlaceImg.center(this.img[0], this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+		PlaceImg.center(this.img[1], this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+		ctx.fillStyle = '#333';
+		ctx.font = FONT_SIZE + 'px ' + FONT;
+		ctx.textAlign = 'center'
+		ctx.textBaseline = 'middle';
+		ctx.fillText(card.group, this.x, this.y+this.h*0.15);
+	}
+	cheeses.push(card);
+	targets.push(card);
+}
+
+function createCheese(card,c,r) {
 	card.x = Math.round(grid / 2 + grid * c);
 	card.y = Math.round(grid / 2 + grid * r);
 	card.img[0] = cheese;
-	card.txt[0] = task[cheeses.length];
+	card.group = task[cheeses.length];
 	card.draw = function() {
 		PlaceImg.center(this.img[0], this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
 		ctx.fillStyle = '#333';
 		ctx.font = FONT_SIZE + 'px ' + FONT;
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'middle';
-		ctx.fillText(card.txt[0], this.x, this.y+this.h*0.15);
+		ctx.fillText(card.group, this.x, this.y+this.h*0.15);
 	}
 	cheeses.push(card);
-	cards.push(card);
 }
 
 function createBackground() {
 	for(let r = 0; r <= Math.ceil(canvas.height/grid); r+=3) {
 		for(let c = 0; c <= Math.ceil(canvas.width/grid); c+=3) {
-			log('card');
 			bg_card = new Card('b',3*grid,3*grid);
 			bg_card.img[0] = background;
 			bg_card.x = Math.round(grid / 2 + grid * c);
@@ -170,17 +260,19 @@ function createLevel() {
 			card = new Card(level[r][c],grid,grid);
 			switch(level[r][c]) {
 				case 'x': card.img[0] = wall[randInt(0,1)]; break;
-				case 'o': addCheese(card,c,r); continue; break;
-				case 'p': card.img[0] = playerImg; break;
-				case 'g': card.img[0] = target; break;
+				case 'o': createCheese(card,c,r); continue; break;
+				case 'u': createUnmovableCheese(card,c,r); continue; break;
+				case 'a': card.img[0] = playerImg; break;
+				case 'z': card.img[0] = target; break;
 				case ' ':   continue; 	       break;
 				default : card.color = '#449'; break;
 			}
 			card.x = Math.round(grid / 2 + grid * c);
 			card.y = Math.round(grid / 2 + grid * r);
 
-			if ( level[r][c] == 'p') {
+			if ( level[r][c] == 'a') {
 				player = card;	
+				player.group = 'player';
 				player.alpha = 1;
 				player.orientation = 'u';
 				player.draw = function() {
@@ -193,8 +285,14 @@ function createLevel() {
 					}
 					PlaceImg.rotate(this.img[0], this.x, this.y, this.w, this.h, rad);
 				}
+				continue;
 			}
-		if ( card.group == 'g' ) { cards.unshift(card); }
+		if ( card.group == 'z' ) {
+			targets.push(card);
+		}
+		else if ( card.group == 'x' ) {
+			cards.push(card);
+		}
 		else { cards.push(card); }
 		}
 	}
