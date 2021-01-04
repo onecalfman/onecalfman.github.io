@@ -56,6 +56,7 @@ function draw() {
 }
 
 async function end() {
+	n++;
 	ctx.fillStyle = bgColor;
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 	ctx.fillStyle = '#333';
@@ -64,7 +65,6 @@ async function end() {
 }
 
 function restart() {
-	n++;
 	level = [];
 	cards = [];
 	buttons = [];
