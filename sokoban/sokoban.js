@@ -21,7 +21,7 @@ var levelHeight;
 var player;
 
 var playerImg = new Image();
-playerImg.src = 'assets/player.png';
+playerImg.src = 'assets/player.svg';
 var cheese = new Image();
 cheese.src = 'assets/cheese.png';
 var wall = [new Image(), new Image(), new Image(), new Image()];
@@ -56,15 +56,15 @@ function draw() {
 }
 
 async function end() {
-	n++;
 	ctx.fillStyle = bgColor;
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 	ctx.fillStyle = '#333';
 	ctx.fillText('Richtig!', this.w / 2, this.h / 2);
-	setTimeout(restart,1000);
+	setTimeout(restart,2000);
 }
 
 function restart() {
+	n++;
 	level = [];
 	cards = [];
 	buttons = [];
