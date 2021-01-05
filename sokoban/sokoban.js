@@ -15,13 +15,13 @@ var task;
 
 var grid;
 var level = [];
-var n = 1;
+var n = 2;
 var levelWidth;
 var levelHeight;
 var player;
 
 var playerImg = new Image();
-playerImg.src = 'assets/player.svg';
+playerImg.src = 'assets/player.png';
 var cheese = new Image();
 cheese.src = 'assets/cheese.png';
 var wall = [new Image(), new Image(), new Image(), new Image()];
@@ -33,13 +33,6 @@ var target = new Image();
 target.src = 'assets/ziel.png';
 var background = new Image();
 background.src = 'assets/bg.png';
-
-var colors = [ 
-	'#86C9B7', '#87A7C7', '#94D0A1', '#8ECC85',
-	'#F69856', '#F4A96D', '#90A8CC', '#93AACF',
-	'#B67BB4', '#ABA9CE', '#F086A2', '#F1785B',
-	'#9AD078', '#6DBFA9', '#F3B23C',
-];
 
 const par = new URLSearchParams(window.location.search);
 if ( par.get('l')) { n = par.get('l');}
@@ -56,7 +49,10 @@ function draw() {
 }
 
 async function end() {
-	n++;
+	log('end')
+	document.removeEventListener('keydown', move);
+	document.removeEventListener('mousedown', button);
+	document.removeEventListener('touchend', button);
 	ctx.fillStyle = bgColor;
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 	ctx.fillStyle = '#333';
@@ -65,6 +61,7 @@ async function end() {
 }
 
 function restart() {
+	n++;
 	level = [];
 	cards = [];
 	buttons = [];
@@ -338,4 +335,7 @@ function init() {
 	document.addEventListener('keydown', move);
 	document.addEventListener('mousedown', button);
 	document.addEventListener('touchend', button);
+	setTimeout(draw, 10);
+	setTimeout(draw, 200);
+	setTimeout(draw, 500);
 }
