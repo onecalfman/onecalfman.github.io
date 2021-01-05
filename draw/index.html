@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  	<meta charset="UTF-8">
+	<meta id="viewport" name='viewport' content='width=device-width, initial-scale=1, user-scalable=0' >
+	
+	<title>Draw</title> 
+	  
+  	<link rel="stylesheet" href="css/main.css">
+	<link href='https://fonts.googleapis.com/css?family=Roboto Slab' rel='stylesheet'>
+	<style>
+	body {
+    		font-family: 'Roboto Slab';font-size: 22px;
+	}
+	</style>
+
+</head>
+
+<body onload="init()">
+
+	<div class="container">
+		<div id="sidebar" class="sidebar">
+		<canvas id="rect" onclick="selector = 'r'" width=50 height=50></canvas>
+		<canvas id="circle" onclick="selector = 'c'" width=50 height=50></canvas>
+		<canvas id="triangle" onclick="selector = 'c'" width=50 height=50></canvas>
+		<canvas id="line" onclick="selector = 'l'" width=50 height=50></canvas>
+		<canvas id="free" onclick="selector = 'c'" width=50 height=50></canvas>
+		<canvas id="grid" onclick="selector = 'c'" width=50 height=50></canvas>
+		</div>
+		<div id="content" class="content">
+			<canvas id="canvas" width=600 height=600></canvas>
+		</div>
+
+<script src="/laagberg.js">
+</script>
+<script src="draw.js">
+</script>
+</body>
+</html>

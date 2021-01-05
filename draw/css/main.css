@@ -1,0 +1,50 @@
+@font-face {
+  font-family: Grundschrift;
+  src: url('/fonts/grundschrift.ttf');
+}
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&display=swap');
+
+
+body, html, p { 
+	margin: 0px; 
+	padding: 0px; 
+	width: 100%;
+	height: 100%;
+	background-color: #ddd;
+	position: fixed; 
+} 
+
+#canvas { 
+	background-color: #ddd;
+	min-width: 300px;
+	margin: 0px;
+} 
+
+.container{
+	display: grid;
+	background-color: #ddd;
+	grid-template-colums: 10px 1fr;
+}
+
+.sidebar{
+	padding: 0px;
+  	display: grid;
+  	place-items: center;
+	background-color: #ddd;
+	grid-column-start: 1;
+	grid-column-end: 1;
+	margin: 0px;
+	border: 0px;
+}
+
+.content {
+  	display: grid;
+	background-color: #ddd;
+  	place-items: center;
+	grid-column-start: 2;
+	grid-column-end: 2;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	overflow: auto;
+}
