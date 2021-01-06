@@ -21,18 +21,22 @@ var levelHeight;
 var player;
 
 var playerImg = new Image();
-playerImg.src = 'assets/player.png';
+playerImg.src = 'assets/player.svg';
 var cheese = new Image();
 cheese.src = 'assets/cheese.png';
 var wall = [new Image(), new Image(), new Image(), new Image()];
-wall[0].src = 'assets/pflanze.png'
-wall[1].src = 'assets/pflanze2.png'
-wall[2].src = 'assets/ananaspflanze.png'
-wall[3].src = 'assets/felsen.png'
+//wall[0].src = 'assets/pflanze.png'
+//wall[1].src = 'assets/pflanze2.png'
+wall[0].src = 'assets/pflanze.svg'
+wall[1].src = 'assets/pflanze2.svg'
+//wall[2].src = 'assets/ananaspflanze.png'
+//wall[3].src = 'assets/felsen.png'
 var target = new Image();
 target.src = 'assets/ziel.png';
 var background = new Image();
 background.src = 'assets/bg.png';
+var arrow = new Image();
+arrow.src = 'assets/arrow.png';
 
 const par = new URLSearchParams(window.location.search);
 if ( par.get('l')) { n = par.get('l');}
@@ -155,6 +159,13 @@ function touchControlls() {
 	buttons.push(new Button(middleX, middleY - size, size, size, up));
 	buttons.push(new Button(middleX + size, middleY, size, size, right));
 	buttons.push(new Button(middleX, middleY + size, size, size, down));
+
+	for(i in buttons) {
+		buttons[i].img = arrow;
+		buttons[i].draw = function() {
+				PlaceImg.rotate(this.img, this.x, this.y, this.w, this.h, i * Math.PI / 2);
+		}
+	}
 }
 
 function button(event) {
