@@ -36,7 +36,7 @@ target.src = 'assets/ziel.png';
 var background = new Image();
 background.src = 'assets/bg.png';
 var arrow = new Image();
-arrow.src = 'assets/arrow.png';
+arrow.src = 'assets/arrow.svg';
 
 const par = new URLSearchParams(window.location.search);
 if ( par.get('l')) { n = par.get('l');}
