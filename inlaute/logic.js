@@ -474,6 +474,7 @@ function init()
 	ctx.font = FONT_SIZE * SCALE + px + FONT;
 	ctx.textBaseline = "hanging";
 	ctx.globalAlpha = 1;
+
 	if ( isTouchDevice ) { Physics.G = -4 } else { Physics.G = -2 }
 
 	words = getWords(set);
