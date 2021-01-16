@@ -1,6 +1,7 @@
 ---
 title: Online Spiele
 author: Jonas Walkling
+lang: de
 disable-header-and-footer: true
 header-includes:
  - \usepackage[T1]{fontenc}
@@ -196,7 +197,7 @@ Wenn p gesetzt wird, wird das Endergebnis in Prozent, statt als x von y angezeig
 Legt den Buchstaben fest
 
 * Default: -
-* Möglich: m
+* Möglich: l, m, s
 	\bigskip
 
 
