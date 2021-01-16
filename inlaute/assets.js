@@ -15,6 +15,19 @@ const assets = {
 	'Oma'		: ['Oma',	'assets/Oma.PNG',	'assets/Oma.mp3'],
 	'Stempel'	: ['Stempel',	'assets/Stempel.PNG',	'assets/Stempel.mp3'],
 	'Wolke'		: ['Wolke',	'assets/Wolke.PNG',	'assets/Wolke.mp3']
+	'Nadel' 	: [ 'Nadel',	'assets/Nadel.PNG',	'assets/Nadel.mp3'],	
+	'Lupe' 		: ['Lupe',	'assets/Lupe.PNG',	'assets/Lupe.mp3'],	
+	'Luftballon' 	: ['Luftballon','assets/Luftballon.PNG','assets/Luftballon.mp3'],	
+	'Loewe' 	: ['Löwe',	'assets/Loewe.PNG',	'assets/Loewe.mp3'],	
+	'Lineal' 	: ['Lineal',	'assets/Lineal.PNG',	'assets/Lineal.mp3'],	
+	'Lampe' 	: ['Lampe',	'assets/Lampe.PNG',	'assets/Lampe.mp3'],	
+	'Gabel' 	: ['Gabel', 	'assets/Gabel.PNG',	'assets/Gabel.mp3'],	
+	'Floete' 	: ['Flöte',	'assets/Floete.PNG',	'assets/Floete.mp3'],	
+	'Esel' 		: ['Esel',	'assets/Esel.PNG',	'assets/Esel.mp3'],	
+	'Delfin' 	: ['Delfin',	'assets/Delfin.PNG',	'assets/Delfin.mp3'],	
+	'Chamaeleon' 	: ['Chamaeleon','assets/Chamaeleon.PNG','assets/Chamaeleon.mp3'],	
+	'Blume' 	: ['Blume',	'assets/Blume.PNG',	'assets/Blume.mp3'],	
+
 }
 
 function getWords(letter) {
@@ -22,6 +35,9 @@ function getWords(letter) {
 		case "m" :
 			words = ['Ameise','Ampel','Banane','Blumentopf','Brille','Dose','Eimer','Ente','Feder','Mais','Maus','Mond','Muffin','Oma','Stempel','Wolke'];
 			break;
+		case "l" :
+			words = ['Ameise','Ampel','Banane','Blume','Brille','Chamaeleon','Delfin','Dose','Esel','Feder','Floete','Gabel','Lampe','Lineal','Loewe','Luftballon','Lupe','Maus','Nadel','Wolke'];
+			break;	
 	}
 	return words;
 }
