@@ -48,7 +48,7 @@ function getWords(letter) {
 			words = ['Ameise','Ampel','Banane','Blume','Brille','Chamaeleon','Delfin','Dose','Esel','Feder','Floete','Gabel','Lampe','Lineal','Loewe','Luftballon','Lupe','Maus','Nadel','Wolke'];
 			break;	
 		case "s" :
-			words = ['Ameise','Ananas','Besen','Brille','Chamaeleon','Dose','Eis','Esel','Feder','Floete','Gabel','Lampe','Lineal','Maus','Nadel','Saege','Sechs','Sieben','Sofa','Sonne'];
+			words = ['Ameise','Ananas','Besen','Brille','Chamaeleon','Dose','Eis','Esel','Feder','Floete','Gabel','Lampe','Lineal','Maus','Nadel','Saege','Sieben','Sofa','Sonne'];
 			break;  
 	}
 	return words;
