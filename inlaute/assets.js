@@ -15,7 +15,6 @@ const assets = {
 	'Ente'		: ['Ente',	'assets/Ente.PNG',	'assets/Ente.mp3'],
 	'Esel' 		: ['Esel',	'assets/Esel.PNG',	'assets/Esel.mp3'],	
 	'Feder'		: ['Feder',	'assets/Feder.PNG',	'assets/Feder.mp3'],
-	'Floete'	: ['Floete',	'assets/Floete.PNG',    'assets/Floete.mp3'],
 	'Floete' 	: ['Flöte',	'assets/Floete.PNG',	'assets/Floete.mp3'],	
 	'Gabel' 	: ['Gabel', 	'assets/Gabel.PNG',	'assets/Gabel.mp3'],	
 	'Lampe' 	: ['Lampe',	'assets/Lampe.PNG',	'assets/Lampe.mp3'],	
@@ -34,7 +33,8 @@ const assets = {
 	'Saege'		: ['Saege',	'assets/Saege.PNG',	'assets/Saege.mp3'],	
 	'Sechs'		: ['Sechs',	'assets/Sechs.PNG',     'assets/Sechs.mp3'],
 	'Sieben'	: ['Sieben',	'assets/Sieben.PNG',    'assets/Sieben.mp3'],
-	'Sofa'		: ['Sofa',	'assets/Sofa.PNG',    'assets/Sofa.mp3'],
+	'Sofa'		: ['Sofa',	'assets/Sofa.PNG',    	'assets/Sofa.mp3'],
+	'Sonne'		: ['Sonne',	'assets/Sonne.PNG',    	'assets/Sonne.mp3'],
 	'Stempel'	: ['Stempel',	'assets/Stempel.PNG',	'assets/Stempel.mp3'],
 	'Wolke'		: ['Wolke',	'assets/Wolke.PNG',	'assets/Wolke.mp3'],
 }
