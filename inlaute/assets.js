@@ -14,8 +14,8 @@ const assets = {
 	'Muffin'	: ['Muffin',	'assets/Muffin.PNG',	'assets/Muffin.mp3'],
 	'Oma'		: ['Oma',	'assets/Oma.PNG',	'assets/Oma.mp3'],
 	'Stempel'	: ['Stempel',	'assets/Stempel.PNG',	'assets/Stempel.mp3'],
-	'Wolke'		: ['Wolke',	'assets/Wolke.PNG',	'assets/Wolke.mp3']
-	'Nadel' 	: [ 'Nadel',	'assets/Nadel.PNG',	'assets/Nadel.mp3'],	
+	'Wolke'		: ['Wolke',	'assets/Wolke.PNG',	'assets/Wolke.mp3'],
+	'Nadel' 	: ['Nadel',	'assets/Nadel.PNG',	'assets/Nadel.mp3'],	
 	'Lupe' 		: ['Lupe',	'assets/Lupe.PNG',	'assets/Lupe.mp3'],	
 	'Luftballon' 	: ['Luftballon','assets/Luftballon.PNG','assets/Luftballon.mp3'],	
 	'Loewe' 	: ['Löwe',	'assets/Loewe.PNG',	'assets/Loewe.mp3'],	
