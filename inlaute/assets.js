@@ -27,7 +27,14 @@ const assets = {
 	'Delfin' 	: ['Delfin',	'assets/Delfin.PNG',	'assets/Delfin.mp3'],	
 	'Chamaeleon' 	: ['Chamaeleon','assets/Chamaeleon.PNG','assets/Chamaeleon.mp3'],	
 	'Blume' 	: ['Blume',	'assets/Blume.PNG',	'assets/Blume.mp3'],	
-
+	'Ananas'	: ['Ananas',	'assets/Ananas.PNG',	'assets/Ananas.mp3'],
+	'Lupe'		: ['Lupe',	'assets/Lupe.PNG',      'assets/Lupe.mp3'],
+	'Esel'		: ['Esel',	'assets/Esel.PNG',      'assets/Esel.mp3'],
+	'Floete'	: ['Floete',	'assets/Floete.PNG',    'assets/Floete.mp3'],
+	'Luftballon'	: ['Luftballon','assets/Luftballon.PNG','assets/Luftballon.mp3'],
+	'Sieben'	: ['Sieben',	'assets/Sieben.PNG',    'assets/Sieben.mp3'],
+	'Sechs'		: ['Sechs',	'assets/Sechs.PNG',     'assets/Sechs.mp3'],
+	'Saege'		: ['Saege',	'assets/Saege.PNG',	'assets/Saege.mp3'],	
 }
 
 function getWords(letter) {
@@ -38,6 +45,9 @@ function getWords(letter) {
 		case "l" :
 			words = ['Ameise','Ampel','Banane','Blume','Brille','Chamaeleon','Delfin','Dose','Esel','Feder','Floete','Gabel','Lampe','Lineal','Loewe','Luftballon','Lupe','Maus','Nadel','Wolke'];
 			break;	
+		case "s" :
+			words = ['Ameise','Ananas','Besen','Brille','Chamaeleon','Dose','Eis','Esel','Feder','Floete','Gabel','Lampe','Lineal','Maus','Nadel','Saege','Sechs','Sieben','Sofa','Sonne'];
+			break;  
 	}
 	return words;
 }
