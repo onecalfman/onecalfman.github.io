@@ -120,7 +120,8 @@ function collision(card,pos) {
 					if (solutionEval(sortBy(cheeses).map((card) => card.group).toString().replaceAll(',',''))) {
 						end();
 					} else { 
-					restart();
+						n--;
+						end();
 					}
 				}
 				return;
