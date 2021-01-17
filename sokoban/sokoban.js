@@ -23,7 +23,7 @@ var player;
 var playerImg = new Image();
 playerImg.src = 'assets/player.svg';
 var cheese = new Image();
-cheese.src = 'assets/cheese.png';
+cheese.src = 'assets/cheese.svg';
 var wall = [new Image(), new Image(), new Image(), new Image()];
 //wall[0].src = 'assets/pflanze.png'
 //wall[1].src = 'assets/pflanze2.png'
