@@ -1,0 +1,75 @@
+\documentclass[]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usetikzlibrary{arrows,decorations.markings}
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+\usetikzlibrary{positioning}
+\usetikzlibrary{patterns}
+\usetikzlibrary{circuits.logic.US,circuits.logic.IEC,fit}
+\newcommand\addvmargin[1]{
+  \node[fit=(current bounding box),inner ysep=#1,inner xsep=0]{};
+}
+\usepackage{pgfplots}
+\usepgflibrary{patterns}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{CrimsonPro}
+\usepackage{multirow}
+\usepackage{textcomp}
+\usepackage{multicol}
+\usepackage{makecell}
+\usepackage[makeroom]{cancel}
+\usepackage{lscape}
+\usepackage[utf8]{inputenc}
+%\usepackage{geometry}
+% \geometry{
+%	 a4paper,
+%	 left=10mm,
+%	 right=10mm,
+%	 top=10mm,
+%	 bottom=20mm,
+%	 }
+\usepackage{hyperref}
+\newcommand{\thicc}{thick}
+\newcommand{\ultraskip}{\bigskip\bigskip\bigskip\bigskip\bigskip\bigskip}
+\newcommand{\tabellenskalierung}{0.75}
+\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+\newcolumntype{C}[1]{>{\PreserveBackslash\centering}p{#1}}
+\newcolumntype{R}[1]{>{\PreserveBackslash\raggedleft}p{#1}}
+\newcolumntype{L}[1]{>{\PreserveBackslash\raggedright}p{#1}}
+
+\title{Webserver Starten / JavaScript}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Server Starten}
+
+\begin{enumerate}
+
+	 \item Startmenü öffnen
+	 \item XAMPP auswählen
+	 \item Controll-Panle → Rechtsklick → Als Administrator ausführen
+	 \item In der Obersten zeile auf start Klicken ( bei apache )
+
+\end{enumerate}
+
+\subsection*{Ordner öffnen}
+\begin{itemize}
+	\item Der Ordner liegt under \texttt{C:\textbackslash Users\textbackslash Tine\textbackslash apache}
+	\item Jeder Unterordner steht für eine Unterseite.
+\end{itemize}
+
+\subsection*{Website öffnen}
+\begin{itemize}
+	\item \href{http://127.0.1.1}{\texttt{http://127.0.1.1}}
+\end{itemize}
+
+
+
+\end{document}
+

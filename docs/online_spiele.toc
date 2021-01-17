@@ -1,0 +1,31 @@
+\contentsline {section}{\numberline {1}Einmaleins}{1}{section.1}%
+\contentsline {paragraph}{reihe}{1}{section*.3}%
+\contentsline {paragraph}{dauer}{1}{section*.4}%
+\contentsline {paragraph}{prozent}{1}{section*.5}%
+\contentsline {paragraph}{speed}{1}{section*.6}%
+\contentsline {paragraph}{schwerkraft}{1}{section*.7}%
+\contentsline {paragraph}{interval}{1}{section*.8}%
+\contentsline {paragraph}{max}{1}{section*.9}%
+\contentsline {paragraph}{fps}{2}{section*.10}%
+\contentsline {paragraph}{breite}{2}{section*.11}%
+\contentsline {paragraph}{zr\_scale}{2}{section*.12}%
+\contentsline {section}{\numberline {2}Anlaute}{2}{section.2}%
+\contentsline {paragraph}{l}{2}{section*.13}%
+\contentsline {paragraph}{c}{2}{section*.14}%
+\contentsline {section}{\numberline {3}Mengen}{2}{section.3}%
+\contentsline {paragraph}{set}{2}{section*.15}%
+\contentsline {paragraph}{t}{2}{section*.16}%
+\contentsline {paragraph}{s}{2}{section*.17}%
+\contentsline {paragraph}{r}{2}{section*.18}%
+\contentsline {paragraph}{c}{2}{section*.19}%
+\contentsline {paragraph}{p}{2}{section*.20}%
+\contentsline {section}{\numberline {4}Inlaute}{3}{section.4}%
+\contentsline {paragraph}{Beispiel:}{3}{section*.21}%
+\contentsline {paragraph}{s}{3}{section*.22}%
+\contentsline {paragraph}{n}{3}{section*.23}%
+\contentsline {section}{\numberline {5}Immerzehn}{3}{section.5}%
+\contentsline {paragraph}{d}{3}{section*.24}%
+\contentsline {paragraph}{c}{3}{section*.25}%
+\contentsline {paragraph}{r}{3}{section*.26}%
+\contentsline {paragraph}{t}{3}{section*.27}%
+\contentsline {paragraph}{t}{3}{section*.28}%
