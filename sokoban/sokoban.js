@@ -310,6 +310,7 @@ function createLevel() {
 function parseLevel(text) {
 	task = text.split('#')[1].replaceAll('\n','').replaceAll(' ','');
 	text = text.split('#')[0];
+	if ( task.includes(',') ) { task = task.split(','); }
 	level.push([]);
 	let row = 0;
 	for(i in text) {
