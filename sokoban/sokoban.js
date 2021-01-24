@@ -15,7 +15,7 @@ var task;
 
 var grid;
 var level = [];
-var n = 2;
+var n = 1;
 var levelWidth;
 var levelHeight;
 var player;
