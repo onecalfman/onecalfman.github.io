@@ -15,7 +15,8 @@ var task;
 
 var grid;
 var level = [];
-var n = 1;
+var levelNum = 1;
+log(levelNum);
 var levelWidth;
 var levelHeight;
 var player;
@@ -39,7 +40,7 @@ var arrow = new Image();
 arrow.src = 'assets/arrow.svg';
 
 const par = new URLSearchParams(window.location.search);
-if ( par.get('l')) { n = par.get('l');}
+if ( par.get('l')) { levelGroup = par.get('l');}
 
 function draw() {
 	ctx.fillStyle = bgColor;
@@ -65,7 +66,9 @@ async function end() {
 }
 
 function restart() {
-	n++;
+	log(levelNum);
+	levelNum++;
+	log(levelNum);
 	level = [];
 	cards = [];
 	buttons = [];
@@ -113,21 +116,21 @@ function collision(card,pos) {
 		}
 		for(i in targets) {
 			if(card.x == targets[i].x && card.y == targets[i].y) {
-				card.ontarget = i.toString();
-				log(cheeses.map((card) => card.ontarget))
-				if (cheeses.map((card) => card.ontarget).every(a => typeof(a) == 'string')) {
-					cheeses = sortBy(cheeses);
-					if (solutionEval(sortBy(cheeses).map((card) => card.group).toString().replaceAll(',',''))) {
+				let solution = [];
+				targets[i].value  = card.group.toString();
+				for(t in targets) {
+					if(targets[t].value) solution.push(targets[t].value);
+				}
+				if(solution.length == targets.length) {
+					if (solutionEval(solution)) {
+						log("solved");
 						end();
 					} else { 
-						n--;
+						log("false");
+						levelNum--;
 						end();
 					}
 				}
-				return;
-			}
-			else {
-				card.ontarget = false;
 			}
 		}
 	}
@@ -191,26 +194,21 @@ function move(event) {
 	setTimeout(() => { document.addEventListener('keydown', move); }, 50);
 }
 
-function solutionEval(string) {
-	let i = string.split('=');
-	let left = i[0];
-	let right = i[1];
-	if ( left.includes('+') ) {
-		left = left.split('+');
-		if ( Math.ceil(left[0]) + Math.ceil(left[1]) == right ) { return true; }
-	}
-	else if ( right.includes('+')) {
-		right = right.split('+');
-		if ( Math.ceil(right[0]) + Math.ceil(right[1]) == left ) { return true; }
-	}
-	else if ( left.includes('-')) {
-		left = left.split('-');
-		if ( Math.ceil(left[0]) - Math.ceil(left[1]) == right ) { return true; }
-	}
-	else if ( right.includes('-')) {
-		right = right.split('-');
-		if ( Math.ceil(right[0]) - Math.ceil(right[1]) == left ) { return true; }
-	}
+function termEval(arr) {
+	log("termEval: " + arr);
+	if(arr.length == 1) return parseInt(arr[0]);
+	if(arr[1] == '+') return parseInt(arr[0]) + parseInt(arr[2]);
+	if(arr[1] == '-') return parseInt(arr[0]) - parseInt(arr[2]);
+}
+
+function solutionEval(arr) {
+	log(arr);
+	let eqIndex = arr.indexOf('=');
+	let left = arr.slice(0,eqIndex);
+	let right = arr.slice(eqIndex+1,arr.length);
+	log(left);
+	log(right);
+	if(termEval(left) == termEval(right)) return true;
 	return false;
 }
 
@@ -232,6 +230,7 @@ function createUnmovableCheese(card,c,r) {
 		ctx.fillText(card.group, this.x, this.y+this.h*0.15);
 	}
 	cheeses.push(card);
+	card.value = card.group;
 	targets.push(card);
 }
 
@@ -327,8 +326,8 @@ function parseLevel(text) {
 	return level;
 }
 
-function initLevel(n) {
-	url = 'level/' + n;
+function initLevel(levelNum) {
+	url = 'level/' + levelNum;
 	fetch(url).then(function(response) {
 		response.text().then(function(text) {
 			level = parseLevel(text);
@@ -339,12 +338,14 @@ function initLevel(n) {
 			if(isTouchDevice) { touchControlls(); }
 			createBackground();
 			createLevel();
+			log("level " + levelNum + " created");
 		});
 	});
 }
 
 function init() {
-	initLevel(n);
+	log("init");
+	initLevel(levelNum);
 	document.addEventListener('keydown', move);
 	document.addEventListener('mousedown', button);
 	document.addEventListener('touchend', button);
