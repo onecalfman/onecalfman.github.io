@@ -1,0 +1,159 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Messtechnik</title> 
+	<link href="main.css" rel="stylesheet">
+	<meta name='viewport' content='width=device-width' initial-scale=1>
+</head> 
+<body>
+<div class="container">
+<div class="sidebar">
+	<button class="sidebutton" onclick="openTab(event, 'basic')"> Basic  </button>
+	<button class="sidebutton" onclick="openTab(event, 'teila')"> Teil A </button>
+	<form class="sidebutton" target="_blank" action="http://onlinestatbook.com/2/calculators/normal_dist.html"> <input type="submit" value="Normalverteilung" /> </form>
+	<!--<button class="sidebutton" onclick="openTab(event, 'histogram')"> Histogram </button>-->
+	<button class="sidebutton" onclick="openTab(event, 'ttest')"> T-Test </button>
+	<button class="sidebutton" onclick="openTab(event, 'linreg')">Lineare Regression</button>
+	</div>
+
+
+<div class="content" id="normalverteilung">
+	<table>
+	<tr> <td>     Erwartungswert:       </td> <td> <input id="mu_d" size="4" autofocus> </td> </tr>
+	<tr> <td>     Standardabweichung:       </td> <td> <input id="sigma_d" size="4" > </td> </tr>
+	<tr> <td text-align:right colspan=2 >     P( 
+			<input id="normal_u" size="4" > 
+			&#60; x &#60; 
+			<input id="normal_o" size="4" >)
+		</td> </tr>
+	</table>
+</div>
+
+<div class="content" id="ttest">
+	<h1>T-Test</h1>
+
+	<table>
+	<tr> <td> <input id="ttest_dist1" name="ttest_dist1" colspan=2 value="" size="80">   </td> </tr> 
+	<tr> <td> <input id="ttest_dist2" name="ttest_dist2" colspan=2 value="" size="80"> </td> </tr>
+	</table>
+	n: <input id="t_n" name="t_n" size="5">
+
+  	<button class="tpbtn" onclick="ttest_P(0.9);" id="0.9">0,9</button>
+  	<button class="tpbtn" onclick="ttest_P(0.95);" id="0.95">0,95</button>
+  	<button class="tpbtn" onclick="ttest_P(0.975);" id="0.975">0,975</button>
+	<button class="tpbtn" onclick="ttest_P(0.99);" id="0.99">0,99</button> 
+	<button class="tpbtn" onclick="ttest_P(0.995);" id="0.995">0,995</button> 
+
+	<table id="ttest_dist_table"> </table>
+	<div id=ttest_vals></div>
+	<table id="ttest_res_table"> </table>
+</div>
+
+<div class="content" id="histogram">
+	<center>
+	<h1>Histogram</h1>
+	</center>
+
+	<input id="hist_dist" name="hist_dist" value="" size="80" autofocus>
+
+	</div>
+
+<div class="content" id="basic">
+	<center>
+	<input id="distribution" name="distribution" value="" size="80" autofocus>
+	</center>
+
+<table text-align="left" width="100%">
+    <colgroup>
+       <col span="1" style="width: 30%;">
+       <col span="1" style="width: 70%;">
+    </colgroup>
+    <tbody> 
+	<tr> <td>Sortiert:            </td> <td id="sort">             </td> </tr>
+	<tr> <td>n:                   </td> <td id="length">           </td> </tr>
+	<tr> <td>Modus                </td> <td id="mode">             </td> </tr>
+	<tr> <td>Quantile             </td> <td id="quantile">         </td> </tr>
+	<tr> <td>Interquartilsabstand </td> <td id="interquantile">    </td> </tr>
+	<tr> <td>Median               </td> <td id="median">           </td> </tr>
+	<tr> <td>Mittelwert           </td> <td id="mean">             </td> </tr>
+	<tr> <td>Spannweite           </td> <td id="spannweite">       </td> </tr>
+	<tr> <td>Harmonisches Mittel  </td> <td id="harmonic_mean">    </td> </tr>
+	<tr> <td>Geometrisches Mittel </td> <td id="geometric_mean">   </td> </tr>
+	<tr> <td>Quadratisches Mittel </td> <td id="quadratic_mean">   </td> </tr>
+	<tr> <td>Schiefe              </td> <td id="schiefe">          </td> </tr>
+	<tr> <td><br>                 </td>                            </td> </tr>
+	<tr> <td>Varianz              </td> <td id="variance">         </td> </tr>
+	<tr> <td>Emprische Varianz    </td> <td id="empiric_variance"> </td> </tr>
+	<tr> <td>Standardabweichung   </td> <td id="standard_deviation"> </td> </tr>
+	<tr> <td>Emprische Streuung   </td> <td id="emp_streuung">     </td> </tr>
+    </tbody> 
+</table>
+
+<center>
+	<!--<canvas id="basic_canvas" width=400>-->
+</center>
+
+</div>
+
+<div class="content" id="teila">
+	<table>
+	<tr> <td>Mittelwert: </td><td> <input id="mittelwert" name="mittelwert" colspan=1 value="" size="5">   </td> </tr> 
+	<tr> <td>Streuung: </td><td> <input id="streuung" name="streuung" colspan=1 value="" size="5"> </td> </tr>
+	<tr> <td>Varianz: </td><td> <input id="varianz" name="varianz" colspan=1 value="" size="5"> </td> </tr>
+	<tr> <td>n: </td><td> <input id="n_a" name="n a" colspan=1 size="5"> </td> </tr>
+	<tr> <td>P: </td><td> <input id="P_a" name="p a" colspan=1 size="5"> </td> </tr>
+	<tr> <td text-align:right colspan=2 >     P( 
+			<input id="lower" size="4"> 
+			&#60; x &#60; 
+			<input id="upper" size="4">)
+		</td> </tr>
+	</table>
+	<button id="a_konfidenz" onclick="konfidenzintervall()">Konfidenzinterval</button>
+	<button id="a_stichprobe" onclick="stichprobenumfang_S()">Stichprobenumfang Streuung</button>
+	<button id="a_stichprobe" onclick="stichprobenumfang_sigma()">Stichprobenumfang Sigma</button>
+	<button id="a_stichprobe" onclick="tval()">T Wert</button>
+	<button id="a_stichprobe" onclick="normal()">Im Bereich</button>
+	<div id="teil_a_res"></div>
+</div>
+
+<div class="content" id="linreg">
+	<center>
+	<h1>Lineare Regression</h1>
+	</center>
+
+	x: <input id="lin_regx" name="lin_reg" value="" size="50" autofocus>
+	<select name="xscale" id="xscale" selected=0>
+  		<option value="0">0</option>
+  		<option value="9">9</option>
+  		<option value="6">6</option>
+  		<option value="3">3</option>
+  		<option value="-3">-3</option>
+  		<option value="-6">-6</option>
+  		<option value="-9">-9</option>
+  		<option value="-12">-12</option>
+  		<option value="-15">-15</option>
+	</select><br>
+	y: <input id="lin_regy" name="lin_reg" value="" size="50">
+	<select name="yscale" id="yscale" selected=0>
+  		<option value="0">0</option>
+  		<option value="9">9</option>
+  		<option value="6">6</option>
+  		<option value="3">3</option>
+  		<option value="-3">-3</option>
+  		<option value="-6">-6</option>
+  		<option value="-9">-9</option>
+  		<option value="-12">-12</option>
+  		<option value="-15">-15</option>
+	</select><br>
+	<div id="lin_reg_res">
+	</div>
+
+</div>
+
+</div>
+
+	<script src="https://unpkg.com/simple-statistics@7.4.0/dist/simple-statistics.min.js"> </script>
+	<script src="/laagberg.js"> </script>
+	<script src="stats.js"> </script>
+</body> 
+</html>
