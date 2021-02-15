@@ -463,3 +463,21 @@ function tval() {
 	div.appendChild(t);
 	div.appendChild(p);
 }
+
+function testgroesse() {
+	let div = document.getElementById('teil_a_res');
+	while (div.firstChild) { div.firstChild.remove() }
+	let p = document.createElement('p');
+	let x = parse_input('mittelwert')[0];
+	let my = parse_input('erwartungswert')[0];
+	let S = parse_input('streuung')[0];
+	let n = parse_input('n_a')[0];
+	log(p)
+	log(x)
+        log(my)
+        log(S)
+        log(n)
+
+	p.innerText = 't_0 = ' + (x - my) / (S / Math.sqrt(n));
+	div.appendChild(p);
+}
