@@ -10,10 +10,9 @@
 <div class="sidebar">
 	<button class="sidebutton" onclick="openTab(event, 'basic')"> Basic  </button>
 	<button class="sidebutton" onclick="openTab(event, 'teila')"> Teil A </button>
-	<form class="sidebutton" target="_blank" action="http://onlinestatbook.com/2/calculators/normal_dist.html"> <input type="submit" value="Normalverteilung" /> </form>
 	<!--<button class="sidebutton" onclick="openTab(event, 'histogram')"> Histogram </button>-->
 	<button class="sidebutton" onclick="openTab(event, 'ttest')"> T-Test </button>
-	<button class="sidebutton" onclick="openTab(event, 'linreg')">Lineare Regression</button>
+	<button class="sidebutton" onclick="openTab(event, 'linreg')">linreg</button>
 	</div>
 
 
@@ -38,11 +37,11 @@
 	</table>
 	n: <input id="t_n" name="t_n" size="5">
 
-  	<button class="tpbtn" onclick="ttest_P(0.9);" id="0.9">0,9</button>
+  	<!-- <button class="tpbtn" onclick="ttest_P(0.9);" id="0.9">0,9</button>
   	<button class="tpbtn" onclick="ttest_P(0.95);" id="0.95">0,95</button>
   	<button class="tpbtn" onclick="ttest_P(0.975);" id="0.975">0,975</button>
 	<button class="tpbtn" onclick="ttest_P(0.99);" id="0.99">0,99</button> 
-	<button class="tpbtn" onclick="ttest_P(0.995);" id="0.995">0,995</button> 
+	<button class="tpbtn" onclick="ttest_P(0.995);" id="0.995">0,995</button> -->
 
 	<table id="ttest_dist_table"> </table>
 	<div id=ttest_vals></div>
@@ -50,9 +49,7 @@
 </div>
 
 <div class="content" id="histogram">
-	<center>
 	<h1>Histogram</h1>
-	</center>
 
 	<input id="hist_dist" name="hist_dist" value="" size="80" autofocus>
 
@@ -60,7 +57,7 @@
 
 <div class="content" id="basic">
 	<center>
-	<input id="distribution" name="distribution" value="" size="80" autofocus>
+	<input class="wide_input" id="distribution" name="distribution" value="" size="80" autofocus>
 	</center>
 
 <table text-align="left" width="100%">
@@ -83,8 +80,8 @@
 	<tr> <td>Schiefe              </td> <td id="schiefe">          </td> </tr>
 	<tr> <td><br>                 </td>                            </td> </tr>
 	<tr> <td>Varianz              </td> <td id="variance">         </td> </tr>
-	<tr> <td>Emprische Varianz    </td> <td id="empiric_variance"> </td> </tr>
-	<tr> <td>Standardabweichung   </td> <td id="standard_deviation"> </td> </tr>
+	<!--<tr> <td>Emprische Varianz    </td> <td id="empiric_variance"> </td> </tr>
+	<tr> <td>Standardabweichung   </td> <td id="standard_deviation"> </td> </tr>-->
 	<tr> <td>Emprische Streuung   </td> <td id="emp_streuung">     </td> </tr>
     </tbody> 
 </table>
@@ -96,6 +93,8 @@
 </div>
 
 <div class="content" id="teila">
+	<div margin="auto">
+	<div style="width:25%; float:left;">
 	<table>
 	<tr> <td>Mittelwert: </td><td> <input id="mittelwert" name="mittelwert" colspan=1 value="" size="5">   </td> </tr> 
 	<tr> <td>Erwartungswert: </td><td> <input id="erwartungswert" name="erwartungswert" colspan=1 value="" size="5">   </td> </tr> 
@@ -109,43 +108,45 @@
 			<input id="upper" size="4">)
 		</td> </tr>
 	</table>
-	<button id="a_konfidenz" onclick="konfidenzintervall()">Konfidenzinterval</button>
-	<button id="a_stichprobe" onclick="stichprobenumfang_S()">Stichprobenumfang Streuung</button>
-	<button id="a_stichprobe" onclick="stichprobenumfang_sigma()">Stichprobenumfang Sigma</button>
-	<button id="a_stichprobe" onclick="tval()">T Wert</button>
-	<button id="a_stichprobe" onclick="testgroesse()">Testgroesse</button>
-	<button id="a_stichprobe" onclick="normal()">Im Bereich</button>
-	<div id="teil_a_res"></div>
+	</div>
+	<div style="width:30%; float:left;">
+		<button class="button_teil_a" id="a_konfidenz" onclick="konfidenzintervall()">Konfidenzinterval</button><br>
+		<button class="button_teil_a" id="a_stichprobe" onclick="stichprobenumfang_S()">Stichprobenumfang Streuung</button><br>
+		<button class="button_teil_a" id="a_stichprobe" onclick="stichprobenumfang_sigma()">Stichprobenumfang Sigma</button><br>
+		<button class="button_teil_a" id="a_stichprobe" onclick="tval()">T Wert</button><br>
+		<button class="button_teil_a" id="a_stichprobe" onclick="testgroesse()">Testgroesse</button><br>
+		<button class="button_teil_a" id="a_stichprobe" onclick="normal()">Im Bereich</button><br>
+	</div>
+	<div style="width:45%; float:right; font-size:1.1em;" id="teil_a_res"></div>
+	</div>
 </div>
 
 <div class="content" id="linreg">
-	<center>
 	<h1>Lineare Regression</h1>
-	</center>
 
 	x: <input id="lin_regx" name="lin_reg" value="" size="50" autofocus>
 	<select name="xscale" id="xscale" selected=0>
-  		<option value="0">0</option>
-  		<option value="9">9</option>
-  		<option value="6">6</option>
-  		<option value="3">3</option>
-  		<option value="-3">-3</option>
-  		<option value="-6">-6</option>
-  		<option value="-9">-9</option>
-  		<option value="-12">-12</option>
-  		<option value="-15">-15</option>
+  		<option value="0">e 0</option>
+  		<option value="9">e 9</option>
+  		<option value="6">e 6</option>
+  		<option value="3">e 3</option>
+  		<option value="-3">e -3</option>
+  		<option value="-6">e -6</option>
+  		<option value="-9">e -9</option>
+  		<option value="-12">e -12</option>
+  		<option value="-15">e -15</option>
 	</select><br>
 	y: <input id="lin_regy" name="lin_reg" value="" size="50">
 	<select name="yscale" id="yscale" selected=0>
-  		<option value="0">0</option>
-  		<option value="9">9</option>
-  		<option value="6">6</option>
-  		<option value="3">3</option>
-  		<option value="-3">-3</option>
-  		<option value="-6">-6</option>
-  		<option value="-9">-9</option>
-  		<option value="-12">-12</option>
-  		<option value="-15">-15</option>
+  		<option value="0">e 0</option>
+  		<option value="9">e 9</option>
+  		<option value="6">e 6</option>
+  		<option value="3">e 3</option>
+  		<option value="-3">e -3</option>
+  		<option value="-6">e -6</option>
+  		<option value="-9">e -9</option>
+  		<option value="-12">e -12</option>
+  		<option value="-15">e -15</option>
 	</select><br>
 	<div id="lin_reg_res">
 	</div>
