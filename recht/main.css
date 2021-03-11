@@ -148,6 +148,20 @@ button {
 	border: solid 0px;
 }
 
+.main_items {
+	width : 30%;
+	min-width : 250px;
+	font-size: 1.4em;
+	text-align: left;
+	font-weight: bold;
+	padding: 20px;
+	line-height: 2em;
+	margin: 20px;
+	color: #ccc;
+	background: #494e6b;
+	border: solid 0px;
+}
+
 .menu {
 	font-size: 1.4em;
 	font-weight: bold;
