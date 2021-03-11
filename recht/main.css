@@ -140,7 +140,9 @@ button {
 .menu {
 	font-size: 1.4em;
 	font-weight: bold;
-	padding: 10px;
+	padding: 20px;
+	line-height: 2em;
+	margin: 20px;
 	color: #ccc;
 	background: #494e6b;
 	border: solid 0px;
