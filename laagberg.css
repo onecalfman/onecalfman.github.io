@@ -1,0 +1,107 @@
+@font-face {
+  font-family: Grundschrift;
+  src: url('/fonts/grundschrift.ttf');
+}
+* {margin: 0px; padding: 0px;}
+
+img {
+border: none;
+max-width: 30%;
+height: auto;
+border-radius: 4px;
+padding: 3px;
+}
+
+h1 {
+font-family: Grundschrift, arial, verdana, sans serif;
+font-size: 2em;
+line-height: 2em;
+}
+
+h2 {
+font-family: Grundschrift, arial, verdana, sans serif;
+max-width: 300;
+font-size: 1.4em;
+line-height: 1.8em;
+}
+
+h3 {
+font-family: Grundschrift, arial, verdana, sans serif;
+font-size: 1.2em;
+line-height: 1.5em;
+}
+
+h4 {
+font-family: Grundschrift, arial, verdana, sans serif;
+font-size: 1.1em;
+line-height: 1.4em;
+}
+
+a, p, ul, ol, li {
+font-family: Grundschrift, arial, verdana, sans serif;
+font-size: 1.0em;
+line-height: 1.4em;
+margin-bottom: 6px;
+}
+a, a:visited {
+color: #003366;
+font-weight: bold;
+text-decoration: none;
+}
+a:hover, a:focus{
+color: #000000;
+}
+
+q {
+font-family: arial, verdana, sans serif; 
+font-style: italic; 
+font-variant: small-caps;  
+font-size: 1.1em; 
+line-height: 1.4em;
+}
+
+blockquote {
+font-family: georgia, times, serif;
+font-size: 1.1em; 
+line-height: 1.4em;
+padding: 15px 8% 15px 8%;
+}
+
+li {
+list-style-type: circle;
+list-style-position: inside;
+padding-left: 15px;
+}
+
+tr, td {
+font-family: helvetica, arial, verdana, sans serif;  
+font-size: 0.95em; 
+line-height: 1.2em;
+padding: 3px 5px 3px 5px;
+}
+
+hr {
+margin: 20px 0px 20px 0px;
+}
+
+body {
+background-color: #eee;
+color: #181818;
+
+}
+
+.menu {
+padding: 12px 12px 12px 12px;
+text-align: center;
+display: block;
+font-size: 3em;
+line-height: 1em;
+}
+
+.link {
+padding: 12px 12px 12px 12px;
+text-align: center;
+display: block;
+font-size: 2em;
+line-height: 1em;
+}
